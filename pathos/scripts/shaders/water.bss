@@ -1,6 +1,6 @@
 $global_determinator specular 0 1
 $shader_vertex $begin
-#version 130
+#version 460
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -55,7 +55,7 @@ $determinator fog 0 1
 $determinator side 0 1
 $determinator rectrefract 0 1
 $begin
-#version 130
+#version 460
 
 uniform sampler2D normalMap;
 uniform sampler2D lightMap;

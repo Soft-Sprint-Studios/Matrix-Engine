@@ -9,7 +9,7 @@ $shader_vertex
 $determinator chrome 0 1
 $determinator flex 0 1
 $begin
-#version 130
+#version 460
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -237,7 +237,7 @@ $invalid_state 2 numdlights 1 4 alphatest 1 1
 $invalid_state 1 shadertype 4 4
 $invalid_state 1 shadertype 6 6
 $begin
-#version 130
+#version 460
 #extension GL_ARB_texture_rectangle : enable
 
 uniform sampler2D texture0;

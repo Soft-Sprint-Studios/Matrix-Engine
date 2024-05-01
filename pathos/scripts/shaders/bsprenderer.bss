@@ -43,7 +43,7 @@ $invalid_state 2 light1_shadowmap 1 1 numlights 0 1
 $invalid_state 2 light2_shadowmap 1 1 numlights 0 2
 $invalid_state 2 light3_shadowmap 1 1 numlights 0 3
 $shader_vertex $begin
-#version 130
+#version 460
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -231,7 +231,7 @@ void main()
 }
 $end
 $shader_fragment $begin
-#version 130
+#version 460
 
 $branch cubemaps >= 1
 $begin

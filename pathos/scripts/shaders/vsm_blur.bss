@@ -1,5 +1,5 @@
 $shader_vertex $begin
-#version 130
+#version 460
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -21,7 +21,7 @@ $end
 $shader_fragment 
 $determinator type 0 2
 $begin
-#version 130
+#version 460
 
 uniform sampler2D texture0;
 uniform float size;

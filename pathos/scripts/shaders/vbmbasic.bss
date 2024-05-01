@@ -4,7 +4,7 @@ $shader_vertex
 $determinator chrome 0 1
 $determinator flex 0 1
 $begin
-#version 130
+#version 460
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -149,7 +149,7 @@ $invalid_state 2 specular 1 1 shadertype 2 4
 $invalid_state 2 luminance 1 1 shadertype 2 4
 $invalid_state 2 bumpmapping 1 1 shadertype 2 4
 $begin
-#version 130
+#version 460
 
 uniform sampler2D texture0;
 uniform sampler2DRect rectangle;

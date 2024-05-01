@@ -1,6 +1,6 @@
 $global_determinator mode 0 1
 $shader_vertex $begin
-#version 130
+#version 460
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -25,7 +25,7 @@ void main()
 $end
 $shader_fragment 
 $begin
-#version 130
+#version 460
 
 uniform sampler2D texture0;
 uniform vec4 color;

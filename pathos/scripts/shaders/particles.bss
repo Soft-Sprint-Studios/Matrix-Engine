@@ -7,7 +7,7 @@ $invalid_state 2 type 1 1 num_point_lights 1 4
 $invalid_state 2 type 1 1 num_proj_lights 1 4
 $invalid_state 2 alphatest 1 2 type 1 1
 $shader_vertex $begin
-#version 130
+#version 330
 
 uniform mat4 projection;
 uniform mat4 modelview;
@@ -72,7 +72,7 @@ void main()
 }
 $end
 $shader_fragment $begin
-#version 130
+#version 330
 #extension GL_ARB_texture_rectangle : enable
 
 uniform sampler2D texture0;
