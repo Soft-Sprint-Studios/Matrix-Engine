@@ -22,7 +22,7 @@ enum pp_shadertypes_t
 	SHADER_MBLUR,
 	SHADER_ENVFADE,
 	SHADER_GRAIN,
-	SHADER_NORMAL
+	SHADER_VIGNETTE,
 };
 
 struct pp_shader_attribs
@@ -106,6 +106,8 @@ private:
 	bool DrawFade( screenfade_t& fade );
 	// Draws screen film grain
 	bool DrawFilmGrain( void );
+	// Draws Vignette 
+	bool DrawVignette(void);
 
 	// Fetches screen contents
 	static void FetchScreen( rtt_texture_t** ptarget );
@@ -157,6 +159,8 @@ private:
 
 	// Filmgrain cvar
 	CCVar*			m_pCvarFilmGrain;
+	// Vignetting cvar
+	CCVar* m_pCvarVignette;
 	// Postporcess cvar
 	CCVar*			m_pCvarPostProcess;
 

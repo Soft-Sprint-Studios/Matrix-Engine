@@ -54,10 +54,14 @@ state variables and functionality.
 #include "r_main.h"
 #include "dllexports.h"
 #include "filewriterthread.h"
+#include <ctime>
+#include <discord_rpc.h>
 
 #if defined WIN32 && _64BUILD
 #include <detours.h>
 #endif
+
+static int64_t eptime = static_cast<int64_t>(std::time(nullptr));
 
 extern file_interface_t ENGINE_FILE_FUNCTIONS;
 
@@ -98,6 +102,33 @@ CCVar* g_pCvarKeepOldSaves = nullptr;
 bool Sys_ShouldExit( void )
 {
 	return ens.exit;
+}
+
+void handleDiscordReady(const DiscordUser* request) {
+	printf("Discord: connected\n");
+}
+
+void initializeDiscord() {
+	DiscordEventHandlers handlers;
+	memset(&handlers, 0, sizeof(handlers));
+	handlers.ready = handleDiscordReady;
+
+	Discord_Initialize("1235165455237255238", &handlers, 1, nullptr);
+}
+
+void updateRichPresence() {
+	DiscordRichPresence discordPresence;
+	memset(&discordPresence, 0, sizeof(discordPresence));
+
+	discordPresence.state = "";
+	discordPresence.details = "";
+	discordPresence.startTimestamp = eptime;
+	discordPresence.largeImageKey = "";
+	discordPresence.largeImageText = "";
+	discordPresence.smallImageKey = "";
+	discordPresence.smallImageText = "";
+
+	Discord_UpdatePresence(&discordPresence);
 }
 
 //=============================================
@@ -142,7 +173,7 @@ bool Sys_Init( CArray<CString>* argsArray )
 	// Timescale cvar
 	g_pCvarTimeScale = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_SV_ONLY, "host_timescale", "1.0", "Can be used to manipulate the time scale.\n");
 	// Max FPS cvar
-	g_pCvarFPSMax = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_SV_ONLY, "fps_max", "100", "Max framerate.\n");
+	g_pCvarFPSMax = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_SV_ONLY, "fps_max", "300", "Max framerate.\n");
 
 	// MUST BE FIRST
 	// Initialize configuration
@@ -250,6 +281,8 @@ bool Sys_Init( CArray<CString>* argsArray )
 		ens.scheduledmap.clear();
 	}
 
+	initializeDiscord();
+
 	return true;
 }
 
@@ -312,6 +345,8 @@ void Sys_Shutdown( void )
 
 	if(g_hPrintMutex)
 		CloseHandle(g_hPrintMutex);
+
+	Discord_Shutdown();
 
 	// Close file writer thread
 	FWT_Shutdown();
@@ -1043,6 +1078,8 @@ void Sys_Frame( Double frametime )
 
 	// Update sound engine
 	CL_UpdateSound();
+
+	updateRichPresence();
 }
 
 //=============================================

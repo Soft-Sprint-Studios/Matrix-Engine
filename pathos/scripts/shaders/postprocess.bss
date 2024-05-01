@@ -210,7 +210,36 @@ void main()
 	   
 		oColor =  vec4(col,1.0);	
 	$end
-	$branch pp_type == 7
+	$branch pp_type == 8
+    $begin
+    // Calculate the center of the image
+    vec2 center = vec2(0.5, 0.5);
+    
+    // Calculate the distance from the center for the current texcoord
+    vec2 dist = ps_texcoord - center;
+    float distance = length(dist);
+    
+    // Define the size and smoothness of the vignette effect
+    float vignetteSize = 0.3; // Adjust as needed (lower values make the vignette smaller)
+    float vignetteSmoothness = 0.3; // Adjust as needed (higher values make the transition smoother)
+    
+    // Calculate the vignette factor based on the distance from the center
+    float vignetteFactor = smoothstep(vignetteSize, vignetteSize + vignetteSmoothness, distance);
+    
+    // Get the color from the texture
+    vec4 color = texture(texture0, ps_texcoord);
+    
+    // Use black color (0.0, 0.0, 0.0, 0.0) for the vignette
+    vec4 black = vec4(0.0, 0.0, 0.0, 0.0);
+    
+    // Blend the color with black based on the vignette factor
+    // As the distance from the center increases, the blending factor increases
+    color.rgb = mix(color.rgb, black.rgb, vignetteFactor);
+    
+    // Set the output color
+    oColor = color;
+    $end
+	$branch pp_type == 8
 	$begin
 		oColor = texture(texture0, ps_texcoord);
 	$end

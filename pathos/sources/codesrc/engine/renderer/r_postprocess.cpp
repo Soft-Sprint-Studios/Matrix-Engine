@@ -50,6 +50,7 @@ CPostProcess::CPostProcess( void ):
 	m_pShader(nullptr),
 	m_pVBO(nullptr),
 	m_pCvarFilmGrain(nullptr),
+	m_pCvarVignette(nullptr),
 	m_pCvarPostProcess(nullptr),
 	m_pScreenRTT(nullptr),
 	m_pScreenTexture(nullptr)
@@ -73,6 +74,7 @@ bool CPostProcess :: Init( void )
 	// Set up the cvars
 	m_pCvarGamma = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), GAMMA_CVAR_NAME, "1.8", "Controls gamma value.");
 	m_pCvarFilmGrain = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_filmgrain", "1", "Toggle film grain." );
+	m_pCvarVignette = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_vignette", "1", "Toggle vignette.");
 	m_pCvarPostProcess = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_postprocess", "1", "Disable post-process effects." );
 
 	return true;
@@ -255,9 +257,6 @@ bool CPostProcess :: DrawGamma( void )
 	FetchScreen(&m_pScreenRTT);
 	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenRTT->palloc->gl_index);
 
-	if(!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_NORMAL))
-		return false;
-
 	m_pShader->SetUniform1f(m_attribs.u_gamma, m_pCvarGamma->GetValue()/1.8);
 
 	if(!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_GAMMA))
@@ -414,6 +413,20 @@ bool CPostProcess :: DrawFilmGrain( void )
 
 	m_pShader->SetUniform1f(m_attribs.u_timer, rns.time*0.1);
 	if(!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_GRAIN))
+		return false;
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	return true;
+}
+
+bool CPostProcess::DrawVignette(void)
+{
+	// Fetch screen contents
+	FetchScreen(&m_pScreenRTT);
+	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenRTT->palloc->gl_index);
+
+	m_pShader->SetUniform1f(m_attribs.u_timer, rns.time * 0.1);
+	if (!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_GRAIN))
 		return false;
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -609,6 +622,18 @@ bool CPostProcess :: Draw( void )
 	if(m_pCvarPostProcess->GetValue() > 0 && m_pCvarFilmGrain->GetValue() > 0)
 	{
 		if(!DrawFilmGrain())
+		{
+			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
+			m_pShader->DisableShader();
+			m_pVBO->UnBind();
+			return false;
+		}
+	}
+
+	// Render Vignette
+	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarVignette->GetValue() > 0)
+	{
+		if (!DrawVignette())
 		{
 			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
 			m_pShader->DisableShader();
