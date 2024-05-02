@@ -678,4 +678,4 @@ void CL_AddSkyTextureSet( const Char* pstrSkyTextureName, Int32 skysetindex )
 void CL_SetSkyTexture( Int32 skysetindex )
 {
 	gSkyRenderer.SetSkyTexture(skysetindex);
-}
+}	

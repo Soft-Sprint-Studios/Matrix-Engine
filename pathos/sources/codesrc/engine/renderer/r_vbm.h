@@ -221,6 +221,7 @@ struct vbm_attribs
 		u_scope_scale(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_scope_scrsize(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_phong_exponent(CGLSLShader::PROPERTY_UNAVAILABLE),
+		u_parallaxscale(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_specularfactor(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_numlights(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_shadertype(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -270,6 +271,7 @@ struct vbm_attribs
 	Int32 u_rectangle;
 	Int32 u_spectexture;
 	Int32 u_lumtexture;
+	Int32 u_heightmap;
 	Int32 u_normalmap;
 
 	Int32 u_sky_ambient;
@@ -287,6 +289,7 @@ struct vbm_attribs
 	Int32 u_scope_scrsize;
 
 	Int32 u_phong_exponent;
+	Int32 u_parallaxscale;
 	Int32 u_specularfactor;
 
 	attrib_light lights[MAX_ENT_MLIGHTS];
@@ -298,6 +301,7 @@ struct vbm_attribs
 	Int32 d_flexes;
 	Int32 d_specular;
 	Int32 d_luminance;
+	Int32 d_heightmap;
 	Int32 d_bumpmapping;
 	Int32 d_numdlights;
 	

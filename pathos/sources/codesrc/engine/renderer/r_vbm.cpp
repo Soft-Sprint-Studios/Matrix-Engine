@@ -336,6 +336,7 @@ bool CVBMRenderer::InitGL( void )
 		m_attribs.u_flextexture = m_pShader->InitUniform("flextexture", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_flextexturesize = m_pShader->InitUniform("flextexture_size", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_phong_exponent = m_pShader->InitUniform("phong_exponent", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_parallaxscale = m_pShader->InitUniform("parallaxscale", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_specularfactor = m_pShader->InitUniform("specfactor", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_causticsm1 = m_pShader->InitUniform("causticsm1", CGLSLShader::UNIFORM_NOSYNC);
 		m_attribs.u_causticsm2 = m_pShader->InitUniform("causticsm2", CGLSLShader::UNIFORM_NOSYNC);
@@ -365,6 +366,7 @@ bool CVBMRenderer::InitGL( void )
 		if(!R_CheckShaderUniform(m_attribs.u_flextexture, "flextexture", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_flextexturesize, "flextexture_size", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_phong_exponent, "phong_exponent", m_pShader, Sys_ErrorPopup)
+			//|| !R_CheckShaderUniform(m_attribs.u_parallaxscale, "parallaxscale", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_specularfactor, "specfactor", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_causticsm1, "causticsm1", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_causticsm2, "causticsm2", m_pShader, Sys_ErrorPopup)
@@ -2641,6 +2643,7 @@ bool CVBMRenderer::DrawMesh( en_material_t *pmaterial, const vbmmesh_t *pmesh, b
 		!m_pShader->SetDeterminator(m_attribs.d_numlights, (pmaterial->flags & (TX_FL_FULLBRIGHT|TX_FL_SCOPE)) ? 0 : m_numModelLights, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, (pmaterial->ptextures[MT_TX_SPECULAR]) && !(pmaterial->flags & TX_FL_FULLBRIGHT) && !m_isMultiPass && g_pCvarSpecular->GetValue() > 0 ? true : false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, (pmaterial->ptextures[MT_TX_LUMINANCE]) && !(pmaterial->flags & TX_FL_FULLBRIGHT), false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_heightmap, (pmaterial->ptextures[MT_TX_HEIGHTMAP]) && !(pmaterial->flags & TX_FL_FULLBRIGHT), false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, (pmaterial->ptextures[MT_TX_NORMALMAP]) && !(pmaterial->flags & TX_FL_FULLBRIGHT) && g_pCvarBumpMaps->GetValue() > 0, false))
 	return false;
 
@@ -2718,6 +2721,13 @@ bool CVBMRenderer::DrawMesh( en_material_t *pmaterial, const vbmmesh_t *pmesh, b
 	{
 		m_pShader->SetUniform1i(m_attribs.u_normalmap, 4);
 		R_Bind2DTexture(GL_TEXTURE4, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
+	}
+
+	if (pmaterial->ptextures[MT_TX_HEIGHTMAP] && g_pCvarParallaxMap->GetValue() > 0)
+	{
+		m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
+		m_pShader->SetUniform1i(m_attribs.u_heightmap, 5);
+		R_Bind2DTexture(GL_TEXTURE5, pmaterial->ptextures[MT_TX_HEIGHTMAP]->palloc->gl_index);
 	}
 
 	if(pmaterial->scrollu || pmaterial->scrollv)
@@ -3045,6 +3055,8 @@ bool CVBMRenderer::DrawLights( bool specularPass )
 
 				if(pmaterial->flags & (TX_FL_ADDITIVE|TX_FL_ALPHABLEND|TX_FL_FULLBRIGHT|TX_FL_SCOPE))
 					continue;
+
+				m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
 
 				if(specularPass)
 				{
@@ -3437,6 +3449,8 @@ bool CVBMRenderer::DrawFinal ( void )
 				m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp*g_pCvarPhongExponent->GetValue());
 				m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 
+				m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
+
 				if(pmaterial->ptextures[MT_TX_NORMALMAP])
 					continue;
 					
@@ -3478,6 +3492,8 @@ bool CVBMRenderer::DrawFinal ( void )
 
 					m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp*g_pCvarPhongExponent->GetValue());
 					m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
+
+					m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
 
 					R_Bind2DTexture(GL_TEXTURE2, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
 					R_Bind2DTexture(GL_TEXTURE3, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);

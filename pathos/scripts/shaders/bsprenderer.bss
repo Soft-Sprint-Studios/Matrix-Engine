@@ -72,7 +72,7 @@ uniform vec3 v_right;
 uniform vec2 uvoffset;
 
 // Decals
-uniform float decalscale;
+uniform float decalscale;	
 
 in vec4 in_position;
 in vec3 in_normal;
@@ -247,6 +247,8 @@ uniform sampler2D normalmap;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
+uniform sampler2D heightmap;
+uniform float parallaxscale;
 $branch luminance == 1
 $begin
 uniform sampler2D luminance;
@@ -371,6 +373,8 @@ in vec4 ps_light_3_vertexcoord; // projection space
 
 in float ps_fogcoord; // static fogcoord
 in vec3 ps_vertexpos; // for radial fog
+
+
 
 $branch cubemaps >= 1
 $begin
@@ -751,21 +755,30 @@ vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength 
 	return finalColor;
 }
 
-vec4 GetLightmappedSpecular( vec3 v_origin, vec3 v_normal, float specularStrength )
+vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength)
 {
-	vec3 lightDir = GetLightDir( lightvecstex );
-	vec4 lightDiffuse = GetDiffuseLight( difflightmap );
-	
-	// Add specular if any
-	mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-	vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
-	vec3 eyeSpaceNormal = normalize(tbnMatrix * v_normal);
-	
-	float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
-	float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
-	
-	vec4 finalColor = specularValue * lightDiffuse * shineFactor;
-	return finalColor;
+    vec3 lightDir = GetLightDir(lightvecstex);
+    vec4 lightDiffuse = GetDiffuseLight(difflightmap);
+
+    // Add specular if any
+    mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
+    vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
+    vec3 eyeSpaceNormal = normalize(tbnMatrix * v_normal);
+    
+    float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
+    float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
+
+    // Calculate view direction in eye space
+    vec3 viewDir = normalize(v_origin);
+    
+    // Calculate the Fresnel effect
+    float fresnel = pow(1.0 - dot(eyeSpaceNormal, viewDir), 5.0);
+
+    // Modulate the specular value by the Fresnel effect
+    specularValue *= fresnel;
+
+    vec4 finalColor = specularValue * lightDiffuse * shineFactor;
+    return finalColor;
 }
 
 $branch cubemaps >= 1
@@ -817,8 +830,41 @@ vec4 AddCubemaps( float reflectivity )
 	$end
 }
 
+vec2 ParallaxOcclusionMapping(vec2 texCoord, vec3 viewDir, sampler2D depthMap, float parallaxScale) {
+    // Number of samples for parallax occlusion mapping
+    const int numSteps = 16;
+    
+    // Initial height from the depth map
+    float height = texture(depthMap, texCoord).r;
+    
+    // Calculate the initial offset using the view direction and parallax scale
+    float stepSize = height * parallaxScale / float(numSteps);
+    
+    // The offset will be added to the texture coordinates
+    vec2 texCoordOffset = texCoord - stepSize * viewDir.xy;
+    
+    // Use binary search for intersection
+    for (int i = 0; i < numSteps; i++) {
+        height = texture(depthMap, texCoordOffset).r;
+        if (height < 0.0) {
+            // If we find an intersection, reduce the step size and adjust the offset
+            stepSize /= 2.0;
+            texCoordOffset += stepSize * viewDir.xy;
+        } else {
+            // If there's no intersection, keep moving the offset
+            texCoordOffset -= stepSize * viewDir.xy;
+        }
+    }
+
+    return texCoordOffset;
+}
+
 void main()
 {
+    vec3 viewDirWorldSpace = normalize(ps_vertexpos);
+    mat3 tangentFrame = mat3(ps_tangent, ps_binormal, ps_normal);
+    vec3 viewDirTangentSpace = normalize(tangentFrame * viewDirWorldSpace);
+    vec2 modifiedTexCoord = ParallaxOcclusionMapping(ps_texcoord, viewDirTangentSpace, heightmap, parallaxscale);
 	float specularFactor = 0.0;
 	vec4 specularColor = vec4(0, 0, 0, 0);
 	vec4 finalColor = vec4(0, 0, 0, 0);

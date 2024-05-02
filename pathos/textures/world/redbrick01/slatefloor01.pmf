@@ -1,0 +1,12 @@
+$texture
+{
+	$int_width 1024
+	$int_height 1024
+	$material concrete
+	$cubemaps
+	$cubemapstrength 10
+	$texture diffuse world/redbrick01/slatefloor01.dds
+	$texture normal world/redbrick01/slatefloor01_normal.dds
+	$texture specular world/redbrick01/slatefloor01_specular.dds
+	$texture detail detail/dt_conc.dds
+}

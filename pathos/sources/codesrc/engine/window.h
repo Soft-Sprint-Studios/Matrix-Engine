@@ -144,4 +144,5 @@ private:
 	CArray<Int32> m_multiSampleSettingsArray;
 };
 extern CWindow gWindow;
+extern SDL_Window* pTempWindow;
 #endif

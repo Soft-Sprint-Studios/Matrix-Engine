@@ -492,6 +492,10 @@ bool VBM_MeshBonesCompatible( vbmmesh_t *pgrp1, vbmmesh_t *pgrp2, vbmheader_t* p
 			|| !pmaterial2->ptextures[MT_TX_LUMINANCE] && pmaterial1->ptextures[MT_TX_LUMINANCE])
 			return false;
 
+		if (pmaterial2->ptextures[MT_TX_HEIGHTMAP] && !pmaterial1->ptextures[MT_TX_HEIGHTMAP]
+			|| !pmaterial2->ptextures[MT_TX_HEIGHTMAP] && pmaterial1->ptextures[MT_TX_HEIGHTMAP])
+			return false;
+
 		if(pmaterial2->ptextures[MT_TX_NORMALMAP] && !pmaterial1->ptextures[MT_TX_NORMALMAP]
 			|| !pmaterial2->ptextures[MT_TX_NORMALMAP] && pmaterial1->ptextures[MT_TX_NORMALMAP])
 			return false;

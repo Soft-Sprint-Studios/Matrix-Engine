@@ -105,6 +105,8 @@ Int32 CWindow::GetMaxMultiSample( void )
 	return maxSamples;
 }
 
+extern SDL_Window* pTempWindow;
+
 //=============================================
 // Class: CWindow
 // Function: Init
