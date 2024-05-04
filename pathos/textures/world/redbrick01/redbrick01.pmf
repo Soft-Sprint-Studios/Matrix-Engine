@@ -3,8 +3,9 @@ $texture
 	$int_width 1024
 	$int_height 1024
 	$material concrete
-	$parallaxscale 100
+	$parallaxscale 1
 	$texture diffuse world/redbrick01/redbrick01.dds
 	$texture normal world/redbrick01/redbrick01_normal.dds
 	$texture heightmap world/redbrick01/redbrick01_heightmap.dds
+	$texture detail detail/dt_conc.dds
 }

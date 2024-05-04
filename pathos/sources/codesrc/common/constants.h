@@ -236,7 +236,7 @@ static const Uint32 MAX_CLIENTSIDE_ENTITIES = 65535;
 static const Uint32 CL_ENTITY_INDEX_BASE = MAX_SERVER_ENTITIES;
 
 // Max surface extents size
-static const Uint32 MAX_SURFACE_EXTENTS = 1024;
+static const Uint32 MAX_SURFACE_EXTENTS = 2048;
 // Size of a light block(1024x1024 chop size should give 64x64, but we pad by 2)
 static const Uint32 BLOCKLIGHTS_SIZE = (66*66);
 

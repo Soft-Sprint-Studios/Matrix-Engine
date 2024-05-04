@@ -30,16 +30,20 @@ void Cmd_BuildCubemaps( void ) { gCubemaps.BuildCubemaps(); }
 // Cubemap resolutions available
 Uint32 CCubemapManager::g_cubemapResolutions[NUM_CUBEMAP_SIZES][2] =
 { 
+	{ 4, 4 },
+	{ 8, 8 },
 	{ 16, 16 },
 	{ 32, 32 },
 	{ 64, 64 },
 	{ 128, 128 },
 	{ 256, 256 },
-	{ 512, 512 }
+	{ 512, 512 },
+	{ 1024, 1024 },
+	{ 2048, 2048 }
 };
 
 // Cubemap interpolation time
-const Float CCubemapManager::CUBEMAP_INTERP_TIME = 0.5;
+const Float CCubemapManager::CUBEMAP_INTERP_TIME = 0.2;
 
 // Class definition
 CCubemapManager gCubemaps;

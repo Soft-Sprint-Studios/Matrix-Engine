@@ -118,7 +118,7 @@ struct dv30plane_t
 	dv30plane_t():
 		dist(0),
 		type(0)
-	{
+		{
 		memset(normal, 0, sizeof(normal));
 	}
 

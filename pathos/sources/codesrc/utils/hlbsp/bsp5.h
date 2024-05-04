@@ -29,11 +29,11 @@
 
 //============================================================================
 
-#define MIN_SUBDIVIDE_SIZE      64
+#define MIN_SUBDIVIDE_SIZE      128
 
-#define MAX_SUBDIVIDE_SIZE      512
+#define MAX_SUBDIVIDE_SIZE      128
 
-#define DEFAULT_SUBDIVIDE_SIZE  ((MAX_SURFACE_EXTENT-1)*TEXTURE_STEP) //#define DEFAULT_SUBDIVIDE_SIZE  240 //--vluzacn
+#define DEFAULT_SUBDIVIDE_SIZE  128 //#define DEFAULT_SUBDIVIDE_SIZE  240 //--vluzacn
 
 #define MIN_MAXNODE_SIZE        64
 #define MAX_MAXNODE_SIZE        65536

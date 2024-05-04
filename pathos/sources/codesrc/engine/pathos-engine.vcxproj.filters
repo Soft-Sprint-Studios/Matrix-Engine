@@ -73,6 +73,12 @@
     <Filter Include="Header Files\ui\windows">
       <UniqueIdentifier>{490b317a-28a5-4e64-b1b8-fa9426a06071}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\discord">
+      <UniqueIdentifier>{66cabdaa-1bd6-4ec6-8d04-45d65cd416b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\discord">
+      <UniqueIdentifier>{e58e18c0-8a8a-4d08-9918-80f3a0f2a77b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -389,6 +395,12 @@
     </ClCompile>
     <ClCompile Include="uimanager.cpp">
       <Filter>Source Files\ui</Filter>
+    </ClCompile>
+    <ClCompile Include="safety\enginecode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="discord\discordrpcsystem.cpp">
+      <Filter>Source Files\discord</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -871,6 +883,12 @@
     </ClInclude>
     <ClInclude Include="uimanager.h">
       <Filter>Header Files\ui</Filter>
+    </ClInclude>
+    <ClInclude Include="safety\enginecode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="discord\discordrpcsystem.h">
+      <Filter>Header Files\discord</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -191,7 +191,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\libs\sdl_ttf\include;..\libs\discord\include;.\;..\libs\sdl2.0\include\;.\renderer\;..\common\;..\libs\;..\libs\freetype\include\;.\ui\;.\server\;.\client\;..\shared\;..\libs\enet\include;..\libs\openal\include;..\libs\detours\include;..\libs\libogg\include;..\libs\libvorbis\include;..\shared\renderer;.\windows;.\rygsdxtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\discord\include;.\;..\libs\sdl2.0\include\;.\renderer\;..\common\;..\libs\;..\libs\freetype\include\;.\ui\;.\server\;.\client\;..\shared\;..\libs\enet\include;..\libs\openal\include;..\libs\detours\include;..\libs\libogg\include;..\libs\libvorbis\include;..\shared\renderer;.\windows;.\rygsdxtc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4996;4305;4244;4127;4100;4481;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <Link>
@@ -200,8 +200,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>..\libs\sdl_ttf\lib\x64\;x64\Release</AdditionalLibraryDirectories>
-      <AdditionalDependencies>user32.lib;ole32.lib;SDL2_ttf.lib;opengl32.lib;glu32.lib;shell32.lib;gdi32.lib;..\x64\Release\SDL2.lib;..\x64\Release\SDL2Main.lib;..\x64\Release\freetype253.lib;..\libs\enet\enet64.lib;..\libs\openal\libs\Win64\openal32.lib;..\libs\detours\lib.X64\detours.lib;..\libs\discord\lib\discord-rpc.lib;..\x64\Release\libogg_static.lib;..\x64\Release\libvorbisfile_static.lib;..\x64\Release\libvorbis_static.lib;winmm.lib;ws2_32.lib;gdiplus.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>x64\Release</AdditionalLibraryDirectories>
+      <AdditionalDependencies>user32.lib;ole32.lib;opengl32.lib;glu32.lib;shell32.lib;gdi32.lib;..\x64\Release\SDL2.lib;..\x64\Release\SDL2Main.lib;..\x64\Release\freetype253.lib;..\libs\enet\enet64.lib;..\libs\openal\libs\Win64\openal32.lib;..\libs\detours\lib.X64\detours.lib;..\x64\Release\libogg_static.lib;..\x64\Release\libvorbisfile_static.lib;..\x64\Release\libvorbis_static.lib;winmm.lib;ws2_32.lib;gdiplus.lib;comctl32.lib;..\libs\discord\lib\discord-rpc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <DelayLoadDLLs>OpenAL32.dll;SDL2.dll;%(DelayLoadDLLs)</DelayLoadDLLs>
       <IgnoreSpecificDefaultLibraries>libcmt.lib</IgnoreSpecificDefaultLibraries>
@@ -244,6 +244,7 @@
     <ClCompile Include="client\cl_tempentities.cpp" />
     <ClCompile Include="client\cl_utils.cpp" />
     <ClCompile Include="console.cpp" />
+    <ClCompile Include="discord\discordrpcsystem.cpp" />
     <ClCompile Include="dllexports.cpp" />
     <ClCompile Include="edictmanager.cpp" />
     <ClCompile Include="enginefuncs.cpp" />
@@ -281,6 +282,7 @@
       <Optimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MaxSpeed</Optimization>
     </ClCompile>
     <ClCompile Include="rygsdxtc\stb_dxt.cpp" />
+    <ClCompile Include="safety\enginecode.cpp" />
     <ClCompile Include="server\sv_entities.cpp" />
     <ClCompile Include="server\sv_main.cpp" />
     <ClCompile Include="server\sv_world.cpp" />
@@ -388,6 +390,7 @@
     <ClInclude Include="client\cl_utils.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="console.h" />
+    <ClInclude Include="discord\discordrpcsystem.h" />
     <ClInclude Include="dllexports.h" />
     <ClInclude Include="edictmanager.h" />
     <ClInclude Include="enginefuncs.h" />
@@ -426,6 +429,7 @@
     <ClInclude Include="renderer\r_vbm.h" />
     <ClInclude Include="renderer\r_water.h" />
     <ClInclude Include="rygsdxtc\stb_dxt.h" />
+    <ClInclude Include="safety\enginecode.h" />
     <ClInclude Include="server\sv_entities.h" />
     <ClInclude Include="server\sv_main.h" />
     <ClInclude Include="server\sv_world.h" />

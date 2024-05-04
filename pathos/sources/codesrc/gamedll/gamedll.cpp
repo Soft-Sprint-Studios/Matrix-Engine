@@ -140,7 +140,7 @@ bool GameDLLInit( void )
 #else
 	gd_engfuncs.pfnCon_Printf("Game DLL loaded.\n");
 #endif
-	gd_engfuncs.pfnCon_Printf("Game DLL build date: %s.\n", __DATE__);
+	gd_engfuncs.pfnCon_Printf("Game DLL build date and time: %s.\n", __DATE__ __TIME__);
 
 	// Register user messages
 	InitClientUserMessages();

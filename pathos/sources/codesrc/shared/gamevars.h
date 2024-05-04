@@ -10,6 +10,8 @@ All Rights Reserved.
 #ifndef GAMEVARS_H
 #define GAMEVARS_H
 
+#pragma once;
+
 #include "trace.h"
 #include "constants.h"
 

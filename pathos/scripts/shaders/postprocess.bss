@@ -17,7 +17,7 @@ void main()
 }
 $end
 $shader_fragment 
-$determinator pp_type 0 7
+$determinator pp_type 0 13
 $begin
 #version 460
 #extension GL_ARB_texture_rectangle : enable
@@ -131,6 +131,38 @@ vec2 coordRot(in vec2 tc, in float angle)
 }
 $end
 
+$branch pp_type == 8
+$begin
+uniform float chromaticStrength;
+$end
+
+$branch pp_type == 9
+$begin
+uniform float FXAAStrength;
+$end
+
+$branch pp_type == 10
+$begin
+uniform float BWStrength;
+$end
+
+$branch pp_type == 11
+$begin
+uniform float bleachStrength;
+$end
+
+$branch pp_type == 12
+$begin
+const float bloomThreshold = 0.1;
+uniform float bloomStrength;
+$end
+
+$branch pp_type == 13
+$begin
+uniform float vignetteStrength;
+uniform float vignetteRadius;
+$end
+
 void main()
 {
 	$branch pp_type == 0
@@ -210,38 +242,150 @@ void main()
 	   
 		oColor =  vec4(col,1.0);	
 	$end
-	$branch pp_type == 8
-    $begin
-    // Calculate the center of the image
-    vec2 center = vec2(0.5, 0.5);
-    
-    // Calculate the distance from the center for the current texcoord
-    vec2 dist = ps_texcoord - center;
-    float distance = length(dist);
-    
-    // Define the size and smoothness of the vignette effect
-    float vignetteSize = 0.3; // Adjust as needed (lower values make the vignette smaller)
-    float vignetteSmoothness = 0.3; // Adjust as needed (higher values make the transition smoother)
-    
-    // Calculate the vignette factor based on the distance from the center
-    float vignetteFactor = smoothstep(vignetteSize, vignetteSize + vignetteSmoothness, distance);
-    
-    // Get the color from the texture
-    vec4 color = texture(texture0, ps_texcoord);
-    
-    // Use black color (0.0, 0.0, 0.0, 0.0) for the vignette
-    vec4 black = vec4(0.0, 0.0, 0.0, 0.0);
-    
-    // Blend the color with black based on the vignette factor
-    // As the distance from the center increases, the blending factor increases
-    color.rgb = mix(color.rgb, black.rgb, vignetteFactor);
-    
-    // Set the output color
-    oColor = color;
-    $end
-	$branch pp_type == 8
+	$branch pp_type == 7
 	$begin
 		oColor = texture(texture0, ps_texcoord);
+	$end
+    $branch pp_type == 8
+    $begin
+    // Calculate offsets based on chromatic strength and screen size
+    vec2 offsetR = vec2(chromaticStrength / screenwidth, 0.0);
+    vec2 offsetG = vec2(-chromaticStrength / screenwidth, 0.0);
+    vec2 offsetB = vec2(0.0, chromaticStrength / screenheight);
+
+    // Sample the texture with different offsets for each color channel
+    vec4 colorR = texture(texture0, ps_texcoord + offsetR);
+    vec4 colorG = texture(texture0, ps_texcoord + offsetG);
+    vec4 colorB = texture(texture0, ps_texcoord + offsetB);
+
+    // Combine the color channels with their respective offsets
+    oColor.r = colorR.r;
+    oColor.g = colorG.g;
+    oColor.b = colorB.b;
+    oColor.a = (colorR.a + colorG.a + colorB.a) / 3.0;
+    $end
+	$branch pp_type == 9
+    $begin
+	// Sample the current pixel color
+    vec4 currentColor = texture(texture0, ps_texcoord);
+    
+    // Define pixel offsets for sampling surrounding pixels
+    vec2 offsets[4] = vec2[4](
+        vec2(-1.0, 0.0) * vec2(FXAAStrength / screenwidth, 0.0),
+        vec2(1.0, 0.0) * vec2(FXAAStrength / screenwidth, 0.0),
+        vec2(0.0, -1.0) * vec2(0.0, FXAAStrength / screenheight),
+        vec2(0.0, 1.0) * vec2(0.0, FXAAStrength / screenheight)
+    );
+
+    // Sample the four surrounding pixels
+    vec4 leftColor = texture(texture0, ps_texcoord + offsets[0]);
+    vec4 rightColor = texture(texture0, ps_texcoord + offsets[1]);
+    vec4 topColor = texture(texture0, ps_texcoord + offsets[2]);
+    vec4 bottomColor = texture(texture0, ps_texcoord + offsets[3]);
+
+    // Calculate the luminance difference with neighboring pixels
+    float lumaCurrent = dot(currentColor.rgb, vec3(0.299, 0.587, 0.114));
+    float lumaLeft = dot(leftColor.rgb, vec3(0.299, 0.587, 0.114));
+    float lumaRight = dot(rightColor.rgb, vec3(0.299, 0.587, 0.114));
+    float lumaTop = dot(topColor.rgb, vec3(0.299, 0.587, 0.114));
+    float lumaBottom = dot(bottomColor.rgb, vec3(0.299, 0.587, 0.114));
+
+    // Calculate the anti-aliasing effect
+    float lumaDiffX = abs(lumaLeft - lumaRight);
+    float lumaDiffY = abs(lumaTop - lumaBottom);
+    float maxLumaDiff = max(lumaDiffX, lumaDiffY);
+
+    vec4 smoothedColor = currentColor;
+    if (maxLumaDiff > FXAAStrength) {
+        // Interpolate the current color with the average of the neighboring pixels
+        smoothedColor = mix(currentColor, (leftColor + rightColor + topColor + bottomColor) / 4.0, maxLumaDiff / FXAAStrength);
+    }
+
+    // Output the final color
+    oColor = smoothedColor;
+	$end
+	$branch pp_type == 10
+    $begin
+    // Sample the texture at the current coordinates
+    vec4 color = texture(texture0, ps_texcoord);
+
+    // Calculate luminance using the formula (0.3 * R + 0.59 * G + 0.11 * B)
+    float luminance = 0.3 * color.r + 0.59 * color.g + 0.11 * color.b;
+
+    // Mix the original color with grayscale based on the black and white strength parameter
+    vec4 grayscaleColor = vec4(vec3(luminance), color.a);
+    oColor = mix(color, grayscaleColor, BWStrength);
+    $end
+	$branch pp_type == 11
+    $begin
+	 // Sample the color from the input texture
+        vec4 color = texture(texture0, ps_texcoord);
+        
+        // Calculate the grayscale value using the luminance formula
+        float grayscale = dot(color.rgb, vec3(0.299, 0.587, 0.114));
+        
+        // Apply desaturation using a linear interpolation between color and grayscale
+        vec3 desaturatedColor = mix(color.rgb, vec3(grayscale), bleachStrength);
+
+        // Increase contrast based on the bleachStrength uniform
+        vec3 contrastColor = desaturatedColor * bleachStrength + (1.0 - bleachStrength) * desaturatedColor;
+
+        // Assign the output color
+        oColor = vec4(contrastColor, color.a);
+	$end
+	$branch pp_type == 12
+    $begin
+    // Sample the color from the input texture
+    vec4 color = texture(texture0, ps_texcoord);
+
+    // Apply the bright pass filter: keep only pixels that are above the threshold
+    vec4 brightColor = max(color - vec4(bloomThreshold), vec4(0.0));
+
+    // Define offsets and weights for a Gaussian blur
+    vec2 offsets[13] = vec2[](
+        vec2(-1, -1), vec2(0, -1), vec2(1, -1),
+        vec2(-1, 0), vec2(0, 0), vec2(1, 0),
+        vec2(-1, 1), vec2(0, 1), vec2(1, 1),
+        vec2(-2, -2), vec2(2, 2), vec2(-2, 2), vec2(2, -2)
+    );
+    float weights[13] = float[](
+        0.025, 0.1, 0.025,
+        0.1, 0.4, 0.1,
+        0.025, 0.1, 0.025,
+        0.015, 0.015, 0.015, 0.015
+    );
+
+    // Initialize bloomColor
+    vec4 bloomColor = vec4(0.0);
+
+    // Adjust offsets and weights according to bloomStrength
+    for (int i = 0; i < 13; i++) {
+        vec2 offsetCoord = ps_texcoord + offsets[i] * 0.01 * bloomStrength; // Scale offsets with bloomStrength
+        bloomColor += texture(texture0, offsetCoord) * weights[i] * bloomStrength; // Scale weights with bloomStrength
+    }
+
+    // Combine the original color with the bloom effect using addition
+    // Adjust the intensity of the bloom effect with bloomStrength
+    oColor = color + bloomColor * bloomStrength;
+    $end
+	$branch pp_type == 13
+    $begin
+	// Sample the texture color
+    vec4 color = texture(texture0, ps_texcoord);
+
+    // Calculate the normalized screen coordinates
+    vec2 uv = vec2(ps_texcoord.x / screenwidth, ps_texcoord.y / screenheight);
+
+    // Calculate the distance from the center
+    vec2 centeredUV = uv - vec2(0.5, 0.5);
+    float distance = length(centeredUV);
+
+    // Apply the vignette effect
+    float vignette = smoothstep(vignetteRadius, vignetteRadius - vignetteStrength, distance);
+    color.rgb *= vignette;
+
+    // Output the final color
+    oColor = color;
 	$end
 }
 $end

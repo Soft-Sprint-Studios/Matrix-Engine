@@ -19,6 +19,7 @@ state variables and functionality.
 #include "includes.h"
 #include "system.h"
 #include "window.h"
+#include <windows.h> 
 #include "vid.h"
 #include "enginestate.h"
 #include "config.h"
@@ -29,18 +30,7 @@ state variables and functionality.
 #include "input.h"
 #include "texturemanager.h"
 #include "iostream"
-//#define PLAY_VIDEO_START
-#ifdef PLAY_VIDEO_START
-#include <dshow.h>
-
-#pragma comment(lib, "strmiids.lib")
-#endif
-
-#define SHOW_ENGINE_WATERMARK 1
-
-#ifdef SHOW_ENGINE_WATERMARK
-#include <SDL_ttf.h>
-#endif
+#include "safety/enginecode.h"
 
 #include "r_vbo.h"
 #include "r_glsl.h"
@@ -67,14 +57,12 @@ state variables and functionality.
 #include "r_main.h"
 #include "dllexports.h"
 #include "filewriterthread.h"
-#include <ctime>
-#include <discord_rpc.h>
+#include "enginefuncs.h"
+#include "discord/discordrpcsystem.h"
 
 #if defined WIN32 && _64BUILD
 #include <detours.h>
 #endif
-
-static int64_t eptime = static_cast<int64_t>(std::time(nullptr));
 
 extern file_interface_t ENGINE_FILE_FUNCTIONS;
 
@@ -116,105 +104,6 @@ bool Sys_ShouldExit( void )
 {
 	return ens.exit;
 }
-
-void handleDiscordReady(const DiscordUser* request) {
-	printf("Discord: connected\n");
-}
-
-void initializeDiscord() {
-	DiscordEventHandlers handlers;
-	memset(&handlers, 0, sizeof(handlers));
-	handlers.ready = handleDiscordReady;
-
-	Discord_Initialize("1235165455237255238", &handlers, 1, nullptr);
-}
-
-void updateRichPresence() {
-	DiscordRichPresence discordPresence;
-	memset(&discordPresence, 0, sizeof(discordPresence));
-
-	discordPresence.state = "";
-	discordPresence.details = "";
-	discordPresence.startTimestamp = eptime;
-	discordPresence.largeImageKey = "";
-	discordPresence.largeImageText = "";
-	discordPresence.smallImageKey = "";
-	discordPresence.smallImageText = "";
-
-	Discord_UpdatePresence(&discordPresence);
-}
-
-#ifdef PLAY_VIDEO_START
-
-void playIntroVideo() {
-	HRESULT hr;
-	IGraphBuilder* graphBuilder = nullptr;
-	IMediaControl* mediaControl = nullptr;
-
-	// Initialize COM
-	hr = CoInitialize(nullptr);
-	if (FAILED(hr)) {
-		MessageBox(NULL, "Failed to initialize COM.", "Error", MB_OK | MB_ICONERROR);
-		return;
-	}
-
-	// Create GraphBuilder
-	hr = CoCreateInstance(CLSID_FilterGraph, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&graphBuilder));
-	if (FAILED(hr)) {
-		MessageBox(NULL, "Failed to create GraphBuilder.", "Error", MB_OK | MB_ICONERROR);
-		CoUninitialize();
-		return;
-	}
-
-	// Render the MP4 file
-	hr = graphBuilder->RenderFile(L"media/intro.mp4", nullptr);
-	if (FAILED(hr)) {
-		MessageBox(NULL, "Failed to render the MP4 file.", "Error", MB_OK | MB_ICONERROR);
-		graphBuilder->Release();
-		CoUninitialize();
-		return;
-	}
-
-	// Query for MediaControl
-	hr = graphBuilder->QueryInterface(IID_PPV_ARGS(&mediaControl));
-	if (FAILED(hr)) {
-		MessageBox(NULL, "Failed to query for MediaControl.", "Error", MB_OK | MB_ICONERROR);
-		graphBuilder->Release();
-		CoUninitialize();
-		return;
-	}
-
-	// Play the video
-	hr = mediaControl->Run();
-	if (FAILED(hr)) {
-		MessageBox(NULL, "Failed to play the video.", "Error", MB_OK | MB_ICONERROR);
-		mediaControl->Release();
-		graphBuilder->Release();
-		CoUninitialize();
-		return;
-	}
-
-	// Wait for the video to finish playing
-	OAFilterState state;
-	do {
-		hr = mediaControl->GetState(INFINITE, &state);
-		if (FAILED(hr)) {
-			MessageBox(NULL, "Error while getting video state.", "Error", MB_OK | MB_ICONERROR);
-			break;
-		}
-		Sleep(100);
-	} while (state == State_Running);
-
-	// Clean up
-	mediaControl->Release();
-	graphBuilder->Release();
-	CoUninitialize();
-
-	// Proceed with loading progress
-	std::cout << "Video finished. Proceeding with loading progress..." << std::endl;
-	// Add your loading progress code here
-}
-#endif
 
 //=============================================
 // @brief Initializes the basic systems
@@ -259,6 +148,7 @@ bool Sys_Init( CArray<CString>* argsArray )
 	g_pCvarTimeScale = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_SV_ONLY, "host_timescale", "1.0", "Can be used to manipulate the time scale.\n");
 	// Max FPS cvar
 	g_pCvarFPSMax = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_SV_ONLY, "fps_max", "300", "Max framerate.\n");
+	
 
 	// MUST BE FIRST
 	// Initialize configuration
@@ -268,9 +158,11 @@ bool Sys_Init( CArray<CString>* argsArray )
 	if(!Sys_LoadDefaultFont(nullptr))
 		return false;
 
-    #ifdef PLAY_VIDEO_START
-	playIntroVideo();
-    #endif
+
+#ifdef ENGINE_PROTECTION_CODE
+	EngineCode engineCode;
+	engineCode.ShowCodeEntryWindow();
+#endif
 
 	// Initialize UI
 	gUIManager.Init();
@@ -341,7 +233,7 @@ bool Sys_Init( CArray<CString>* argsArray )
 
 	// For logging
 	CString strPrint;
-	strPrint << "Engine initialized";
+	strPrint << "Parallax Engine initialized";
 
 #ifdef _DEBUG
 	strPrint << " - [color r255]DEBUG[/color] build";
@@ -357,7 +249,7 @@ bool Sys_Init( CArray<CString>* argsArray )
 
 	// Close the line
 	Con_Printf(strPrint.c_str());
-	Con_Printf("Engine build Time and Date: %s.\n", __TIME__ __DATE__);
+	Con_Printf("Engine build Time and Date: %s.\n", __TIME__  __DATE__);
 
 	// Mark initialized
 	ens.isinitialized = true;
@@ -1091,44 +983,6 @@ void Sys_Poll( void )
 	pNet->Poll();
 }
 
-#ifdef SHOW_ENGINE_WATERMARK
-// Declare a global variable for the font and color
-extern SDL_Window* pTempWindow;
-TTF_Font* font;
-SDL_Color color = { 255, 255, 255, 255 }; // White color
-
-// Initialize the font
-void InitFont() {
-	if (TTF_Init() == -1) {
-	}
-
-	font = TTF_OpenFont("fonts/path_to_font.ttf", 24); // Replace with your font path and size
-	if (!font) {
-	}
-}
-
-// Render text to the top corner
-void RenderWatermark(SDL_Renderer* renderer, const char* text) {
-	SDL_Surface* surface = TTF_RenderText_Solid(font, text, color);
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-	SDL_FreeSurface(surface);
-
-	// Set the position of the text at the top right corner
-	int textWidth, textHeight;
-	TTF_SizeText(font, text, &textWidth, &textHeight);
-
-	SDL_Rect destRect;
-	destRect.x = 800 - textWidth; // Assuming window width is 800
-	destRect.y = 0;
-	destRect.w = textWidth;
-	destRect.h = textHeight;
-
-	SDL_RenderCopy(renderer, texture, NULL, &destRect);
-
-	SDL_DestroyTexture(texture);
-}
-#endif
-
 //=============================================
 // @brief Manages the main game logic loop
 // 
@@ -1192,14 +1046,6 @@ void Sys_Frame( Double frametime )
 
 	// Client functions
 	CL_Frame();
-	#ifdef SHOW_ENGINE_WATERMARK
-	// Create an SDL renderer and render the watermark
-	SDL_Renderer* renderer = SDL_CreateRenderer(pTempWindow, -1, SDL_RENDERER_ACCELERATED);
-	RenderWatermark(renderer, "© 2024 Your Company");
-
-	// Destroy the renderer
-	SDL_DestroyRenderer(renderer);
-    #endif
 
 	// Perform rendering functions
 	VID_Draw();
@@ -1214,7 +1060,9 @@ void Sys_Frame( Double frametime )
 	// Update sound engine
 	CL_UpdateSound();
 
-	updateRichPresence();
+	const char* mapName = Engine_GetLevelName();
+
+	updateRichPresence(mapName);
 }
 
 //=============================================
@@ -1230,14 +1078,6 @@ Int32 Sys_Main( CArray<CString>* argsArray )
 
 	if(nullptr != hMutex)
 		GetLastError();
-
-	DWORD mutexResult = WaitForSingleObject(hMutex, 0);
-	if(mutexResult != WAIT_OBJECT_0 && mutexResult != WAIT_ABANDONED)
-	{
-		Sys_ErrorPopup("Only one instance of this game can be running at a time.");
-		Con_EPrintf("Error during system initialization.\n");
-		return -1;
-	}
 
 	if(!Sys_Init( argsArray ))
 	{

@@ -600,8 +600,6 @@ private:
 	CUITabBody* InitVideoTab( CUITabList* pTabList, const ui_windowdescription_t* pWinDesc, const ui_objectinfo_t* pTabObject );
 	// Populates the resolutions tab
 	void PopulateResolutions( Int32 deviceIndex );
-	// Populates the MSAA list
-	void PopulateMSAAList( void );
 
 public:
 	// Selects a display device

@@ -356,8 +356,6 @@
     <ClCompile Include="npcclonesoldier.cpp" />
     <ClCompile Include="npcgeneric.cpp" />
     <ClCompile Include="npcmaker.cpp" />
-    <ClCompile Include="npcsecurity.cpp" />
-    <ClCompile Include="npcsecuritydead.cpp" />
     <ClCompile Include="npctesthull.cpp" />
     <ClCompile Include="nullentity.cpp" />
     <ClCompile Include="pathcorner.cpp" />

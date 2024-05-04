@@ -807,14 +807,18 @@
 ]
 @PointClass base(Targetname) size(-16 -16 -16, 16 16 16) = env_cubemap : "Cubemap"
 [
-  size(Choices) : "Size" : 0 =
+  size(Choices) : "Size" : 3 =
   [ 
-      0 : "16*16"
-      1 : "32*32"
-      2 : "64*64"
-      3 : "128*128"
-      4 : "256*256"
-      4 : "512*512"
+      0 : "4*4"
+      1 : "8*8"
+      2 : "16*16"
+      3 : "32*32"
+      4 : "64*64"
+      5 : "128*128"
+	  6 : "256*256"
+	  7 : "512*512"
+	  8 : "1024*1024"
+	  9 : "2048*2048"
   ]
 ]
 @PointClass base(Targetname) size(-8 -8 -8, 8 8 8) color(230 230 255) = env_decal: "Decal Entity" 
@@ -2216,23 +2220,6 @@
 //
 // NPCs
 //
-@PointClass base(NPC, PatrolNPC) size(-16 -16 0, 16 16 72) studio("models/replica.mdl") = npc_clone_soldier : "Clone soldier" 
-[
-  spawnflags(Flags) =
-  [
-    18:  "Low Health"    : 0
-    32 : "SquadLeader" : 0
-  ]
-  netname(string) : "Squad Name"
-  weapons(Choices) : "Weapons" : 3 =
-  [
-    1 : "Sig552"
-    3 : "Sig552 + HG"
-    8 : "M249"
-    16 : "Shotgun"
-    18 : "Shotgun + HG"
-  ]
-]
 @PointClass base(NPC, RenderFields) size(-16 -16 -36, 16 16 36) studio() = npc_generic : "Generic Script NPC" 
 [
   spawnflags(Flags) = 
@@ -2242,43 +2229,6 @@
   ]
   model(studio) : "model"
   body(Integer) : "Body" : 0
-]
-@PointClass base(NPC,TalkNPC) size(-16 -16 0, 16 16 72) studio("models/security.mdl") = npc_security : "Security"
-[
-	suspicious(choices) : "Suspicious" : 0 =
-	[
-		0 : "No"
-		1 : "Yes"
-	]
-	hostile(choices) : "Hostile?" : 0 =
-	[
-		0 : "No"
-		1 : "Yes"
-	]
-	head(choices) : "Head" : 0 =
-	[
-		0 : "Random"
-		1 : "Old White"
-		2 : "Young White"
-		3 : "Young Black"
-	]
-  weapons(Choices) : "Weapons" : 1 =
-  [
-    1 : "Glock"
-    2 : "Desert Eagle"
-    4 : "TRG42"
-  ]
-]
-@PointClass base(Targetname,RenderFields,Appearflags, Angles) size(-16 -16 0, 16 16 72) studio("models/security.mdl") = npc_security_dead : "Dead Security" 
-[
-      pose(Choices) : "Pose" : 0 =
-  [
-    0 : "On back"
-    1 : "On side"
-    2 : "On stomach"
-    3 : "Suicide"
-  ]
-	sequence(Integer): "Sequence" : 35
 ]
 
 @PointClass base(Targetname, Angles) size(-16 -16 -16, 16 16 16) = npcmaker : "NPC Maker"

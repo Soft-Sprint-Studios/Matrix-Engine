@@ -12,7 +12,7 @@ All Rights Reserved.
 #endif
 
 #include "includes.h"
-
+#include "gamevars.h"
 #include "vector.h"
 #include "clientdll.h"
 #include "cldll_interface.h"

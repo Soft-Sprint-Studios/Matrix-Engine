@@ -108,6 +108,9 @@ out vec3 ps_cubebinormal;
 out vec3 ps_cubevertexpos;
 $end
 
+uniform sampler2D heightmap;
+uniform float parallaxscale;
+
 void main()
 {
 	vec4 position = in_position*modelview;
@@ -247,8 +250,6 @@ uniform sampler2D normalmap;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
-uniform sampler2D heightmap;
-uniform float parallaxscale;
 $branch luminance == 1
 $begin
 uniform sampler2D luminance;
@@ -442,23 +443,34 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 	return p_max*sgn+(1.0-sgn);
 }
 
-float CalcSpecular( vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength )
-{
-	// Eye vector (towards the camera)
-	// All coordinates are in eye space
-	vec3 eyeVec = normalize( -v_origin );
-	
-	// Direction in which the triangle reflects the light
-	vec3 reflectVec = reflect( lightDir, v_normal );
-	
-	// Cosine of the angle between the Eye vector and the Reflect vector,
-	// clamped to 0
-	//  - Looking into the reflection -> 1
-	//  - Looking elsewhere -> < 1
-	float cosAlpha = clamp( dot( eyeVec, reflectVec ), 0,1 );	
-	
-	// Currently specular color is light color times two
-	return specfactor * pow( cosAlpha, phong_exponent ) * specularStrength;
+float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
+    // Eye vector (towards the camera)
+    vec3 eyeVec = normalize(-v_origin);
+    
+    // Reflect vector (direction of the reflection of light)
+    vec3 reflectVec = reflect(lightDir, v_normal);
+    
+    // Calculate cosine of the angle between the eye vector and the reflect vector,
+    // clamping it to the range [0, 1]
+    float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
+    
+    // Fetch specular color from the specular texture using the given texture coordinates
+    vec4 specularColor = texture(speculartex, v_origin.xy);
+    
+    // Calculate the specular intensity using the red channel of the specular color
+    float specularReflectance = specularColor.r;
+    
+    // Calculate the specular component using Phong shading model,
+    // scaled by the specular reflectance from the texture
+    // The specularColor RGB channels can affect the tint of the specular reflection
+    vec3 specularTint = specularColor.rgb;
+    float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    
+    // Apply the specular tint from the texture to the specular component
+    vec3 finalSpecular = specularComponent * specularTint;
+    
+    // Return the scalar specular component, which can be combined with the diffuse component later in the shader
+    return dot(finalSpecular, vec3(1.0));
 }
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
@@ -830,41 +842,8 @@ vec4 AddCubemaps( float reflectivity )
 	$end
 }
 
-vec2 ParallaxOcclusionMapping(vec2 texCoord, vec3 viewDir, sampler2D depthMap, float parallaxScale) {
-    // Number of samples for parallax occlusion mapping
-    const int numSteps = 16;
-    
-    // Initial height from the depth map
-    float height = texture(depthMap, texCoord).r;
-    
-    // Calculate the initial offset using the view direction and parallax scale
-    float stepSize = height * parallaxScale / float(numSteps);
-    
-    // The offset will be added to the texture coordinates
-    vec2 texCoordOffset = texCoord - stepSize * viewDir.xy;
-    
-    // Use binary search for intersection
-    for (int i = 0; i < numSteps; i++) {
-        height = texture(depthMap, texCoordOffset).r;
-        if (height < 0.0) {
-            // If we find an intersection, reduce the step size and adjust the offset
-            stepSize /= 2.0;
-            texCoordOffset += stepSize * viewDir.xy;
-        } else {
-            // If there's no intersection, keep moving the offset
-            texCoordOffset -= stepSize * viewDir.xy;
-        }
-    }
-
-    return texCoordOffset;
-}
-
 void main()
 {
-    vec3 viewDirWorldSpace = normalize(ps_vertexpos);
-    mat3 tangentFrame = mat3(ps_tangent, ps_binormal, ps_normal);
-    vec3 viewDirTangentSpace = normalize(tangentFrame * viewDirWorldSpace);
-    vec2 modifiedTexCoord = ParallaxOcclusionMapping(ps_texcoord, viewDirTangentSpace, heightmap, parallaxscale);
 	float specularFactor = 0.0;
 	vec4 specularColor = vec4(0, 0, 0, 0);
 	vec4 finalColor = vec4(0, 0, 0, 0);

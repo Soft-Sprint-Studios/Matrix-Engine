@@ -1198,43 +1198,6 @@ CUITabBody* CUISettingsWindow::InitVideoTab( CUITabList* pTabList, const ui_wind
 	}
 
 	// Create the label
-	CUIText* pAntiAliasLabel = new CUIText(pAntiAliasLabelObjectInfo->getFlags(), 
-		pAntiAliasLabelObjectInfo->getFont(), 
-		pAntiAliasLabelObjectInfo->getText().c_str(),
-		pTabObject->getXInset() + pAntiAliasLabelObjectInfo->getXOrigin(), 
-		pTabObject->getYInset() + pAntiAliasLabelObjectInfo->getYOrigin());
-
-	pAntiAliasLabel->setParent(pVideoTab);
-
-	// Create the display device tab
-	const ui_objectinfo_t* pAntiAliasListObject = pWinDesc->getObject(UI_OBJECT_LIST, VIDEOTAB_ANTIALIAS_LIST_OBJ_NAME);
-	if(!pAntiAliasListObject)
-	{
-		Con_EPrintf("Window description file '%s' has no definition for '%s'.\n", WINDOW_DESC_FILE, VIDEOTAB_DISPLAY_DEVICE_LIST_OBJ_NAME);
-		return false;
-	}
-
-	CUIAntiAliasSelectEvent* pAntiAliasSelectEvent = new CUIAntiAliasSelectEvent(this);
-	m_pMSAADropList = new CUIDropDownList(pAntiAliasListObject->getFlags(), 
-		pAntiAliasSelectEvent, 
-		nullptr,
-		pAntiAliasListObject->getFont(),
-		pAntiAliasListObject->getWidth(), 
-		pAntiAliasListObject->getHeight(), 
-		pTabObject->getXInset() + pAntiAliasListObject->getXOrigin(), 
-		pTabObject->getYInset() + pAntiAliasListObject->getYOrigin());
-	m_pMSAADropList->setParent(pVideoTab);
-
-	if(!m_pMSAADropList->init(pWindowModeListObject->getSchema().c_str()))
-	{
-		Con_EPrintf("Failed to initiate 'CUIDropDownList' for 'CUISettingsWindow'.\n");
-		return nullptr;
-	}
-
-	// Populate the list
-	PopulateMSAAList();
-
-	// Create the label
 	const ui_objectinfo_t* pVerticalSyncLabelObjectInfo = pWinDesc->getObject(UI_OBJECT_TEXT, VIDEOTAB_VERTICAL_SYNC_LABEL_OBJ_NAME);
 	if(!pVerticalSyncLabelObjectInfo)
 	{
@@ -1570,36 +1533,6 @@ void CUISettingsWindow::PopulateResolutions( Int32 deviceIndex )
 	}
 }
 
-//=============================================
-// @brief Populates the MSAA list
-//
-//=============================================
-void CUISettingsWindow::PopulateMSAAList( void )
-{
-	// Get MSAA setting
-	m_msaaIndex = gWindow.GetCurrentMSAASetting();
-
-	if(m_pMSAADropList->getListSize())
-		m_pMSAADropList->clearList();
-
-	// Populate MSAA tab
-	Int32 nbMSAASettings = gWindow.GetNbMSAASettings();
-	for(Int32 i = 0; i < nbMSAASettings; i++)
-	{
-		Uint32 msaaValue = gWindow.GetMSAASetting(i);
-
-		CString strChoice;
-		if(i == 0)
-			strChoice << "Disabled";
-		else
-			strChoice << msaaValue << "x MSAA";
-
-		m_pMSAADropList->addChoice(strChoice.c_str());
-
-		if(m_msaaIndex == i)
-			m_pMSAADropList->setSelection(i);
-	}
-}
 
 //=============================================
 // @brief Sets up the Binds tab

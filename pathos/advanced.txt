@@ -197,6 +197,17 @@
 	{ "0.000000" }
 }
 
+"discord_rpc"
+{
+	"Discord RPC"
+	{
+		UIDropDownList
+		"Disabled" "0"
+		"Enabled" "1"
+	}
+	{ "1.000000" }
+}
+
 "r_glowocclusion"
 {
 	"Sample pass glow occlusion"

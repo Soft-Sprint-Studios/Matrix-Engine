@@ -16,7 +16,7 @@ All Rights Reserved.
 class CWADTextureResource;
 
 // Default is MAX_MAP_LEAFS/8
-static const Uint32 DEFAULT_VISBUFFER_SIZE = 16384;
+static const Uint32 DEFAULT_VISBUFFER_SIZE = 65536;
 // Default game directory
 static const Char DEFAULT_GAMEDIR[] = "pathos";
 // Common game directory

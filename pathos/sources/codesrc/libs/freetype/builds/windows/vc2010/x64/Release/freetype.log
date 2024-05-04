@@ -21,6 +21,8 @@
   fttype1.c
   ftwinfnt.c
   ftxf86.c
+d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(141): warning C4245: 'initializing' : conversion from 'int' to 'FT_UInt', signed/unsigned mismatch
+d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(179): warning C4389: '==' : signed/unsigned mismatch
   ftlcdfil.c
   ftgxval.c
   ftotval.c
@@ -31,16 +33,12 @@
   pshinter.c
   psmodule.c
   raster.c
-d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(141): warning C4245: 'initializing' : conversion from 'int' to 'FT_UInt', signed/unsigned mismatch
-d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(179): warning C4389: '==' : signed/unsigned mismatch
   sfnt.c
   truetype.c
-  type1.c
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afmodule.c(106): warning C4389: '==' : signed/unsigned mismatch
+  type1.c
   type1cid.c
   type42.c
-d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(102): warning C4244: '=' : conversion from 'FT_Pos' to 'FT_Short', possible loss of data
-d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(108): warning C4244: '=' : conversion from 'FT_Pos' to 'FT_Short', possible loss of data
   winfnt.c
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(504): warning C4244: '=' : conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(504): warning C4244: '=' : conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
@@ -64,6 +62,8 @@ d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\fr
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(648): warning C4244: '=' : conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(648): warning C4244: '=' : conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(648): warning C4244: '=' : conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
+d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(604): warning C4701: potentially uninitialized local variable 'p_first' used
+d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(653): warning C4701: potentially uninitialized local variable 'p_last' used
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(291): warning C4244: '=' : conversion from 'FT_UInt' to 'FT_UShort', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(292): warning C4244: '=' : conversion from 'FT_UInt' to 'FT_UShort', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(803): warning C4244: 'initializing' : conversion from 'FT_Short' to 'FT_Char', possible loss of data
@@ -74,6 +74,6 @@ d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\fr
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(808): warning C4244: 'initializing' : conversion from 'FT_UShort' to 'FT_Byte', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(1355): warning C4244: '=' : conversion from 'FT_Int' to 'FT_Short', possible loss of data
 d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(1356): warning C4244: '=' : conversion from 'int' to 'FT_Short', possible loss of data
-d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(604): warning C4701: potentially uninitialized local variable 'p_first' used
-d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(653): warning C4701: potentially uninitialized local variable 'p_last' used
+d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(102): warning C4244: '=' : conversion from 'FT_Pos' to 'FT_Short', possible loss of data
+d:\sourcesdk\pathos-publicmythiclegendinteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(108): warning C4244: '=' : conversion from 'FT_Pos' to 'FT_Short', possible loss of data
   freetype.vcxproj -> D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\x64\Release\freetype253.lib

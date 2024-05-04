@@ -37,6 +37,12 @@
     <Filter Include="Header Files\rendering">
       <UniqueIdentifier>{c4315af4-51a2-4f52-b831-4a0139319c90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\discord">
+      <UniqueIdentifier>{d005d280-b3ad-403e-8859-0f05797fcee6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\discord">
+      <UniqueIdentifier>{b29bd649-a0ca-4f42-9d57-92d644b72ec1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\common\cstring.cpp">

@@ -22,6 +22,12 @@ enum pp_shadertypes_t
 	SHADER_MBLUR,
 	SHADER_ENVFADE,
 	SHADER_GRAIN,
+	SHADER_NORMAL,
+	SHADER_CHROMATIC,
+	SHADER_FXAA,
+	SHADER_BW,
+	SHADER_BLEACH,
+	SHADER_BLOOM,
 	SHADER_VIGNETTE,
 };
 
@@ -53,6 +59,13 @@ struct pp_shader_attribs
 	Int32	u_screenwidth;
 	Int32	u_screenheight;
 	Int32	u_timer;
+	Int32	u_chromaticStrength;
+	Int32	u_FXAAStrength;
+	Int32	u_BWStrength;
+	Int32	u_BleachStrength;
+	Int32	u_BloomStrength;
+	Int32	u_VignetteStrength;
+	Int32	u_VignetteRadius;
 
 	Int32	u_texture1;
 	Int32	u_texture2;
@@ -106,7 +119,17 @@ private:
 	bool DrawFade( screenfade_t& fade );
 	// Draws screen film grain
 	bool DrawFilmGrain( void );
-	// Draws Vignette 
+	// Draws screen chromatic
+	bool DrawChromatic(void);
+	// Draws screen FXAA
+	bool DrawFXAA(void);
+	// Draws screen BW
+	bool DrawBW(void);
+	// Draws screen Bleach bypass
+	bool DrawBleachBypass(void);
+	// Draws screen Bloom
+	bool DrawBloom(void);
+	// Draws screen Vignette
 	bool DrawVignette(void);
 
 	// Fetches screen contents
@@ -159,8 +182,32 @@ private:
 
 	// Filmgrain cvar
 	CCVar*			m_pCvarFilmGrain;
-	// Vignetting cvar
+	// Chromatic cvar
+	CCVar* m_pCvarChromatic;
+	// Chromatic strength cvar
+	CCVar* m_pCvarChromaticStrength;
+	// FXAA cvar
+	CCVar* m_pCvarFXAA;
+	// FXAA strength cvar
+	CCVar* m_pCvarFXAAStrength;
+	// BW cvar
+	CCVar* m_pCvarBW;
+	// BW strength cvar
+	CCVar* m_pCvarBWStrength;
+	// Bleach bypass cvar
+	CCVar* m_pCvarBleachbypass;
+	// Bleach bypass strength cvar
+	CCVar* m_pCvarBleachbypassStrength;
+	// Bloom cvar
+	CCVar* m_pCvarBloom;
+	// Bloom strength cvar
+	CCVar* m_pCvarBloomStrength;
+	// Vignette cvar
 	CCVar* m_pCvarVignette;
+	// Vignette strength cvar
+	CCVar* m_pCvarVignetteStrength;
+	// Vignette Radius cvar
+	CCVar* m_pCvarVignetteRadius;
 	// Postporcess cvar
 	CCVar*			m_pCvarPostProcess;
 

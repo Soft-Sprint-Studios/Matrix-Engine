@@ -10,6 +10,9 @@ All Rights Reserved.
 #ifndef COMMON_H
 #define COMMON_H
 
+#pragma once;
+
+
 class Vector;
 template <typename T> class CArray;
 
