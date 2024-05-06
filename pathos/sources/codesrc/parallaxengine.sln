@@ -48,6 +48,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hlvis", "utils\hlvis\hlvis.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hlrad", "utils\hlrad\hlrad.vcxproj", "{3B5F6C9B-1238-1ECF-14D8-01E4C3AB0EE1}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stb_image", "libs\stb_image\stb_image.vcxproj", "{E07AD928-3ABF-467F-8CA6-42D830959154}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -214,6 +216,18 @@ Global
 		{3B5F6C9B-1238-1ECF-14D8-01E4C3AB0EE1}.Release|Win32.Build.0 = Release|Win32
 		{3B5F6C9B-1238-1ECF-14D8-01E4C3AB0EE1}.Release|x64.ActiveCfg = Release|x64
 		{3B5F6C9B-1238-1ECF-14D8-01E4C3AB0EE1}.Release|x64.Build.0 = Release|x64
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Debug|Win32.Build.0 = Debug|Win32
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Debug|x64.ActiveCfg = Debug|x64
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Debug|x64.Build.0 = Debug|x64
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.EngineRelease|Win32.ActiveCfg = Release|Win32
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.EngineRelease|Win32.Build.0 = Release|Win32
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.EngineRelease|x64.ActiveCfg = Release|x64
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.EngineRelease|x64.Build.0 = Release|x64
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Release|Win32.ActiveCfg = Release|Win32
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Release|Win32.Build.0 = Release|Win32
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Release|x64.ActiveCfg = Release|x64
+		{E07AD928-3ABF-467F-8CA6-42D830959154}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

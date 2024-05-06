@@ -1,4 +1,5 @@
-﻿  SDL_atomic.c
+﻿cl : command line  warning D9002: ignoring unknown option '/arch:SSE'
+  SDL_atomic.c
   SDL_spinlock.c
   SDL_directsound.c
   SDL_diskaudio.c
@@ -162,4 +163,5 @@
   Generating Code...
      Creating library D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\x64\Release\SDL2.lib and object D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\x64\Release\SDL2.exp
   SDL.vcxproj -> D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\x64\Release\SDL2.dll
+  Copy SDL2.dll to gamedir/x64
           1 file(s) copied.

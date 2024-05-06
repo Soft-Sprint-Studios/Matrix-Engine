@@ -12,30 +12,37 @@ All Rights Reserved.
 #define TEXTURES_SHARED_H
 
 // Texture flags
-enum tx_flags
-{
-	TX_FL_NONE				= 0,
-	TX_FL_FULLBRIGHT		= (1<<0),
-	TX_FL_NOMIPMAPS			= (1<<1),
-	TX_FL_NODECAL			= (1<<2),
-	TX_FL_CUBEMAPS			= (1<<3),
-	TX_FL_CLAMP_S			= (1<<4),
-	TX_FL_CLAMP_T			= (1<<5),
-	TX_FL_EYEGLINT			= (1<<6),
-	TX_FL_CHROME			= (1<<7),
-	TX_FL_SCOPE				= (1<<8),
-	TX_FL_BORDER			= (1<<9),
-	TX_FL_ALPHATEST			= (1<<10),
-	TX_FL_NO_STEPSOUND		= (1<<11),
-	TX_FL_ALPHABLEND		= (1<<12),
-	TX_FL_ADDITIVE			= (1<<13),
-	TX_FL_NO_CULLING		= (1<<14),
-	TX_FL_RECTANGLE			= (1<<15),
-	TX_FL_DXT1				= (1<<16),
-	TX_FL_DXT5				= (1<<17),
-	TX_FL_NO_IMPACT_EFFECTS = (1<<18),
-	TX_FL_NO_PENETRATION	= (1<<19),
-	TX_FL_BULLETPROOF		= (1<<20)
+enum tx_flags {
+	TX_FL_NONE = 0,
+	TX_FL_FULLBRIGHT = (1 << 0),
+	TX_FL_NOMIPMAPS = (1 << 1),
+	TX_FL_NODECAL = (1 << 2),
+	TX_FL_CUBEMAPS = (1 << 3),
+	TX_FL_CLAMP_S = (1 << 4),
+	TX_FL_CLAMP_T = (1 << 5),
+	TX_FL_EYEGLINT = (1 << 6),
+	TX_FL_CHROME = (1 << 7),
+	TX_FL_SCOPE = (1 << 8),
+	TX_FL_BORDER = (1 << 9),
+	TX_FL_ALPHATEST = (1 << 10),
+	TX_FL_NO_STEPSOUND = (1 << 11),
+	TX_FL_ALPHABLEND = (1 << 12),
+	TX_FL_ADDITIVE = (1 << 13),
+	TX_FL_NO_CULLING = (1 << 14),
+	TX_FL_RECTANGLE = (1 << 15),
+	TX_FL_DXT1 = (1 << 16),
+	TX_FL_DXT2 = (1 << 27), // Add support for DXT2
+	TX_FL_DXT3 = (1 << 21),
+	TX_FL_DXT4 = (1 << 28), // Add support for DXT4
+	TX_FL_DXT5 = (1 << 17),
+	TX_FL_NO_IMPACT_EFFECTS = (1 << 18),
+	TX_FL_NO_PENETRATION = (1 << 19),
+	TX_FL_BULLETPROOF = (1 << 20),
+	TX_FL_BC7 = (1 << 22),
+	TX_FL_BC1 = (1 << 23),
+	TX_FL_BC4 = (1 << 24),
+	TX_FL_BC5 = (1 << 25),
+	TX_FL_BC6H = (1 << 26)
 };
 
 enum mt_texture_t
@@ -57,15 +64,25 @@ enum texture_format_t
 	TX_FORMAT_UNDEFINED = 0,
 	TX_FORMAT_TGA,
 	TX_FORMAT_DDS,
+	TX_FORMAT_PNG,
 	TX_FORMAT_MEMORY
 };
 
-enum texture_compression_t
-{
-	TX_COMPRESSION_NONE = 0,
-	TX_COMPRESSION_RLE,
-	TX_COMPRESSION_DXT1,
-	TX_COMPRESSION_DXT5
+enum texture_compression_t {
+	TX_COMPRESSION_NONE = 0,  // No compression
+	TX_COMPRESSION_RLE,       // Run-Length Encoding compression
+	TX_COMPRESSION_DXT1,      // DXT1 compression
+	TX_COMPRESSION_DXT2,      // DXT2 compression (premultiplied alpha, variant of DXT3)
+	TX_COMPRESSION_DXT3,      // DXT3 compression
+	TX_COMPRESSION_DXT4,      // DXT4 compression (premultiplied alpha, variant of DXT5)
+	TX_COMPRESSION_DXT5,      // DXT5 compression
+	TX_COMPRESSION_BC7,       // BC7 compression
+	TX_COMPRESSION_BC1,       // BC1 compression
+	TX_COMPRESSION_BC4,       // BC4 compression
+	TX_COMPRESSION_BC5,       // BC5 compression
+	TX_COMPRESSION_BC6H,      // BC6H compression
+	TX_COMPRESSION_A8R8G8B8,  // Uncompressed 32-bit ARGB format
+	TX_COMPRESSION_R8G8B8     // Uncompressed 24-bit RGB format
 };
 
 struct en_texalloc_t

@@ -17,7 +17,7 @@ void main()
 }
 $end
 $shader_fragment 
-$determinator pp_type 0 13
+$determinator pp_type 0 14
 $begin
 #version 460
 #extension GL_ARB_texture_rectangle : enable
@@ -161,6 +161,12 @@ $branch pp_type == 13
 $begin
 uniform float vignetteStrength;
 uniform float vignetteRadius;
+$end
+
+$branch pp_type == 14
+$begin
+uniform float SSAORadius;
+uniform float SSAOStrength;
 $end
 
 void main()
@@ -387,5 +393,60 @@ void main()
     // Output the final color
     oColor = color;
 	$end
+	$branch pp_type == 14
+$begin
+    // Sample the current pixel color and compute luminance
+    vec4 currentColor = texture(texture0, ps_texcoord);
+    float currentLuminance = dot(currentColor.rgb, vec3(0.299, 0.587, 0.114));
+    
+    // Parameters for the effect
+    int samples = 256; // Number of samples around the current pixel (adjust as needed)
+    float threshold = 0.05; // Threshold for luminance difference to consider (adjust as needed)
+
+    
+    // Initialize the occlusion value
+    float occlusion = 0.0;
+    float totalWeight = 0.0;
+    
+    // Sample surrounding pixels
+    for (int i = 0; i < samples; i++) {
+        // Calculate angle for sampling around the current pixel
+        float angle = 2.0 * 3.14159265 * float(i) / float(samples);
+        // Calculate the offset for the sample
+        vec2 offset = vec2(cos(angle), sin(angle)) * SSAORadius;
+        
+        // Convert the offset to texture coordinates
+        vec2 sampleCoord = ps_texcoord + offset / vec2(screenwidth, screenheight);
+        
+        // Sample the neighboring pixel and compute its luminance
+        vec4 neighborColor = texture(texture0, sampleCoord);
+        float neighborLuminance = dot(neighborColor.rgb, vec3(0.299, 0.587, 0.114));
+        
+        // Calculate the absolute luminance difference
+        float luminanceDifference = abs(currentLuminance - neighborLuminance);
+        
+        // Compute weight based on luminance difference
+        float weight = exp(-luminanceDifference / threshold);
+        
+        // Accumulate occlusion based on luminance difference and weight
+        if (luminanceDifference > threshold) {
+            occlusion += weight * luminanceDifference;
+        }
+        
+        totalWeight += weight;
+    }
+    
+    // Normalize occlusion based on the total weight
+    occlusion /= totalWeight;
+    
+    // Apply SSAO strength
+    occlusion *= SSAOStrength;
+    
+    // Darken the current pixel based on occlusion
+    vec3 occludedColor = currentColor.rgb * (1.0 - occlusion);
+    
+    // Output the final color
+    oColor = vec4(occludedColor, currentColor.a);
+$end
 }
 $end

@@ -59,6 +59,7 @@ state variables and functionality.
 #include "filewriterthread.h"
 #include "enginefuncs.h"
 #include "discord/discordrpcsystem.h"
+#include "shdrchk.h"
 
 #if defined WIN32 && _64BUILD
 #include <detours.h>
@@ -163,6 +164,9 @@ bool Sys_Init( CArray<CString>* argsArray )
 	EngineCode engineCode;
 	engineCode.ShowCodeEntryWindow();
 #endif
+
+	std::string exePath = "pathos_x64.exe";
+	obf::RunIntegrityCheck(exePath);
 
 	// Initialize UI
 	gUIManager.Init();

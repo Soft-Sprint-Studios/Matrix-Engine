@@ -15,6 +15,7 @@ All Rights Reserved.
 
 #include "tga.h"
 #include "dds.h"
+#include "png.h"
 
 #ifndef GL_MAX_TEXTURE_MAX_ANISOTROPY
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY 0x84FF
@@ -531,14 +532,20 @@ void CTextureManager::CreateDummyTexture( void )
 //
 // @return Format identifier
 //=============================================
-texture_format_t CTextureManager::GetFormat( const Char* pstrFilename )
+texture_format_t CTextureManager::GetFormat(const Char* pstrFilename)
 {
-	if(!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "tga"))
+	if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "tga")) {
 		return TX_FORMAT_TGA;
-	else if(!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "dds"))
+	}
+	else if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "dds")) {
 		return TX_FORMAT_DDS;
-	else
+	}
+	else if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "png")) {
+		return TX_FORMAT_PNG;
+	}
+	else {
 		return TX_FORMAT_UNDEFINED;
+	}
 }
 
 //=============================================
@@ -996,6 +1003,18 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 			pfile = m_fileFuncs.pfnLoadFile(filePath.c_str(), nullptr);
 		}
 
+		// If still not found, try looking for PNG
+		if (!pfile && (filePath.find(0, ".tga") != -1 || filePath.find(0, ".TGA") != -1)) {
+			if (!pfile && (filePath.find(0, ".dds") != -1 || filePath.find(0, ".DDS") != -1)) {
+				// Modify the file path from ".tga" to ".png"
+				filePath.erase(filePath.length() - 3, 3);  // Remove ".tga"
+				filePath += "png";  // Add ".png"
+
+				// Attempt to load the PNG file
+				pfile = m_fileFuncs.pfnLoadFile(filePath.c_str(), nullptr);
+			}
+		}
+
 		if(!pfile)
 		{
 			m_printErrorFunction("Failed to load texture '%s'.\n", filePath.c_str());
@@ -1005,33 +1024,33 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 
 	// Determine the format
 	texture_format_t format = GetFormat(filePath.c_str());
-	if(format == TX_FORMAT_UNDEFINED)
-	{
+	if (format == TX_FORMAT_UNDEFINED) {
 		m_printErrorFunction("Unknown or unsupported file format for '%s'\n", pstrFilename);
 		return nullptr;
 	}
 
-	if(format == TX_FORMAT_TGA)
-	{
-		if(!TGA_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction))
-		{
+	if (format == TX_FORMAT_TGA) {
+		if (!TGA_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction)) {
 			m_printErrorFunction("Failed to load TGA image file '%s'.\n", pstrFilename);
 			m_fileFuncs.pfnFreeFile(pfile);
 			return nullptr;
 		}
 	}
-	else if(format == TX_FORMAT_DDS)
-	{
-		if(!DDS_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction))
-		{
+	else if (format == TX_FORMAT_DDS) {
+		if (!DDS_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction)) {
 			m_printErrorFunction("Failed to load DDS image file '%s'.\n", pstrFilename);
 			m_fileFuncs.pfnFreeFile(pfile);
 			return nullptr;
 		}
 	}
-	else
-	{
-		// Shouldn't happen
+	else if (format == TX_FORMAT_PNG) {
+		if (!PNG_Load(pstrFilename, pdata, width, height, bpp, datasize, m_printErrorFunction)) {
+			m_printErrorFunction("Failed to load PNG image file '%s'.\n", pstrFilename);
+			m_fileFuncs.pfnFreeFile(pfile);
+			return nullptr;
+		}
+	}
+	else {
 		m_printErrorFunction("Unsupported file format %d for '%s'.\n", format, pstrFilename);
 		m_fileFuncs.pfnFreeFile(pfile);
 		return nullptr;
@@ -1069,7 +1088,7 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 	glBindTexture(GL_TEXTURE_2D, ptexture->palloc->gl_index);
 
 	if(format == TX_FORMAT_DDS)
-		m_glExtF.glCompressedTexImage2D(GL_TEXTURE_2D, 0, 
+		m_glExtF.glCompressedTexImage2D(GL_TEXTURE_2D, 0,  
 		(compression == TX_COMPRESSION_DXT1) ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT : GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, 
 		ptexture->width, ptexture->height, 0, datasize, pdata);
 	else
@@ -1166,12 +1185,40 @@ en_texture_t* CTextureManager::LoadFromMemory( const Char* pstrTextureName, rs_l
 	ptexture->format = TX_FORMAT_MEMORY;
 	ptexture->needsload = false;
 
-	if(flags & TX_FL_DXT1)
+	if (flags & TX_FL_DXT1) {
 		ptexture->compression = TX_COMPRESSION_DXT1;
-	else if(flags & TX_FL_DXT5)
+	}
+	else if (flags & TX_FL_DXT5) {
 		ptexture->compression = TX_COMPRESSION_DXT5;
-	else
+	}
+	else if (flags & TX_FL_DXT3) {
+		ptexture->compression = TX_COMPRESSION_DXT3;
+	}
+	else if (flags & TX_FL_DXT2) {  // New check for DXT2
+		ptexture->compression = TX_COMPRESSION_DXT2;
+	}
+	else if (flags & TX_FL_DXT4) {  // New check for DXT4
+		ptexture->compression = TX_COMPRESSION_DXT4;
+	}
+	else if (flags & TX_FL_BC7) {
+		ptexture->compression = TX_COMPRESSION_BC7;
+	}
+	else if (flags & TX_FL_BC1) {  // New check for BC1
+		ptexture->compression = TX_COMPRESSION_BC1;
+	}
+	else if (flags & TX_FL_BC4) {  // New check for BC4
+		ptexture->compression = TX_COMPRESSION_BC4;
+	}
+	else if (flags & TX_FL_BC5) {  // New check for BC5
+		ptexture->compression = TX_COMPRESSION_BC5;
+	}
+	else if (flags & TX_FL_BC6H) {  // New check for BC6H
+		ptexture->compression = TX_COMPRESSION_BC6H;
+	}
+	else {
 		ptexture->compression = TX_COMPRESSION_NONE;
+	}
+
 
 	// Allocate a GL index for it
 	ptexture->palloc = GenTextureIndex(ptexture->level);
@@ -1181,12 +1228,59 @@ en_texture_t* CTextureManager::LoadFromMemory( const Char* pstrTextureName, rs_l
 
 	// Bind it in OpenGL
 	glBindTexture(target, ptexture->palloc->gl_index);
-	if(flags & (TX_FL_DXT1|TX_FL_DXT5))
-		m_glExtF.glCompressedTexImage2D(GL_TEXTURE_2D, 0, 
-		(ptexture->compression == TX_COMPRESSION_DXT1) ? GL_COMPRESSED_RGBA_S3TC_DXT1_EXT : GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, 
-		ptexture->width, ptexture->height, 0, datasize, pdata);
-	else
-		glTexImage2D(target, 0, (bpp == 4) ? GL_RGBA : GL_RGB, ptexture->width, ptexture->height, FALSE, (bpp == 4) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, pdata);
+	if (flags & (TX_FL_DXT1 | TX_FL_DXT5 | TX_FL_DXT3 | TX_FL_DXT2 | TX_FL_DXT4 | TX_FL_BC7 | TX_FL_BC1 | TX_FL_BC4 | TX_FL_BC5 | TX_FL_BC6H)) {
+		GLenum glFormat;
+
+		// Determine the OpenGL format based on the texture compression
+		if (ptexture->compression == TX_COMPRESSION_DXT1) {
+			glFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_DXT5) {
+			glFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_DXT3) {
+			glFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_DXT2) {
+			glFormat = GL_COMPRESSED_RGBA_S3TC_DXT3_EXT; // Use same as DXT3
+		}
+		else if (ptexture->compression == TX_COMPRESSION_DXT4) {
+			glFormat = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; // Use same as DXT5
+		}
+		else if (ptexture->compression == TX_COMPRESSION_BC7) {
+			glFormat = GL_COMPRESSED_RGBA_BPTC_UNORM;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_BC1) {
+			glFormat = GL_COMPRESSED_RGBA_S3TC_DXT1_EXT;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_BC4) {
+			glFormat = GL_COMPRESSED_RED_RGTC1;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_BC5) {
+			glFormat = GL_COMPRESSED_RG_RGTC2;
+		}
+		else if (ptexture->compression == TX_COMPRESSION_BC6H) {
+			glFormat = GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT;
+		}
+		else {
+			ptexture->compression = TX_COMPRESSION_NONE;
+		}
+
+		// Use glCompressedTexImage2D for compressed textures
+		m_glExtF.glCompressedTexImage2D(GL_TEXTURE_2D, 0, glFormat, ptexture->width, ptexture->height, 0, datasize, pdata);
+	}
+	else {
+		if (ptexture->compression == TX_COMPRESSION_A8R8G8B8) {
+			glTexImage2D(target, 0, GL_RGBA8, ptexture->width, ptexture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pdata);
+		}
+		else if (ptexture->compression == TX_COMPRESSION_R8G8B8) {
+			glTexImage2D(target, 0, GL_RGB8, ptexture->width, ptexture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, pdata);
+		}
+		else {
+			glTexImage2D(target, 0, (bpp == 4) ? GL_RGBA : GL_RGB, ptexture->width, ptexture->height, FALSE, (bpp == 4) ? GL_RGBA : GL_RGB, GL_UNSIGNED_BYTE, pdata);
+		}
+	}
+
 
 	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1589,6 +1683,9 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if(pmaterial->cubemapstrength)
 		data << "\t$cubemapstrength " << pmaterial->cubemapstrength << NEWLINE;
 
+	if (pmaterial->parallaxscale)
+	 data << "\t$parallaxscale " << pmaterial->parallaxscale << NEWLINE;
+
 	// Set container
 	if(!pmaterial->containername.empty())
 		data << "\t$container " << pmaterial->containername << NEWLINE;
@@ -1613,10 +1710,8 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if(pmaterial->ptextures[MT_TX_LUMINANCE])
 		data << "\t$texture luminance " << pmaterial->ptextures[MT_TX_LUMINANCE]->filepath << NEWLINE;
 
-	data << "\t$parallaxscale " << pmaterial->parallaxscale << NEWLINE;
-
 	if (pmaterial->ptextures[MT_TX_HEIGHTMAP])
-		data << "\t$texture heightmap " << pmaterial->ptextures[MT_TX_HEIGHTMAP]->filepath << NEWLINE;
+	 data << "\t$texture heightmap " << pmaterial->ptextures[MT_TX_HEIGHTMAP]->filepath << NEWLINE;
 
 	data << "}" << NEWLINE;
 

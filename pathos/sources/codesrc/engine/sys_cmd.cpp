@@ -37,6 +37,9 @@ All Rights Reserved.
 #include "r_menu.h"
 #include "vid.h"
 #include "filewriterthread.h"
+#include <windows.h> // For Windows API functions
+#include <iostream>
+#include <vector>
 
 // Port CVAR
 CCVar* g_pCVarPort = nullptr;
@@ -82,6 +85,34 @@ void Cmd_LoadMap( void )
 	}
 
 	SV_SpawnGame(pstrFilename);
+}
+
+void Cmd_ListMaps() {
+	const std::string mapDirectory = std::string(DEFAULT_GAMEDIR) + "\\maps\\";
+	const std::string filePattern = "*.bsp";
+	std::string searchPath = mapDirectory + filePattern;
+	std::vector<std::string> mapList;
+	WIN32_FIND_DATA fileData;
+	HANDLE hFind = FindFirstFile(searchPath.c_str(), &fileData);
+	if (hFind == INVALID_HANDLE_VALUE) {
+		Con_Printf("Error: Could not open the maps folder.\n");
+		return;
+	}
+	do {
+		std::string fileName = fileData.cFileName;
+		std::string mapName = fileName.substr(0, fileName.size() - 4);
+		mapList.push_back(mapName);
+	} while (FindNextFile(hFind, &fileData) != 0);
+	FindClose(hFind);
+	if (mapList.empty()) {
+		Con_Printf("No maps found in the maps folder.\n");
+	}
+	else {
+		Con_Printf("List of maps in the maps folder:\n");
+		for (size_t i = 0; i < mapList.size(); ++i) {
+			Con_Printf("- %s\n", mapList[i].c_str());
+		}
+	}
 }
 
 //=============================================
@@ -560,6 +591,7 @@ void Sys_InitCommands( void )
 	gCommands.CreateCommand("pause", Cmd_Pause, "Pauses the game");
 	gCommands.CreateCommand("quit", Cmd_Sys_Quit, "Exits the application");
 	gCommands.CreateCommand("map", Cmd_LoadMap, "Loads a map");
+	gCommands.CreateCommand("maps", Cmd_ListMaps, "List of all maps");
 	gCommands.CreateCommand("save", Cmd_Save, "Saves the game");
 	gCommands.CreateCommand("quicksave", Cmd_QuickSave, "Creates a quicksave");
 	gCommands.CreateCommand("autosave", Cmd_AutoSave, "Creates an autosave");

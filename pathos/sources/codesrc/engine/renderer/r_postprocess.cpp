@@ -56,6 +56,7 @@ CPostProcess::CPostProcess( void ):
 	m_pCvarBleachbypass(nullptr),
 	m_pCvarBloom(nullptr),
 	m_pCvarVignette(nullptr),
+	m_pCvarSSAO(nullptr),
 	m_pCvarPostProcess(nullptr),
 	m_pScreenRTT(nullptr),
 	m_pScreenTexture(nullptr)
@@ -92,6 +93,9 @@ bool CPostProcess :: Init( void )
 	m_pCvarVignette = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_vignette", "0", "Toggle Vignette.");
 	m_pCvarVignetteStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_vignettestrength", "1", "Vignette Strength.");
 	m_pCvarVignetteRadius = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_vignetteradius", "1", "Vignette Radius.");
+	m_pCvarSSAO = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_ssao", "0", "Toggle SSAO.");
+	m_pCvarSSAOStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_ssaostrength", "1", "SSAO Strength.");
+	m_pCvarSSAORadius = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_ssaoradius", "1", "SSAO Radius.");
 	m_pCvarPostProcess = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_postprocess", "1", "Disable post-process effects." );
 
 	return true;
@@ -142,6 +146,8 @@ bool CPostProcess :: InitGL( void )
 		m_attribs.u_BloomStrength = m_pShader->InitUniform("bloomStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_VignetteStrength = m_pShader->InitUniform("vignetteStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_VignetteRadius = m_pShader->InitUniform("vignetteRadius", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_SSAOStrength = m_pShader->InitUniform("SSAOStrength", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_SSAORadius = m_pShader->InitUniform("SSAORadius", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_texture1 = m_pShader->InitUniform("texture0", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_texture2 = m_pShader->InitUniform("blurtexture", CGLSLShader::UNIFORM_INT1);
 
@@ -160,6 +166,8 @@ bool CPostProcess :: InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_BloomStrength, "bloomStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_VignetteStrength, "vignetteStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_VignetteRadius, "vignetteRadius", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_SSAOStrength, "SSAOStrength", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_SSAORadius, "SSAORadius", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_texture1, "texture0", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_texture1, "texture1", m_pShader, Sys_ErrorPopup))
 			return false;
@@ -566,6 +574,25 @@ bool CPostProcess::DrawVignette(void)
 // @brief
 //
 //=============================================
+bool CPostProcess::DrawSSAO(void)
+{
+	// Fetch screen contents
+	FetchScreen(&m_pScreenRTT);
+	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenRTT->palloc->gl_index);
+
+	m_pShader->SetUniform1f(m_attribs.u_SSAOStrength, m_pCvarSSAOStrength->GetValue());
+	m_pShader->SetUniform1f(m_attribs.u_SSAORadius, m_pCvarSSAORadius->GetValue());
+	if (!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_SSAO))
+		return false;
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	return true;
+}
+
+//=============================================
+// @brief
+//
+//=============================================
 void CPostProcess :: ClearMotionBlur( void )
 {
 	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenTexture->gl_index);
@@ -634,7 +661,7 @@ bool CPostProcess :: Draw( void )
 	m_pShader->EnableAttribute(m_attribs.a_origin);
 	m_pShader->EnableAttribute(m_attribs.a_texcoord);
 
-	glDepthMask(GL_FALSE);
+	glDepthMask(GL_TRUE);
 
 	rns.view.projection.LoadIdentity();
 	rns.view.modelview.LoadIdentity();
@@ -823,6 +850,18 @@ bool CPostProcess :: Draw( void )
 	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarVignette->GetValue() > 0)
 	{
 		if (!DrawVignette())
+		{
+			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
+			m_pShader->DisableShader();
+			m_pVBO->UnBind();
+			return false;
+		}
+	}
+
+	// Render SSAO
+	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarSSAO->GetValue() > 0)
+	{
+		if (!DrawSSAO())
 		{
 			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
 			m_pShader->DisableShader();

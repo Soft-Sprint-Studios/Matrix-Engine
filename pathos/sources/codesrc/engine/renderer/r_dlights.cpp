@@ -39,7 +39,7 @@ const Uint32 CDynamicLightManager::NUM_DL_DEFAULT_STYLES = 12;
 // Default lightstyle framerate
 const Char CDynamicLightManager::DEFAULT_LIGHTSTYLE_FRAMERATE = 10;
 // Minimum shadowmap size
-const Uint32 CDynamicLightManager::SHADOWMAP_MIN_SIZE = 128;
+const Uint32 CDynamicLightManager::SHADOWMAP_MIN_SIZE = 256;
 // Maximum lightstyle string length
 const Uint32 CDynamicLightManager::MAX_STYLESTRING = 64;
 // Time until an unused shadowmap is freed

@@ -29,6 +29,7 @@ enum pp_shadertypes_t
 	SHADER_BLEACH,
 	SHADER_BLOOM,
 	SHADER_VIGNETTE,
+	SHADER_SSAO,
 };
 
 struct pp_shader_attribs
@@ -66,6 +67,8 @@ struct pp_shader_attribs
 	Int32	u_BloomStrength;
 	Int32	u_VignetteStrength;
 	Int32	u_VignetteRadius;
+	Int32	u_SSAOStrength;
+	Int32	u_SSAORadius;
 
 	Int32	u_texture1;
 	Int32	u_texture2;
@@ -131,6 +134,8 @@ private:
 	bool DrawBloom(void);
 	// Draws screen Vignette
 	bool DrawVignette(void);
+	// Draws SSAO
+	bool DrawSSAO(void);
 
 	// Fetches screen contents
 	static void FetchScreen( rtt_texture_t** ptarget );
@@ -208,6 +213,12 @@ private:
 	CCVar* m_pCvarVignetteStrength;
 	// Vignette Radius cvar
 	CCVar* m_pCvarVignetteRadius;
+	// SSAO cvar
+	CCVar* m_pCvarSSAO;
+	// SSAO strength cvar
+	CCVar* m_pCvarSSAOStrength;
+	// SSAO Radius cvar
+	CCVar* m_pCvarSSAORadius;
 	// Postporcess cvar
 	CCVar*			m_pCvarPostProcess;
 

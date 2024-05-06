@@ -13,7 +13,7 @@ All Rights Reserved.
 #define DATATYPES_H
 typedef	char				Char;
 typedef	unsigned char		Uchar;
-typedef	unsigned __int8		byte;
+typedef unsigned __int8 byte;
 typedef	__int32				Int32;
 typedef unsigned __int32	Uint32;
 typedef __int16				Int16;

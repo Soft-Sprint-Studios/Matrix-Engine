@@ -12,7 +12,7 @@ All Rights Reserved.
 #include "skytexturesets.h"
 
 // Max skybox sets
-const Uint32 CSkyTextureSets::MAX_SKYBOX_TEXTURE_SETS = 32;
+const Uint32 CSkyTextureSets::MAX_SKYBOX_TEXTURE_SETS = 512;
 
 CSkyTextureSets gSkyTextureSets;
 

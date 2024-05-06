@@ -402,6 +402,12 @@
     <ClCompile Include="discord\discordrpcsystem.cpp">
       <Filter>Source Files\discord</Filter>
     </ClCompile>
+    <ClCompile Include="shdrchk.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="png.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
@@ -889,6 +895,12 @@
     </ClInclude>
     <ClInclude Include="discord\discordrpcsystem.h">
       <Filter>Header Files\discord</Filter>
+    </ClInclude>
+    <ClInclude Include="shdrchk.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="png.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

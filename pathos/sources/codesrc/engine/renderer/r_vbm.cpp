@@ -3745,9 +3745,9 @@ bool CVBMRenderer::DrawWireframe( void )
 		return false;
 
 	if(m_isMultiPass)
-		m_pShader->SetUniform4f(m_attribs.u_color, 1.0, 0.0, 0.0, 1.0);
+		m_pShader->SetUniform4f(m_attribs.u_color, 1.0, 0.5, 0.0, 1.0);
 	else
-		m_pShader->SetUniform4f(m_attribs.u_color, 1.0, 1.0, 1.0, 1.0);
+		m_pShader->SetUniform4f(m_attribs.u_color, 1.0, 0.5, 0.0, 1.0);
 
 	glDisable(GL_BLEND);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);

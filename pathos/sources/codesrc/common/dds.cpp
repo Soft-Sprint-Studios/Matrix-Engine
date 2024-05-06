@@ -51,13 +51,44 @@ bool DDS_Load( const Char* pstrFilename, const byte* pfile, byte*& pdata, Uint32
 		return false;
 	}
 
-	if(ddsFourCC == D3DFMT_DXT1)
+	if (ddsFourCC == D3DFMT_DXT1) {
 		compression = TX_COMPRESSION_DXT1;
-	else if(ddsFourCC == D3DFMT_DXT5)
+	}
+	else if (ddsFourCC == D3DFMT_DXT3) {
+		compression = TX_COMPRESSION_DXT3;
+	}
+	else if (ddsFourCC == D3DFMT_DXT5 || ddsFourCC == D3DFMT_BC3) {
 		compression = TX_COMPRESSION_DXT5;
-	else
-	{
-		pfnPrintFn("Incorrect compression on: %s. Only DXT1 and DXT5 DDS files are supported.\n", pstrFilename);
+	}
+	else if (ddsFourCC == D3DFMT_BC7) {
+		compression = TX_COMPRESSION_BC7;
+	}
+	else if (ddsFourCC == D3DFMT_BC1) {
+		compression = TX_COMPRESSION_BC1;
+	}
+	else if (ddsFourCC == D3DFMT_BC4 || ddsFourCC == D3DFMT_ATI1) {
+		compression = TX_COMPRESSION_BC4;
+	}
+	else if (ddsFourCC == D3DFMT_BC5 || ddsFourCC == D3DFMT_ATI2) {
+		compression = TX_COMPRESSION_BC5;
+	}
+	else if (ddsFourCC == D3DFMT_BC6H) {
+		compression = TX_COMPRESSION_BC6H;
+	}
+	else if (ddsFourCC == D3DFMT_DXT2) {
+		compression = TX_COMPRESSION_DXT2;  // Add handling for DXT2
+	}
+	else if (ddsFourCC == D3DFMT_DXT4) {
+		compression = TX_COMPRESSION_DXT4;  // Add handling for DXT4
+	}
+	else if (ddsFourCC == D3DFMT_A8R8G8B8) {
+		compression = TX_COMPRESSION_A8R8G8B8;
+	}
+	else if (ddsFourCC == D3DFMT_R8G8B8) {
+		compression = TX_COMPRESSION_R8G8B8;
+	}
+	else {
+		pfnPrintFn("Incorrect compression on: %s. Supported formats are DXT1, DXT2, DXT3, DXT4, DXT5, BC7, BC1, BC4, BC5, BC6H, A8R8G8B8, and R8G8B8 DDS files.\n", pstrFilename);
 		return false;
 	}
 

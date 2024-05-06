@@ -20,8 +20,21 @@ All Rights Reserved.
 
 #define DDS_DATA_OFFSET				128
 
-#define D3DFMT_DXT1					'1TXD'    //  DXT1 compression texture format 
-#define D3DFMT_DXT5					'5TXD'    //  DXT5 compression texture format 
+#define D3DFMT_DXT1             '1TXD'    // DXT1 compression texture format
+#define D3DFMT_DXT5             '5TXD'    // DXT5 compression texture format
+#define D3DFMT_DXT3             '3TXD'    // DXT3 compression texture format
+#define D3DFMT_BC7              '7CB '    // BC7 compression texture format
+#define D3DFMT_BC1              '1CB '    // BC1 compression texture format
+#define D3DFMT_BC4              '4CB '    // BC4 compression texture format
+#define D3DFMT_BC5              '5CB '    // BC5 compression texture format
+#define D3DFMT_BC6H             'H6CB'    // BC6H compression texture format
+#define D3DFMT_BC3              '3CB '    // BC3 compression texture format (equivalent to DXT5)
+#define D3DFMT_ATI1 '1ITA'  // ATI1 compression texture format (equivalent to BC4)
+#define D3DFMT_ATI2 '2ITA'  // ATI2 compression texture format (equivalent to BC5)
+#define D3DFMT_DXT2 '2TXD'  // DXT2 compression texture format
+#define D3DFMT_DXT4 '4TXD'  // DXT4 compression texture format
+#define D3DFMT_A8R8G8B8 '32BG' // Uncompressed 32-bit ARGB texture format
+#define D3DFMT_R8G8B8   '24BG' // Uncompressed 24-bit RGB texture format
 
 struct dds_header_t 
 {
