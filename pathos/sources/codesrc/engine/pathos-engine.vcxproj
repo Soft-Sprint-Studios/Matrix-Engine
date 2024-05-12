@@ -258,7 +258,6 @@
     <ClCompile Include="net_mp.cpp" />
     <ClCompile Include="net_sp.cpp" />
     <ClCompile Include="pbspv1.cpp" />
-    <ClCompile Include="png.cpp" />
     <ClCompile Include="renderer\r_beams.cpp" />
     <ClCompile Include="renderer\r_blackhole.cpp" />
     <ClCompile Include="renderer\r_cables.cpp" />
@@ -410,7 +409,6 @@
     <ClInclude Include="net_mp.h" />
     <ClInclude Include="net_sp.h" />
     <ClInclude Include="pbspv1.h" />
-    <ClInclude Include="png.h" />
     <ClInclude Include="renderer\r_beams.h" />
     <ClInclude Include="renderer\r_blackhole.h" />
     <ClInclude Include="renderer\r_cables.h" />

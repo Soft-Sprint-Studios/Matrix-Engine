@@ -69,9 +69,9 @@ const Uint32 CConsole::PRINT_BOX_REF_HEIGHT = 200;
 const Uint32 CConsole::PRINT_BOX_REF_BAR_THICKNESS = 5;
 
 // Print box bar color
-const color32_t CConsole::PRINT_BOX_BAR_COLOR = color32_t(150, 0, 0, 100);
+const color32_t CConsole::PRINT_BOX_BAR_COLOR = color32_t(255, 255, 255, 100);
 // Print box background color
-const color32_t CConsole::PRINT_BOX_BACKGROUND_COLOR = color32_t(0, 0, 0, 50);
+const color32_t CConsole::PRINT_BOX_BACKGROUND_COLOR = color32_t(50, 50, 50, 127);
 
 // Text schema name for console text box
 const Char CConsole::TEXTBOX_TEXTSCHEMA_NAME[] = "consolebox";

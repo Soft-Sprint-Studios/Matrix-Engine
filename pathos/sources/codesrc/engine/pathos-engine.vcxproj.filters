@@ -411,9 +411,6 @@
     <ClCompile Include="shdrchk.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="png.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="sentrysystem.cpp">
       <Filter>Source Files\sentry</Filter>
     </ClCompile>
@@ -901,9 +898,6 @@
     </ClInclude>
     <ClInclude Include="discord\discordrpcsystem.h">
       <Filter>Header Files\discord</Filter>
-    </ClInclude>
-    <ClInclude Include="png.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>

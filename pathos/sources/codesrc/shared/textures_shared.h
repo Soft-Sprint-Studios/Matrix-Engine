@@ -65,7 +65,6 @@ enum texture_format_t
 	TX_FORMAT_UNDEFINED = 0,
 	TX_FORMAT_TGA,
 	TX_FORMAT_DDS,
-	TX_FORMAT_PNG,
 	TX_FORMAT_MEMORY
 };
 

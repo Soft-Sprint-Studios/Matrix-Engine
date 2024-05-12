@@ -158,6 +158,8 @@ public:
 	void CmdInputList( input_type_t type );
 	// Dumps the contents of the console to a file
 	void CmdConDump( void ) const;
+	// Color of the console text
+	void Cmd_ConColortex(int r, int g, int b, int a);
 
 public:
 	// Buffer for all console text

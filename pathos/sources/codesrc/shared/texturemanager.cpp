@@ -15,7 +15,6 @@ All Rights Reserved.
 
 #include "tga.h"
 #include "dds.h"
-#include "png.h"
 
 #ifndef GL_MAX_TEXTURE_MAX_ANISOTROPY
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY 0x84FF
@@ -540,9 +539,6 @@ texture_format_t CTextureManager::GetFormat(const Char* pstrFilename)
 	else if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "dds")) {
 		return TX_FORMAT_DDS;
 	}
-	else if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "png")) {
-		return TX_FORMAT_PNG;
-	}
 	else {
 		return TX_FORMAT_UNDEFINED;
 	}
@@ -1009,18 +1005,6 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 			pfile = m_fileFuncs.pfnLoadFile(filePath.c_str(), nullptr);
 		}
 
-		// If still not found, try looking for PNG
-		if (!pfile && (filePath.find(0, ".tga") != -1 || filePath.find(0, ".TGA") != -1)) {
-			if (!pfile && (filePath.find(0, ".dds") != -1 || filePath.find(0, ".DDS") != -1)) {
-				// Modify the file path from ".tga" to ".png"
-				filePath.erase(filePath.length() - 3, 3);  // Remove ".tga"
-				filePath += "png";  // Add ".png"
-
-				// Attempt to load the PNG file
-				pfile = m_fileFuncs.pfnLoadFile(filePath.c_str(), nullptr);
-			}
-		}
-
 		if(!pfile)
 		{
 			m_printErrorFunction("Failed to load texture '%s'.\n", filePath.c_str());
@@ -1045,13 +1029,6 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 	else if (format == TX_FORMAT_DDS) {
 		if (!DDS_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction)) {
 			m_printErrorFunction("Failed to load DDS image file '%s'.\n", pstrFilename);
-			m_fileFuncs.pfnFreeFile(pfile);
-			return nullptr;
-		}
-	}
-	else if (format == TX_FORMAT_PNG) {
-		if (!PNG_Load(pstrFilename, pdata, width, height, bpp, datasize, m_printErrorFunction)) {
-			m_printErrorFunction("Failed to load PNG image file '%s'.\n", pstrFilename);
 			m_fileFuncs.pfnFreeFile(pfile);
 			return nullptr;
 		}
