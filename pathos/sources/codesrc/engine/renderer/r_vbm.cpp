@@ -336,7 +336,7 @@ bool CVBMRenderer::InitGL( void )
 		m_attribs.u_flextexture = m_pShader->InitUniform("flextexture", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_flextexturesize = m_pShader->InitUniform("flextexture_size", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_phong_exponent = m_pShader->InitUniform("phong_exponent", CGLSLShader::UNIFORM_FLOAT1);
-		m_attribs.u_parallaxscale = m_pShader->InitUniform("parallaxscale", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_aoscale = m_pShader->InitUniform("aoscale", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_specularfactor = m_pShader->InitUniform("specfactor", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_causticsm1 = m_pShader->InitUniform("causticsm1", CGLSLShader::UNIFORM_NOSYNC);
 		m_attribs.u_causticsm2 = m_pShader->InitUniform("causticsm2", CGLSLShader::UNIFORM_NOSYNC);
@@ -347,6 +347,7 @@ bool CVBMRenderer::InitGL( void )
 		m_attribs.u_rectangle = m_pShader->InitUniform("rectangle", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_spectexture = m_pShader->InitUniform("spectexture", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_lumtexture = m_pShader->InitUniform("lumtexture", CGLSLShader::UNIFORM_INT1);
+		m_attribs.u_aotexture = m_pShader->InitUniform("aotex", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_normalmap = m_pShader->InitUniform("normalmap", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_fogcolor = m_pShader->InitUniform("fogcolor", CGLSLShader::UNIFORM_FLOAT3);
 		m_attribs.u_fogparams = m_pShader->InitUniform("fogparams", CGLSLShader::UNIFORM_FLOAT2);
@@ -366,7 +367,7 @@ bool CVBMRenderer::InitGL( void )
 		if(!R_CheckShaderUniform(m_attribs.u_flextexture, "flextexture", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_flextexturesize, "flextexture_size", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_phong_exponent, "phong_exponent", m_pShader, Sys_ErrorPopup)
-			//|| !R_CheckShaderUniform(m_attribs.u_parallaxscale, "parallaxscale", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_aoscale, "aoscale", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_specularfactor, "specfactor", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_causticsm1, "causticsm1", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_causticsm2, "causticsm2", m_pShader, Sys_ErrorPopup)
@@ -377,6 +378,7 @@ bool CVBMRenderer::InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_rectangle, "rectangle", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_spectexture, "spectexture", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_lumtexture, "lumtexture", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_aotexture, "aotex", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_normalmap, "normalmap", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_fogcolor, "fogcolor", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_fogparams, "fogparams", m_pShader, Sys_ErrorPopup)
@@ -401,6 +403,7 @@ bool CVBMRenderer::InitGL( void )
 		m_attribs.d_flexes = m_pShader->GetDeterminatorIndex("flex");
 		m_attribs.d_specular = m_pShader->GetDeterminatorIndex("specular");
 		m_attribs.d_luminance = m_pShader->GetDeterminatorIndex("luminance");
+		m_attribs.d_ao = m_pShader->GetDeterminatorIndex("ao");
 		m_attribs.d_bumpmapping = m_pShader->GetDeterminatorIndex("bumpmapping");
 		m_attribs.d_numdlights = m_pShader->GetDeterminatorIndex("numdlights");
 
@@ -411,6 +414,7 @@ bool CVBMRenderer::InitGL( void )
 			|| !R_CheckShaderDeterminator(m_attribs.d_flexes, "flex", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderDeterminator(m_attribs.d_specular, "specular", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderDeterminator(m_attribs.d_luminance, "luminance", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderDeterminator(m_attribs.d_ao, "ao", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderDeterminator(m_attribs.d_bumpmapping, "bumpmapping", m_pShader, Sys_ErrorPopup))
 			return false;
 
@@ -2357,6 +2361,7 @@ bool CVBMRenderer::SetupRenderer( void )
 		!m_pShader->SetDeterminator(m_attribs.d_numlights, m_numModelLights, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, FALSE, false))
 		return false;
 
@@ -2405,6 +2410,7 @@ bool CVBMRenderer::RestoreRenderer( void )
 {
 	if(!m_pShader->SetDeterminator(m_attribs.d_specular, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, FALSE, false))
 		return false;
@@ -2643,7 +2649,7 @@ bool CVBMRenderer::DrawMesh( en_material_t *pmaterial, const vbmmesh_t *pmesh, b
 		!m_pShader->SetDeterminator(m_attribs.d_numlights, (pmaterial->flags & (TX_FL_FULLBRIGHT|TX_FL_SCOPE)) ? 0 : m_numModelLights, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, (pmaterial->ptextures[MT_TX_SPECULAR]) && !(pmaterial->flags & TX_FL_FULLBRIGHT) && !m_isMultiPass && g_pCvarSpecular->GetValue() > 0 ? true : false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, (pmaterial->ptextures[MT_TX_LUMINANCE]) && !(pmaterial->flags & TX_FL_FULLBRIGHT), false) ||
-		!m_pShader->SetDeterminator(m_attribs.d_heightmap, (pmaterial->ptextures[MT_TX_HEIGHTMAP]) && !(pmaterial->flags & TX_FL_FULLBRIGHT), false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, (pmaterial->ptextures[MT_TX_AO]) && !(pmaterial->flags & TX_FL_FULLBRIGHT), false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, (pmaterial->ptextures[MT_TX_NORMALMAP]) && !(pmaterial->flags & TX_FL_FULLBRIGHT) && g_pCvarBumpMaps->GetValue() > 0, false))
 	return false;
 
@@ -2711,6 +2717,8 @@ bool CVBMRenderer::DrawMesh( en_material_t *pmaterial, const vbmmesh_t *pmesh, b
 		R_Bind2DTexture(GL_TEXTURE2, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
 	}
 
+	m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
+
 	if(pmaterial->ptextures[MT_TX_LUMINANCE])
 	{
 		m_pShader->SetUniform1i(m_attribs.u_lumtexture, 3);
@@ -2723,11 +2731,10 @@ bool CVBMRenderer::DrawMesh( en_material_t *pmaterial, const vbmmesh_t *pmesh, b
 		R_Bind2DTexture(GL_TEXTURE4, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
 	}
 
-	if (pmaterial->ptextures[MT_TX_HEIGHTMAP] && g_pCvarParallaxMap->GetValue() > 0)
+	if (pmaterial->ptextures[MT_TX_AO])
 	{
-		m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
-		m_pShader->SetUniform1i(m_attribs.u_heightmap, 5);
-		R_Bind2DTexture(GL_TEXTURE5, pmaterial->ptextures[MT_TX_HEIGHTMAP]->palloc->gl_index);
+		m_pShader->SetUniform1i(m_attribs.u_aotexture, 4);
+		R_Bind2DTexture(GL_TEXTURE4, pmaterial->ptextures[MT_TX_AO]->palloc->gl_index);
 	}
 
 	if(pmaterial->scrollu || pmaterial->scrollv)
@@ -2791,6 +2798,7 @@ bool CVBMRenderer::DrawLights( bool specularPass )
 		!m_pShader->SetDeterminator(m_attribs.d_numlights, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, specularPass, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, FALSE, false))
 		return false;
 
@@ -3056,8 +3064,6 @@ bool CVBMRenderer::DrawLights( bool specularPass )
 				if(pmaterial->flags & (TX_FL_ADDITIVE|TX_FL_ALPHABLEND|TX_FL_FULLBRIGHT|TX_FL_SCOPE))
 					continue;
 
-				m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
-
 				if(specularPass)
 				{
 					if(!pmaterial->ptextures[MT_TX_SPECULAR])
@@ -3068,6 +3074,8 @@ bool CVBMRenderer::DrawLights( bool specularPass )
 
 					R_Bind2DTexture(GL_TEXTURE0+texunit+1, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
 				}
+
+				m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 
 				if(pmaterial->ptextures[MT_TX_NORMALMAP] && g_pCvarBumpMaps->GetValue() > 0)
 				{
@@ -3222,6 +3230,7 @@ bool CVBMRenderer::DrawFinal ( void )
 	if(!m_pShader->SetDeterminator(m_attribs.d_alphatest, ALPHATEST_DISABLED, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, 0, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, 0, false))
 		return false;
 
@@ -3449,7 +3458,7 @@ bool CVBMRenderer::DrawFinal ( void )
 				m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp*g_pCvarPhongExponent->GetValue());
 				m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 
-				m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
+				m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 
 				if(pmaterial->ptextures[MT_TX_NORMALMAP])
 					continue;
@@ -3493,7 +3502,7 @@ bool CVBMRenderer::DrawFinal ( void )
 					m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp*g_pCvarPhongExponent->GetValue());
 					m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 
-					m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
+					m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 
 					R_Bind2DTexture(GL_TEXTURE2, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
 					R_Bind2DTexture(GL_TEXTURE3, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
@@ -3740,6 +3749,7 @@ bool CVBMRenderer::DrawWireframe( void )
 		!m_pShader->SetDeterminator(m_attribs.d_alphatest, ALPHATEST_DISABLED, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, 0, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid))
 		return false;
@@ -5196,6 +5206,7 @@ bool CVBMRenderer::PrepareVSM( cl_dlight_t *dl )
 		!m_pShader->SetDeterminator(m_attribs.d_numlights, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, 0, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_vsm))
 	{
@@ -5495,6 +5506,7 @@ bool CVBMRenderer::PrepAuraPass( void )
 		!m_pShader->SetDeterminator(m_attribs.d_alphatest, ALPHATEST_DISABLED, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, 0, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid))
 	{
@@ -5784,6 +5796,7 @@ bool CVBMRenderer::DrawBones( void )
 		!m_pShader->SetDeterminator(m_attribs.d_chrome, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, false, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid, true))
 		return false;
@@ -5848,6 +5861,7 @@ bool CVBMRenderer::DrawHitBoxes( void )
 		!m_pShader->SetDeterminator(m_attribs.d_chrome, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, false, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid, true))
 		return false;
@@ -5892,6 +5906,7 @@ bool CVBMRenderer::DrawBoundingBox( void )
 		!m_pShader->SetDeterminator(m_attribs.d_chrome, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, false, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid, true))
 		return false;
@@ -5933,6 +5948,7 @@ bool CVBMRenderer::DrawLightVectors( void )
 		!m_pShader->SetDeterminator(m_attribs.d_chrome, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, false, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid, true))
 		return false;
@@ -6291,6 +6307,7 @@ bool CVBMRenderer::DrawAttachments( void )
 		!m_pShader->SetDeterminator(m_attribs.d_chrome, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, false, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid, true))
 		return false;
@@ -6382,6 +6399,7 @@ bool CVBMRenderer::DrawHullBoundingBox( void )
 		!m_pShader->SetDeterminator(m_attribs.d_chrome, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_flexes, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, false, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, false, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_shadertype, vbm_solid, true))
 		return false;

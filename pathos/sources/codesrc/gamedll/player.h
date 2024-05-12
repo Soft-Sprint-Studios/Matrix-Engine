@@ -113,6 +113,7 @@ public:
 		Int32 channel;
 	};
 
+	void SetDead();
 public:
 	// Player punch treshold for falling
 	static const Float PLAYER_FALL_VELOCITY_PUNCH_MIN;

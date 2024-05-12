@@ -900,10 +900,10 @@ const Char* CInput::GetMouseButtonName( Int32 button )
 // Class: CConfig
 // Function: CmdBindKey
 //=============================================
-void CInput::CmdBindKey( void )
+void CInput::CmdBindKey(void)
 {
 	// Make sure the params are ok
-	if(gCommands.Cmd_Argc() != 3)
+	if (gCommands.Cmd_Argc() != 3)
 	{
 		Con_Printf("'bind' usage: bind <key name> <command>\n");
 		return;
@@ -914,9 +914,9 @@ void CInput::CmdBindKey( void )
 	const Char* pstrCmdName = gCommands.Cmd_Argv(2);
 
 	// Clear key from other binds
-	for(Uint32 i = 0; i < m_keyInfoArray.size(); i++)
+	for (Uint32 i = 0; i < m_keyInfoArray.size(); i++)
 	{
-		if(!qstrcmp(m_keyInfoArray[i].binding, pstrCmdName))
+		if (!qstrcmp(m_keyInfoArray[i].binding, pstrCmdName))
 		{
 			gConfig.DeleteField(CConfig::USER_CONFIG_GRP_NAME, m_keyInfoArray[i].name.c_str());
 			m_keyInfoArray[i].binding.clear();
@@ -925,24 +925,28 @@ void CInput::CmdBindKey( void )
 
 	// Try to bind it
 	Uint32 i = 0;
-	for(; i < m_keyInfoArray.size(); i++)
+	for (; i < m_keyInfoArray.size(); i++)
 	{
 		keyinfo_t& keyInfo = m_keyInfoArray[i];
-		if(!qstrcicmp(keyInfo.name, pstrKeyName))
+		if (!qstrcicmp(keyInfo.name, pstrKeyName))
 		{
 			// Never allow binding over the grave key
-			if(i == SDL_SCANCODE_GRAVE && qstrcmp(pstrCmdName, CConsole::TOGGLECONSOLE_CMD_NAME))
+			if (i == SDL_SCANCODE_GRAVE && qstrcmp(pstrCmdName, CConsole::TOGGLECONSOLE_CMD_NAME))
 			{
 				Con_EPrintf("Binding over this key is not allowed.\n");
 				return;
 			}
 
 			keyInfo.binding = pstrCmdName;
+
+			// Print the message indicating the binding was successful
+			Con_Printf("'%s' is bound to '%s'.\n", pstrKeyName, pstrCmdName);
+
 			break;
 		}
 	}
 
-	if(i == m_keyInfoArray.size())
+	if (i == m_keyInfoArray.size())
 	{
 		Con_EPrintf("%s is not a valid key.\n", pstrKeyName);
 		return;
@@ -951,6 +955,7 @@ void CInput::CmdBindKey( void )
 	// Set it in the config too
 	gConfig.SetValue(CConfig::USER_CONFIG_GRP_NAME, pstrKeyName, pstrCmdName, true, CONF_FIELD_KEYBIND);
 }
+
 
 //=============================================
 // Class: CConfig

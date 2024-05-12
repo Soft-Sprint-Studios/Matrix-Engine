@@ -8,7 +8,7 @@ void handleDiscordReady(const DiscordUser* request) {
 
 void initializeDiscord() {
     DiscordEventHandlers handlers;
-    std::memset(&handlers, 0, sizeof(handlers));
+    memset(&handlers, 0, sizeof(handlers));
     handlers.ready = handleDiscordReady;
 
     Discord_Initialize("1235165455237255238", &handlers, 1, nullptr);
@@ -31,7 +31,7 @@ std::string cleanMapName(const std::string& mapName) {
 
 void updateRichPresence(const char * mapName) {
     DiscordRichPresence discordPresence;
-    std::memset(&discordPresence, 0, sizeof(discordPresence));
+    memset(&discordPresence, 0, sizeof(discordPresence));
 
     std::string stateText = "Playing Map: ";
     if (mapName != nullptr) {
@@ -39,7 +39,7 @@ void updateRichPresence(const char * mapName) {
         stateText += cleanedMapName;
     }
     else {
-        stateText = "In Menu";
+        stateText = "In Main Menu";
     }
     discordPresence.state = stateText.c_str();
     discordPresence.details = "Developing Parallax Engine";

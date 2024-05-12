@@ -6525,3 +6525,9 @@ void CPlayerEntity::DelayedGlobalTriggerThink( void )
 		ClearGlobalDelayedTrigger();
 	}
 }
+
+void CPlayerEntity::SetDead() {
+	if (m_pState) {
+		m_pState->deadstate = DEADSTATE_DEAD;
+	}
+}

@@ -1,10 +1,12 @@
-$global_determinator shadertype 0 23
+$global_determinator shadertype 0 22
 $global_determinator fogtype 0 2
 $global_determinator alphatest 0 2
 $global_determinator bumpmapping 0 1
 $global_determinator specular 0 1
 $global_determinator cubemaps 0 2
 $global_determinator luminance 0 1
+$global_determinator parallax 0 1
+$global_determinator ao 0 1
 $global_determinator numlights 0 4
 $global_determinator light0_shadowmap 0 1
 $global_determinator light1_shadowmap 0 1
@@ -107,6 +109,9 @@ out vec3 ps_cubetangent;
 out vec3 ps_cubebinormal;
 out vec3 ps_cubevertexpos;
 $end
+
+uniform sampler2D heightmap;
+uniform float parallaxscale;
 
 void main()
 {
@@ -226,6 +231,43 @@ void main()
 		ps_texcoord.x = dot(in_position, caustics_m1);
 		ps_texcoord.y = dot(in_position, caustics_m2);
 	$end
+
+   $branch parallax == 1
+    $begin
+        // Sample height value from the height map
+        float heightValue = texture(heightmap, in_texcoord).r;
+        
+        // Define offsets for a grid of neighboring sampling points
+        vec2 offsets[25] = vec2[](
+            vec2(-0.02, -0.02), vec2(-0.02, -0.01), vec2(-0.02, 0), vec2(-0.02, 0.01), vec2(-0.02, 0.02),
+            vec2(-0.01, -0.02), vec2(-0.01, -0.01), vec2(-0.01, 0), vec2(-0.01, 0.01), vec2(-0.01, 0.02),
+            vec2(0, -0.02), vec2(0, -0.01), vec2(0, 0), vec2(0, 0.01), vec2(0, 0.02),
+            vec2(0.01, -0.02), vec2(0.01, -0.01), vec2(0.01, 0), vec2(0.01, 0.01), vec2(0.01, 0.02),
+            vec2(0.02, -0.02), vec2(0.02, -0.01), vec2(0.02, 0), vec2(0.02, 0.01), vec2(0.02, 0.02)
+        );
+        
+        // Accumulate height values for smoothing
+        float smoothHeightValue = heightValue;
+        for (int i = 0; i < 25; i++) {
+            smoothHeightValue += texture(heightmap, in_texcoord + offsets[i]).r;
+        }
+        
+        // Average the accumulated height values
+        smoothHeightValue /= 26.0; // 1 (original) + 25 (neighbors)
+        
+        // Calculate displacement using the smooth height value and parallax scale
+        float displacement = smoothHeightValue * parallaxscale;
+        
+        // Clamp displacement within a specified range to prevent excessive distortion
+        float minDisplacement = -7.0; // Define minimum displacement (adjust as needed)
+        float maxDisplacement = 5.0; // Define maximum displacement (adjust as needed)
+        displacement = clamp(displacement, minDisplacement, maxDisplacement);
+        
+        // Apply displacement to the position along the normal direction
+        position.xyz += in_normal * displacement;
+    $end
+
+
 	
 	gl_Position = position*projection;
 }
@@ -247,12 +289,12 @@ uniform sampler2D normalmap;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
-uniform sampler2D heightmap;
-uniform float parallaxscale;
 $branch luminance == 1
 $begin
 uniform sampler2D luminance;
 $end
+uniform sampler2D aomaptex;
+uniform float aoscale;
 
 $branch numlights >= 1
 $begin
@@ -841,58 +883,8 @@ vec4 AddCubemaps( float reflectivity )
 	$end
 }
 
-$branch shadertype == 23
-$begin
-// Parallax occlusion mapping function
-// Inputs:
-// - texCoords: Texture coordinates
-// - viewDir: The view direction vector in tangent space
-// - heightMap: The height map texture sampler
-// - heightScale: The scale of the height map (a float value)
-// - TBN: Tangent, bitangent, and normal matrix for transforming viewDir into tangent space
-// Outputs:
-// - Adjusted texture coordinates after applying parallax occlusion mapping
-vec2 parallaxOcclusionMapping(vec2 texCoords, vec3 viewDir, sampler2D heightMap, float heightScale, mat3 TBN) {
-    // Fixed number of steps for sampling along the view direction
-    const int numSteps = 32;
-    
-    // Get the initial height from the height map at the texture coordinates
-    float height = texture(heightMap, texCoords).r * heightScale;
-    
-    // Calculate the initial ray step based on view direction and texture coordinates
-    vec3 rayStep = viewDir * height * -1.0 / float(numSteps);
-    
-    // Initialize the sampled texture coordinates
-    vec2 sampledTexCoords = texCoords;
-    
-    // Loop through the fixed number of steps
-    for (int i = 0; i < numSteps; i++) {
-        // Increment the sampled texture coordinates by the ray step
-        sampledTexCoords += rayStep.xy;
-        
-        // Sample the height at the current coordinates
-        height = texture(heightMap, sampledTexCoords).r * heightScale;
-        
-        // If the current height intersects with the view ray, break the loop
-        if (height >= sampledTexCoords.y) {
-            break;
-        }
-    }
-    
-    // Return the adjusted texture coordinates
-    return sampledTexCoords;
-}
-$end
-
 void main()
 {
-    $branch shadertype == 23
-	$begin
-    mat3 TBN = mat3(ps_tangent, ps_binormal, ps_normal);
-	vec3 viewDir = normalize(-ps_vertexpos.xyz);
-	vec3 viewDirTS = normalize(TBN * viewDir);
-	vec2 ParallaxTexCoords = parallaxOcclusionMapping(ps_texcoord, viewDirTS, heightmap, parallaxscale, TBN);
-	$end
 	float specularFactor = 0.0;
 	vec4 specularColor = vec4(0, 0, 0, 0);
 	vec4 finalColor = vec4(0, 0, 0, 0);
@@ -900,25 +892,11 @@ void main()
 
 	$branch specular == 1 || cubemaps >= 1
 	$begin
-	$branch shadertype != 23
-	$begin
 		vec4 specTexture = texture2D(speculartex, ps_texcoord);
 		specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
 	$end
-	$end
-	
-	$branch specular == 1 || cubemaps >= 1
-	$begin
-	$branch shadertype == 23
-	$begin
-		vec4 specTexture = texture2D(speculartex, ParallaxTexCoords);
-		specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
-	$end
-	$end
 	
 	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
-	$begin
-	$branch shadertype != 23
 	$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
 		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
@@ -928,21 +906,6 @@ void main()
 		$begin
 			finalColor += AddCubemaps(specularFactor);
 		$end
-	$end
-	$end
-	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
-	$begin
-	$branch shadertype == 23
-	$begin
-		vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
-		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
-		finalColor = finalColor*color;
-		
-		$branch cubemaps >= 1
-		$begin
-			finalColor += AddCubemaps(specularFactor);
-		$end
-	$end
 	$end
 	$branch shadertype == 3 || shadertype == 22
 	$begin
@@ -954,17 +917,10 @@ void main()
 	$end
 	$branch shadertype == 4
 	$begin
-	$branch shadertype != 23
-	$begin
 		finalColor = texture2D(maintexture, ps_texcoord) * color;
-	$end
 	$end
 	$branch shadertype == 4
 	$begin
-	$branch shadertype == 23
-	$begin
-		finalColor = texture2D(maintexture, ParallaxTexCoords) * color;
-	$end
 	$end
 	$branch shadertype == 5
 	$begin
@@ -1132,27 +1088,12 @@ void main()
 	$end
 	$branch shadertype == 9
 	$begin
-	$branch shadertype != 23
-	$begin
 		vec4 caustics1 = texture2D(maintexture, ps_texcoord);
 		vec4 caustics2 = texture2D(detailtex, ps_texcoord);
 		
 		finalColor = caustics1*(1.0 - interpolant) + caustics2*interpolant;
 	$end
-	$end
-	$branch shadertype == 9
-	$begin
-	$branch shadertype == 23
-	$begin
-		vec4 caustics1 = texture2D(maintexture, ParallaxTexCoords);
-		vec4 caustics2 = texture2D(detailtex, ParallaxTexCoords);
-		
-		finalColor = caustics1*(1.0 - interpolant) + caustics2*interpolant;
-	$end
-	$end
 	$branch shadertype == 10
-	$begin
-	$branch shadertype != 23
 	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
@@ -1161,27 +1102,12 @@ void main()
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
 		finalColor.w = finalColor.w * texture2D(maintexture, ps_texcoord).w;
 	$end
-	$end
-	$branch shadertype == 10
-	$begin
-	$branch shadertype == 23
-	$begin
-		vec3 lightDir = GetLightDir( lightvecstex );
-		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-		vec4 diffuseLight = GetDiffuseLight( difflightmap );
-		
-		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
-		finalColor.w = finalColor.w * texture2D(maintexture, ParallaxTexCoords).w;
-	$end
-	$end
 	$branch shadertype == 11
 	$begin
 		finalColor = vec4(1.0, 1.0, 1.0, 1.0)*color;
 	$end
 	
 	$branch shadertype == 12 || shadertype == 13
-	$begin
-	$branch shadertype != 23
 	$begin
 		finalColor = EncodeDepth(ps_vertexpos, light_radius);
 		
@@ -1190,21 +1116,6 @@ void main()
 			if(texture2D(maintexture, ps_texcoord).w < 0.5)
 				discard;
 		$end
-	$end
-	$end
-	
-	$branch shadertype == 12 || shadertype == 13
-	$begin
-	$branch shadertype == 23
-	$begin
-		finalColor = EncodeDepth(ps_vertexpos, light_radius);
-		
-		$branch shadertype == 13
-		$begin
-			if(texture2D(maintexture, ParallaxTexCoords).w < 0.5)
-				discard;
-		$end
-	$end
 	$end
 	
 	$branch shadertype == 14
@@ -1222,47 +1133,19 @@ void main()
 	
 	$branch shadertype == 16
 	$begin
-	$branch shadertype != 23
-	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
 	$end
-	$end
-	$branch shadertype == 16
-	$begin
-	$branch shadertype == 23
-	$begin
-		vec3 lightDir = GetLightDir( lightvecstex );
-		vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
-		vec4 diffuseLight = GetDiffuseLight( difflightmap );
-		
-		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
-	$end
-	$end
 	$branch shadertype == 17
-	$begin
-	$branch shadertype != 23
 	$begin
 		vec4 tex0 = texture2D(maintexture, ps_texcoord);
 		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
 		finalColor = tex0*tex1;
 		finalColor.xyz = finalColor.xyz*2;
 		finalColor = finalColor*color;
-	$end
-	$end
-	$branch shadertype == 17
-	$begin
-	$branch shadertype == 23
-	$begin
-		vec4 tex0 = texture2D(maintexture, ParallaxTexCoords);
-		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
-		finalColor = tex0*tex1;
-		finalColor.xyz = finalColor.xyz*2;
-		finalColor = finalColor*color;
-	$end
 	$end
 	$branch shadertype == 18
 	$begin
@@ -1275,40 +1158,15 @@ void main()
 	$end
 	$branch shadertype == 20
 	$begin
-	$branch shadertype != 23
-	$begin
 		finalColor = texture2D(maintexture, ps_texcoord);
 		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
 		finalColor.a = finalColor.a*tex1.a;
 		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
 	$end
-	$end
-	$branch shadertype == 20
-	$begin
-	$branch shadertype == 23
-	$begin
-		finalColor = texture2D(maintexture, ParallaxTexCoords);
-		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
-		finalColor.a = finalColor.a*tex1.a;
-		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
-	$end
 	$branch shadertype == 21
-	$begin
-	$branch shadertype != 23
 	$begin
 		finalColor = texture2D(maintexture, ps_texcoord);
 		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
-	$end
-	
-	$branch shadertype == 21
-	$begin
-	$branch shadertype == 23
-	$begin
-		finalColor = texture2D(maintexture, ParallaxTexCoords);
-		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
 	$end
 	
 	$branch fogtype != 0
@@ -1325,6 +1183,12 @@ void main()
 	$branch alphatest == 2
 	$begin
 		finalColor.a = (finalColor.a - 0.5) / max(fwidth(finalColor.a), 0.0001) + 0.5;
+	$end
+	
+	$branch ao == 1
+	$begin
+        float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
+        finalColor.rgb *= aoFactor;
 	$end
 
 	oColor = finalColor;

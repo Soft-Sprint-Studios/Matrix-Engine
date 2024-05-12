@@ -37,7 +37,6 @@ All Rights Reserved.
 #include "r_menu.h"
 #include "vid.h"
 #include "filewriterthread.h"
-#include <windows.h> // For Windows API functions
 #include <iostream>
 #include <vector>
 
@@ -87,6 +86,10 @@ void Cmd_LoadMap( void )
 	SV_SpawnGame(pstrFilename);
 }
 
+//=============================================
+// @brief Shows list of active bsps in the maps folder
+// 
+//=============================================
 void Cmd_ListMaps() {
 	const std::string mapDirectory = std::string(DEFAULT_GAMEDIR) + "\\maps\\";
 	const std::string filePattern = "*.bsp";
@@ -582,6 +585,26 @@ void Cmd_ChangeLevel( void )
 	SV_PerformLevelChange(pstrLevelName, pstrLandmarkName);
 }
 
+#define BUILD_TIME __TIME__ " " __DATE__
+
+void GetWindowsVersion() {
+	OSVERSIONINFOEX osvi;
+	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
+	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
+	if (GetVersionEx((LPOSVERSIONINFO)&osvi)) {
+		Con_Printf("Windows NT Version: %d.%d\n", osvi.dwMajorVersion, osvi.dwMinorVersion);
+	}
+	else {
+		Con_Printf("Failed to retrieve Windows version.\n");
+	}
+}
+
+void Cmd_Version() {
+	Con_Printf("Engine Version Information:\n");
+	Con_Printf("Build Time: %s\n", BUILD_TIME);
+	GetWindowsVersion();
+}
+
 //=============================================
 // @brief Creates the system commands
 // 
@@ -603,6 +626,7 @@ void Sys_InitCommands( void )
 	gCommands.CreateCommand("god", Cmd_God, "Toggles godmode cheat", (CMD_FL_SERVERCOMMAND|CMD_FL_CL_RELEVANT|CMD_FL_CHEAT));
 	gCommands.CreateCommand("notarget", Cmd_Notarget, "Toggles notarget cheat", (CMD_FL_SERVERCOMMAND|CMD_FL_CL_RELEVANT|CMD_FL_CHEAT));
 	gCommands.CreateCommand("noclip", Cmd_Noclip, "Toggles noclip cheat", (CMD_FL_SERVERCOMMAND|CMD_FL_CL_RELEVANT|CMD_FL_CHEAT));
+	gCommands.CreateCommand("version", Cmd_Version, "Version info.");
 }
 
 //=============================================

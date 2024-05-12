@@ -1,4 +1,4 @@
-$global_determinator shadertype 0 22
+$global_determinator shadertype 0 23
 $global_determinator fogtype 0 2
 $global_determinator alphatest 0 2
 $global_determinator bumpmapping 0 1
@@ -247,13 +247,13 @@ uniform sampler2D normalmap;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
+uniform sampler2D heightmap;
+uniform float parallaxscale;
 $branch luminance == 1
 $begin
 uniform sampler2D luminance;
 $end
 
-uniform sampler2D heightmap;
-uniform float parallaxscale;
 
 $branch numlights >= 1
 $begin
@@ -386,6 +386,46 @@ in vec3 ps_cubevertexpos;
 $end
 
 out vec4 oColor;
+
+$branch shadertype == 23
+$begin
+vec2 parallaxOcclusionMapping(vec2 texCoords, vec3 viewDir, sampler2D heightMap, float heightScale, mat3 TBN) {
+    // Calculate the number of steps for the parallax occlusion mapping
+    int numSteps = 32;
+    
+    // Calculate the depth increment for each step
+    float depthStep = 1.0 / float(numSteps);
+    
+    // Convert view direction to tangent space
+    viewDir = normalize(TBN * viewDir);
+    
+    // Calculate the initial height offset
+    float heightOffset = texture(heightMap, texCoords).r * heightScale;
+    
+    // Initialize the final texture coordinates
+    vec2 finalTexCoords = texCoords;
+    
+    // Iterate through the number of steps
+    for (int i = 0; i < numSteps; i++) {
+        // Calculate the depth and texCoords offset based on the current step
+        float currentDepth = float(i) * depthStep;
+        vec2 offset = viewDir.xy * (currentDepth * heightOffset);
+        
+        // Update the final texture coordinates
+        finalTexCoords = texCoords - offset;
+        
+        // Sample the height map at the new texture coordinates
+        float newHeight = texture(heightMap, finalTexCoords).r * heightScale;
+        
+        // If the current height is less than the current depth, break the loop
+        if (currentDepth >= newHeight) {
+            break;
+        }
+    }
+    
+    return finalTexCoords;
+}
+$end
 
 float CalcShininess( vec3 v_origin, vec3 v_normal, vec3 l_origin )
 {
@@ -623,7 +663,16 @@ $begin
 	return vec4(0, 0, 0, 0);
 $end
 }
-
+    $branch shadertype == 23
+	$begin
+    mat3 TBN = mat3(ps_tangent, ps_binormal, ps_normal);
+	vec3 viewDir = normalize(-ps_vertexpos.xyz);
+	vec3 viewDirTS = normalize(TBN * viewDir);
+	vec2 ParallaxTexCoords = parallaxOcclusionMapping(ps_texcoord, viewDirTS, heightmap, parallaxscale, TBN);
+	$end
+	
+$branch shadertype != 23
+$begin
 vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
 {
 $branch bumpmapping == 0
@@ -649,6 +698,36 @@ $begin
 	return clamp(finalColor, 0, 1); // To prevent multipass inconsistencies
 $end
 }
+$end
+
+$branch shadertype == 23
+$begin
+vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
+{
+$branch bumpmapping == 0
+$begin
+	vec4 lightmapColor = texture2D(ambLightmap, ps_lmapcoord);
+	$branch luminance == 1
+	$begin
+		lightmapColor.xyz += texture(luminance, ParallaxTexCoords).xyz;
+	$end
+	return clamp(lightmapColor, 0, 1); // To prevent multipass inconsistencies
+$end
+$branch bumpmapping == 1
+$begin
+	// Lightmap is always on unit 0
+	vec4 ambientColor = texture2D(ambLightmap, ps_lmapcoord);
+	vec4 finalColor = ambientColor + diffuseColor * dot(lightDir, v_normal);
+	
+	$branch luminance == 1
+	$begin
+		finalColor.xyz += texture(luminance, ParallaxTexCoords).xyz;
+	$end	
+
+	return clamp(finalColor, 0, 1); // To prevent multipass inconsistencies
+$end
+}
+$end
 
 float SplineFraction( float value, float scale )
 {
@@ -718,6 +797,8 @@ $begin
 $end
 }
 
+$branch shadertype != 23
+$begin
 vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength )
 {
 	vec3 lightDir = GetLightDir( lightvecstex );
@@ -766,6 +847,59 @@ vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength 
 	
 	return finalColor;
 }
+$end
+
+$branch shadertype == 23
+$begin
+vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength )
+{
+	vec3 lightDir = GetLightDir( lightvecstex );
+	vec4 lightDiffuse = GetDiffuseLight( difflightmap );
+	vec4 finalColor = AddBaseLight(baselightmap, lightDiffuse, lightDir, v_normal);
+
+	$branch shadertype == 0
+	$begin
+		vec4 texColor = texture2D(maintexture, ParallaxTexCoords);
+		vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
+		
+		finalColor = finalColor*texColor*detailTexColor;
+		finalColor.xyz = finalColor.xyz*4;
+	$end
+	$branch shadertype == 1
+	$begin
+		vec4 texColor = texture2D(maintexture, ParallaxTexCoords);
+		finalColor = finalColor*texColor;
+		finalColor.xyz = finalColor.xyz*2;
+	$end
+	$branch shadertype == 2
+	$begin
+		// Store light color
+		vec4 lightColor = finalColor;
+	
+		vec4 texColor = texture2D(maintexture, ParallaxTexCoords);
+		finalColor = lightColor*texColor;
+		finalColor.xyz = finalColor.xyz*2;
+
+		vec4 chromeTex = texture2D(chrometex, ps_chromecoord);
+		finalColor.xyz += chromeTex.xyz*lightColor.xyz*2*color.w;
+	$end
+	
+	$branch specular == 1
+	$begin
+		// Add specular if any
+		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
+		vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
+		vec3 eyeSpaceNormal = normalize(tbnMatrix * v_normal);
+		
+		float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
+		float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
+		
+		finalColor += specularValue * lightDiffuse * shineFactor;
+	$end	
+	
+	return finalColor;
+}
+$end
 
 vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength)
 {
@@ -814,6 +948,8 @@ vec4 GetCubemapPixel ( vec3 reflectvec )
 }
 $end
 
+$branch shadertype != 23
+$begin
 vec4 AddCubemaps( float reflectivity )
 { 
 	$branch cubemaps == 0
@@ -841,41 +977,67 @@ vec4 AddCubemaps( float reflectivity )
 		return GetCubemapPixel(reflectvector) * pow(reflectivity, 16);
 	$end
 }
+$end
 
-// Function to perform parallax mapping
-vec2 ParallaxMapping(vec2 texCoord, vec3 normal, vec3 vertexPos) {
-    // Calculate the estimated view direction using the normal's z-component
-    vec3 viewDir = normalize(vertexPos);
-    viewDir.z = abs(normal.z); // Use the normal's z-component to estimate the view direction
-    
-    // Sample the height from the heightmap
-    float height = texture(heightmap, texCoord).r;
-    
-    // Calculate the parallax offset based on the view direction and height
-    float parallaxOffset = height * parallaxscale * viewDir.z;
-    
-    // Adjust the texture coordinates by the parallax offset along the view direction
-    vec2 parallaxTexCoord = texCoord + parallaxOffset * vec2(viewDir.x, viewDir.y);
-    
-    // Return the adjusted texture coordinates
-    return parallaxTexCoord;
+$branch shadertype == 23
+$begin
+vec4 AddCubemaps( float reflectivity )
+{ 
+	$branch cubemaps == 0
+	$begin
+		return vec4(0, 0, 0, 0);
+	$end
+	$branch cubemaps >= 1
+	$begin
+		vec3 v_normal;
+		$branch bumpmapping == 1
+		$begin
+			mat3 tbnMatrix = mat3(ps_cubetangent, ps_cubebinormal, ps_cubenormal);
+			vec3 tex_normal = (2.0 * texture2D (normalmap, ParallaxTexCoords).xyz) - 1.0;
+			vec3 eye_texnormal = normalize(tbnMatrix * tex_normal);
+			
+			float normalstrength = 0.025;
+			v_normal = ps_cubenormal * (1.0 - normalstrength) + eye_texnormal * normalstrength;
+		$end
+		$branch bumpmapping == 0
+		$begin
+			v_normal = ps_cubenormal;
+		$end
+
+		vec3 reflectvector = normalize(-reflect(normalize(ps_cubevertexpos), normalize(v_normal)));
+		return GetCubemapPixel(reflectvector) * pow(reflectivity, 16);
+	$end
 }
+$end
 
 void main()
 {
-    // Calculate the parallax texture coordinates using the function
-    vec2 parallaxTexCoord = ParallaxMapping(ps_texcoord, ps_normal, ps_vertexpos);
 	float specularFactor = 0.0;
 	vec4 specularColor = vec4(0, 0, 0, 0);
 	vec4 finalColor = vec4(0, 0, 0, 0);
 
+
 	$branch specular == 1 || cubemaps >= 1
+	$begin
+	$branch shadertype != 23
 	$begin
 		vec4 specTexture = texture2D(speculartex, ps_texcoord);
 		specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
 	$end
+	$end
+	
+	$branch specular == 1 || cubemaps >= 1
+	$begin
+	$branch shadertype == 23
+	$begin
+		vec4 specTexture = texture2D(speculartex, ParallaxTexCoords);
+		specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
+	$end
+	$end
 	
 	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
+	$begin
+	$branch shadertype != 23
 	$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
 		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
@@ -885,6 +1047,21 @@ void main()
 		$begin
 			finalColor += AddCubemaps(specularFactor);
 		$end
+	$end
+	$end
+	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
+	$begin
+	$branch shadertype == 23
+	$begin
+		vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
+		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
+		finalColor = finalColor*color;
+		
+		$branch cubemaps >= 1
+		$begin
+			finalColor += AddCubemaps(specularFactor);
+		$end
+	$end
 	$end
 	$branch shadertype == 3 || shadertype == 22
 	$begin
@@ -896,13 +1073,32 @@ void main()
 	$end
 	$branch shadertype == 4
 	$begin
+	$branch shadertype != 23
+	$begin
 		finalColor = texture2D(maintexture, ps_texcoord) * color;
+	$end
+	$end
+	$branch shadertype == 4
+	$begin
+	$branch shadertype == 23
+	$begin
+		finalColor = texture2D(maintexture, ParallaxTexCoords) * color;
+	$end
 	$end
 	$branch shadertype == 5
 	$begin
 		// Build the TBN matrix and get the vertex normal
+		$branch shadertype != 23
+	    $begin
 		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
 		vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
+		$end
+		
+		$branch shadertype == 23
+	    $begin
+		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
+		vec3 v_normal = GetEyeSpaceNormal(ParallaxTexCoords, normalmap, ps_normal, tbnMatrix);
+		$end
 		
 		//
 		// Light 1
@@ -982,9 +1178,19 @@ void main()
 	$end
 	$branch shadertype == 7
 	$begin
+	$branch shadertype != 23
+	$begin
 		// Build the TBN matrix and get the vertex normal
 		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
 		vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
+		$end
+		
+		$branch shadertype == 23
+	$begin
+		// Build the TBN matrix and get the vertex normal
+		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
+		vec3 v_normal = GetEyeSpaceNormal(ParallaxTexCoords, normalmap, ps_normal, tbnMatrix);
+		$end
 		
 		//
 		// Light 1
@@ -1064,12 +1270,27 @@ void main()
 	$end
 	$branch shadertype == 9
 	$begin
+	$branch shadertype != 23
+	$begin
 		vec4 caustics1 = texture2D(maintexture, ps_texcoord);
 		vec4 caustics2 = texture2D(detailtex, ps_texcoord);
 		
 		finalColor = caustics1*(1.0 - interpolant) + caustics2*interpolant;
 	$end
+	$end
+	$branch shadertype == 9
+	$begin
+	$branch shadertype == 23
+	$begin
+		vec4 caustics1 = texture2D(maintexture, ParallaxTexCoords);
+		vec4 caustics2 = texture2D(detailtex, ParallaxTexCoords);
+		
+		finalColor = caustics1*(1.0 - interpolant) + caustics2*interpolant;
+	$end
+	$end
 	$branch shadertype == 10
+	$begin
+	$branch shadertype != 23
 	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
@@ -1078,12 +1299,27 @@ void main()
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
 		finalColor.w = finalColor.w * texture2D(maintexture, ps_texcoord).w;
 	$end
+	$end
+	$branch shadertype == 10
+	$begin
+	$branch shadertype == 23
+	$begin
+		vec3 lightDir = GetLightDir( lightvecstex );
+		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+		vec4 diffuseLight = GetDiffuseLight( difflightmap );
+		
+		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
+		finalColor.w = finalColor.w * texture2D(maintexture, ParallaxTexCoords).w;
+	$end
+	$end
 	$branch shadertype == 11
 	$begin
 		finalColor = vec4(1.0, 1.0, 1.0, 1.0)*color;
 	$end
 	
 	$branch shadertype == 12 || shadertype == 13
+	$begin
+	$branch shadertype != 23
 	$begin
 		finalColor = EncodeDepth(ps_vertexpos, light_radius);
 		
@@ -1092,6 +1328,21 @@ void main()
 			if(texture2D(maintexture, ps_texcoord).w < 0.5)
 				discard;
 		$end
+	$end
+	$end
+	
+	$branch shadertype == 12 || shadertype == 13
+	$begin
+	$branch shadertype == 23
+	$begin
+		finalColor = EncodeDepth(ps_vertexpos, light_radius);
+		
+		$branch shadertype == 13
+		$begin
+			if(texture2D(maintexture, ParallaxTexCoords).w < 0.5)
+				discard;
+		$end
+	$end
 	$end
 	
 	$branch shadertype == 14
@@ -1109,19 +1360,47 @@ void main()
 	
 	$branch shadertype == 16
 	$begin
+	$branch shadertype != 23
+	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
 	$end
+	$end
+	$branch shadertype == 16
+	$begin
+	$branch shadertype == 23
+	$begin
+		vec3 lightDir = GetLightDir( lightvecstex );
+		vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
+		vec4 diffuseLight = GetDiffuseLight( difflightmap );
+		
+		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
+	$end
+	$end
 	$branch shadertype == 17
+	$begin
+	$branch shadertype != 23
 	$begin
 		vec4 tex0 = texture2D(maintexture, ps_texcoord);
 		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
 		finalColor = tex0*tex1;
 		finalColor.xyz = finalColor.xyz*2;
 		finalColor = finalColor*color;
+	$end
+	$end
+	$branch shadertype == 17
+	$begin
+	$branch shadertype == 23
+	$begin
+		vec4 tex0 = texture2D(maintexture, ParallaxTexCoords);
+		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
+		finalColor = tex0*tex1;
+		finalColor.xyz = finalColor.xyz*2;
+		finalColor = finalColor*color;
+	$end
 	$end
 	$branch shadertype == 18
 	$begin
@@ -1134,17 +1413,42 @@ void main()
 	$end
 	$branch shadertype == 20
 	$begin
+	$branch shadertype != 23
+	$begin
 		finalColor = texture2D(maintexture, ps_texcoord);
 		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
 		finalColor.a = finalColor.a*tex1.a;
 		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
 	$end
+	$end
+	$branch shadertype == 20
+	$begin
+	$branch shadertype == 23
+	$begin
+		finalColor = texture2D(maintexture, ParallaxTexCoords);
+		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
+		finalColor.a = finalColor.a*tex1.a;
+		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
+	$end
+	$end
 	$branch shadertype == 21
+	$begin
+	$branch shadertype != 23
 	$begin
 		finalColor = texture2D(maintexture, ps_texcoord);
 		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
 	$end
+	$end
 	
+	$branch shadertype == 21
+	$begin
+	$branch shadertype == 23
+	$begin
+		finalColor = texture2D(maintexture, ParallaxTexCoords);
+		finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
+	$end
+	$end
+
 	$branch fogtype != 0
 	$begin
 		float fp_fogfactor = CalcFogFactor( ps_vertexpos.xyz, ps_fogcoord, fogparams );

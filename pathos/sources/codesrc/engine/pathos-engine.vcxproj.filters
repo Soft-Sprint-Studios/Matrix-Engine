@@ -24,9 +24,6 @@
     <Filter Include="Source Files\ui">
       <UniqueIdentifier>{7ce3680f-94e6-4fb8-8ef8-6c040dcc87b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\client">
-      <UniqueIdentifier>{db048224-e616-40fb-8732-7e98f374a4bc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\server">
       <UniqueIdentifier>{ded1b7fb-b260-48f3-9639-b542695c1afa}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,15 @@
     </Filter>
     <Filter Include="Source Files\discord">
       <UniqueIdentifier>{e58e18c0-8a8a-4d08-9918-80f3a0f2a77b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sentry">
+      <UniqueIdentifier>{1035b0e2-eef8-494d-a5e8-adc270b9fe84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\sentry">
+      <UniqueIdentifier>{27f94c5d-22de-47f1-bfe9-aa1510ded578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\common\client">
+      <UniqueIdentifier>{db048224-e616-40fb-8732-7e98f374a4bc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -229,31 +235,31 @@
       <Filter>Source Files\shared</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_cmd.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_efx.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_main.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_msg.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_pmove.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_predict.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_resource.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_snd.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_utils.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="server\sv_entities.cpp">
       <Filter>Source Files\server</Filter>
@@ -292,7 +298,7 @@
       <Filter>Source Files\ui\windows</Filter>
     </ClCompile>
     <ClCompile Include="client\cl_tempentities.cpp">
-      <Filter>Source Files\client</Filter>
+      <Filter>Source Files\common\client</Filter>
     </ClCompile>
     <ClCompile Include="renderer\r_interfacefuncs.cpp">
       <Filter>Source Files\renderer</Filter>
@@ -408,6 +414,9 @@
     <ClCompile Include="png.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sentrysystem.cpp">
+      <Filter>Source Files\sentry</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
@@ -480,9 +489,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="modelcache.h">
@@ -896,11 +902,17 @@
     <ClInclude Include="discord\discordrpcsystem.h">
       <Filter>Header Files\discord</Filter>
     </ClInclude>
+    <ClInclude Include="png.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="shdrchk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="png.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="sentrysystem.h">
+      <Filter>Header Files\sentry</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

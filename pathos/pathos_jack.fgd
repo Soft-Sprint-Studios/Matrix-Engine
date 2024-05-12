@@ -818,7 +818,6 @@
 	  6 : "256*256"
 	  7 : "512*512"
 	  8 : "1024*1024"
-	  9 : "2048*2048"
   ]
 ]
 @PointClass base(Targetname) size(-8 -8 -8, 8 8 8) color(230 230 255) = env_decal: "Decal Entity" 
@@ -891,7 +890,7 @@
     512 : "Start On" : 0
   ]      
 ]
-@PointClass base(Targetname, Global) size(-8 -8 -8, 8 8 8) iconsprite("sprites/lightbulb.spr") color(0 128 255) sprite() = env_dlighttrain : "ELight Train"
+@PointClass base(Targetname, Global) size(-8 -8 -8, 8 8 8) iconsprite("sprites/lightbulb.spr") color(0 128 255) sprite() = env_dlighttrain : "DLight Train"
 [
   target(target_source) : "First stop target"
   speed(integer) : "Speed (units per second)" : 64

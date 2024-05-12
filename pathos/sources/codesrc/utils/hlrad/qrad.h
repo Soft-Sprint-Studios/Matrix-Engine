@@ -187,7 +187,7 @@ enum {
 #define ACCURATEBOUNCE_DEFAULT_SKYLEVEL 5 // sample 1026 normals
 
 
-#define ALLSTYLES 64 // HL limit. //--vluzacn
+#define ALLSTYLES 512 // HL limit. //--vluzacn
 
 #define BOGUS_RANGE 131072
 

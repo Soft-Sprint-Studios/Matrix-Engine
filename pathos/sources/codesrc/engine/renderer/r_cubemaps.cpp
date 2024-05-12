@@ -38,8 +38,7 @@ Uint32 CCubemapManager::g_cubemapResolutions[NUM_CUBEMAP_SIZES][2] =
 	{ 128, 128 },
 	{ 256, 256 },
 	{ 512, 512 },
-	{ 1024, 1024 },
-	{ 2048, 2048 }
+	{ 1024, 1024 }
 };
 
 // Cubemap interpolation time
@@ -434,7 +433,7 @@ void CCubemapManager::BuildEntityList( cl_entity_t** pRenderEntities, Uint32 *pN
 			&& strcmp(pkeyvalue, "func_wall") 
 			&& strcmp(pkeyvalue, "func_illusionary")
 			&& strcmp(pkeyvalue, "env_model"))
-			continue;
+				continue;
 
 		// Grab model
 		pkeyvalue = ValueForKey(pEntities[i], "model");

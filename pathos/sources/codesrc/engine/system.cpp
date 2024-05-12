@@ -60,6 +60,7 @@ state variables and functionality.
 #include "enginefuncs.h"
 #include "discord/discordrpcsystem.h"
 #include "shdrchk.h"
+#include "sentrysystem.h"
 
 #if defined WIN32 && _64BUILD
 #include <detours.h>
@@ -106,6 +107,8 @@ bool Sys_ShouldExit( void )
 	return ens.exit;
 }
 
+SentrySystem sentry;
+
 //=============================================
 // @brief Initializes the basic systems
 // 
@@ -114,6 +117,7 @@ bool Sys_ShouldExit( void )
 //=============================================
 bool Sys_Init( CArray<CString>* argsArray )
 {
+	sentry.init();
 	// Create console print mutex
 	g_hPrintMutex = CreateMutex(nullptr, FALSE, "PathosConsolePrintMutex");
 	if(nullptr != g_hPrintMutex)
@@ -338,6 +342,8 @@ void Sys_Shutdown( void )
 
 	// Quit SDL
 	SDL_Quit();
+
+	sentry.shutdown();
 }
 
 //=============================================
@@ -690,29 +696,6 @@ bool Sys_ParseLaunchParams( const CArray<CString>* argsArray )
 				}
 
 				screenHeight = SDL_atoi(strArg.c_str());
-			}
-			else if(!qstrcmp(strArg, "-max_edicts"))
-			{
-				if(i == (argsArray->size()-1))
-				{
-					Con_Printf("Warning: Missing argument for %s.\n", strArg.c_str());
-					continue;
-				}
-
-				CString argNameInner = strArg;
-				strArg = (*argsArray)[++i];
-				if(!Common::IsNumber(strArg))
-				{
-					Con_Printf("Warning: Argument '%s' for %s needs to be a valid number.\n", strArg.c_str(), argNameInner.c_str());
-					continue;
-				}
-
-				ens.arg_max_edicts = SDL_atoi(strArg.c_str());
-				if(ens.arg_max_edicts > MAX_SERVER_ENTITIES)
-				{
-					Con_Printf("Invalid value %d for '-max_edicts', maximum is %d.\n", ens.arg_max_edicts, (Int32)MAX_SERVER_ENTITIES);
-					ens.arg_max_edicts = MAX_SERVER_ENTITIES;
-				}
 			}
 			else if(!qstrcmp(strArg, "-window") || !qstrcmp(strArg, "-startwindowed") || !qstrcmp(strArg, "-windowed"))
 			{

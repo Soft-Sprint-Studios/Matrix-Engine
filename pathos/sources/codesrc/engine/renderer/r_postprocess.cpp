@@ -57,6 +57,8 @@ CPostProcess::CPostProcess( void ):
 	m_pCvarBloom(nullptr),
 	m_pCvarVignette(nullptr),
 	m_pCvarSSAO(nullptr),
+	m_pCvarTonemap(nullptr),
+	m_pCvarSepia(nullptr),
 	m_pCvarPostProcess(nullptr),
 	m_pScreenRTT(nullptr),
 	m_pScreenTexture(nullptr)
@@ -97,6 +99,11 @@ bool CPostProcess :: Init( void )
 	m_pCvarSSAOStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_ssaostrength", "1", "SSAO Strength.");
 	m_pCvarSSAORadius = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_ssaoradius", "1", "SSAO Radius.");
 	m_pCvarPostProcess = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_postprocess", "1", "Disable post-process effects." );
+	m_pCvarTonemap = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_tonemap", "0", "Toggles Tonemapping.");
+	m_pCvarTonemapunderexposure = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_tonemapunderexposure", "1", "Tonemapping underexposure.");
+	m_pCvarTonemapoverexposure = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_tonemapoverexposure", "1", "Tone mapping overexposure.");
+	m_pCvarSepia = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_sepia", "0", "Toggle Sepia.");
+	m_pCvarSepiaStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_sepiastrength", "1", "Sepia Strength.");
 
 	return true;
 }
@@ -146,6 +153,9 @@ bool CPostProcess :: InitGL( void )
 		m_attribs.u_BloomStrength = m_pShader->InitUniform("bloomStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_VignetteStrength = m_pShader->InitUniform("vignetteStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_VignetteRadius = m_pShader->InitUniform("vignetteRadius", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_Tonemapunderexposure = m_pShader->InitUniform("underExposure", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_Tonemapuoverexposure = m_pShader->InitUniform("overExposure", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_SepiaStrength = m_pShader->InitUniform("sepiaStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_SSAOStrength = m_pShader->InitUniform("SSAOStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_SSAORadius = m_pShader->InitUniform("SSAORadius", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_texture1 = m_pShader->InitUniform("texture0", CGLSLShader::UNIFORM_INT1);
@@ -166,6 +176,9 @@ bool CPostProcess :: InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_BloomStrength, "bloomStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_VignetteStrength, "vignetteStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_VignetteRadius, "vignetteRadius", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_Tonemapunderexposure, "underExposure", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_Tonemapuoverexposure, "overExposure", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_SepiaStrength, "sepiaStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_SSAOStrength, "SSAOStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_SSAORadius, "SSAORadius", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_texture1, "texture0", m_pShader, Sys_ErrorPopup)
@@ -593,6 +606,43 @@ bool CPostProcess::DrawSSAO(void)
 // @brief
 //
 //=============================================
+bool CPostProcess::DrawTonemap(void)
+{
+	// Fetch screen contents
+	FetchScreen(&m_pScreenRTT);
+	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenRTT->palloc->gl_index);
+
+	m_pShader->SetUniform1f(m_attribs.u_Tonemapunderexposure, m_pCvarTonemapunderexposure->GetValue());
+	m_pShader->SetUniform1f(m_attribs.u_Tonemapuoverexposure, m_pCvarTonemapoverexposure->GetValue());
+	if (!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_TONEMAP))
+		return false;
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	return true;
+}
+
+//=============================================
+// @brief
+//
+//=============================================
+bool CPostProcess::DrawSepia(void)
+{
+	// Fetch screen contents
+	FetchScreen(&m_pScreenRTT);
+	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenRTT->palloc->gl_index);
+
+	m_pShader->SetUniform1f(m_attribs.u_SepiaStrength, m_pCvarSepiaStrength->GetValue());
+	if (!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_SEPIA))
+		return false;
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	return true;
+}
+
+//=============================================
+// @brief
+//
+//=============================================
 void CPostProcess :: ClearMotionBlur( void )
 {
 	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenTexture->gl_index);
@@ -862,6 +912,30 @@ bool CPostProcess :: Draw( void )
 	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarSSAO->GetValue() > 0)
 	{
 		if (!DrawSSAO())
+		{
+			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
+			m_pShader->DisableShader();
+			m_pVBO->UnBind();
+			return false;
+		}
+	}
+
+	// Render tonemap
+	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarTonemap->GetValue() > 0)
+	{
+		if (!DrawTonemap())
+		{
+			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
+			m_pShader->DisableShader();
+			m_pVBO->UnBind();
+			return false;
+		}
+	}
+
+	// Render sepia
+	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarSepia->GetValue() > 0)
+	{
+		if (!DrawSepia())
 		{
 			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
 			m_pShader->DisableShader();

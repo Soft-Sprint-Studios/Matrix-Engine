@@ -191,8 +191,8 @@ bool R_Init( void )
 	g_pCvarGraphHeight = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_graphheight", "15", "Height of the time graph." );
 	g_pCvarTimeGraph = gConsole.CreateCVar( CVAR_FLOAT, FL_CV_CLIENT, "r_timegraph", "0", "Show render performance timegraph." );
 	g_pCvarOcclusionQueries = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_glowocclusion", "1", "Toggles the use of occlusion queries for glows." );
-	g_pCvarTraceGlow = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_traceglow", "0", "Enable/disable performance intensive trace tests." );
-	g_pCvarBatchDynamicLights = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_lightbatches", "0", "Controls whether light rendering is batched based on proximity and type of light." );
+	g_pCvarTraceGlow = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_traceglow", "1", "Enable/disable performance intensive trace tests." );
+	g_pCvarBatchDynamicLights = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_lightbatches", "1", "Controls whether light rendering is batched based on proximity and type of light." );
 	g_pCvarOverdarkenTreshold = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_overdarken_treshold", "35", "Overdarkening treshold setting, default is 35." );
 
 	gCommands.CreateCommand("r_exportald", ALD_ExportLightmaps, "Exports current lightmap info as nightstage light info");

@@ -30,6 +30,8 @@ enum pp_shadertypes_t
 	SHADER_BLOOM,
 	SHADER_VIGNETTE,
 	SHADER_SSAO,
+	SHADER_TONEMAP,
+	SHADER_SEPIA,
 };
 
 struct pp_shader_attribs
@@ -61,12 +63,15 @@ struct pp_shader_attribs
 	Int32	u_screenheight;
 	Int32	u_timer;
 	Int32	u_chromaticStrength;
+	Int32	u_SepiaStrength;
 	Int32	u_FXAAStrength;
 	Int32	u_BWStrength;
 	Int32	u_BleachStrength;
 	Int32	u_BloomStrength;
 	Int32	u_VignetteStrength;
 	Int32	u_VignetteRadius;
+	Int32	u_Tonemapunderexposure;
+	Int32	u_Tonemapuoverexposure;
 	Int32	u_SSAOStrength;
 	Int32	u_SSAORadius;
 
@@ -136,6 +141,10 @@ private:
 	bool DrawVignette(void);
 	// Draws SSAO
 	bool DrawSSAO(void);
+	// Draws Tonemapping
+	bool DrawTonemap(void);
+	// Draws screen sepia
+	bool DrawSepia(void);
 
 	// Fetches screen contents
 	static void FetchScreen( rtt_texture_t** ptarget );
@@ -213,6 +222,16 @@ private:
 	CCVar* m_pCvarVignetteStrength;
 	// Vignette Radius cvar
 	CCVar* m_pCvarVignetteRadius;
+	// Tonemap cvar
+	CCVar* m_pCvarTonemap;
+	// Tonemap underexposure cvar
+	CCVar* m_pCvarTonemapunderexposure;
+	// Tonemap overexposure cvar
+	CCVar* m_pCvarTonemapoverexposure;
+	// Seoua cvar
+	CCVar* m_pCvarSepia;
+	// Sepia strength cvar
+	CCVar* m_pCvarSepiaStrength;
 	// SSAO cvar
 	CCVar* m_pCvarSSAO;
 	// SSAO strength cvar

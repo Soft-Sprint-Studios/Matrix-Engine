@@ -276,8 +276,8 @@ bool SV_Init( void )
 	g_psv_chunksize = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_SV_ONLY|FL_CV_NOTIFY), "sv_max_chunksize", "524288", "Max chunk size for uploads", SV_ChunkSizeCvarCallBack);
 	g_psv_allowdownload = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_SV_ONLY|FL_CV_NOTIFY), "sv_allowdownload", "1", "Controls whether downloads for clients are supported");
 	g_psv_netdebug =  gConsole.CreateCVar(CVAR_FLOAT, FL_CV_NONE, "sv_netdebug", "0", "Enable debug prints for net data");
-	g_psv_holdtoduck =  gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_SV_ONLY|FL_CV_SAVE), "sv_holdtoduck", "0", "Controls whether ducking is toggled or to-hold");
-	g_psv_autoaim =  gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_SV_ONLY|FL_CV_SAVE), AUTOAIM_CVAR_NAME, "0", "Controls whether auto-aiming is enabled");
+	g_psv_holdtoduck =  gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_SV_ONLY|FL_CV_SAVE), "sv_holdtoduck", "1", "Controls whether ducking is toggled or to-hold");
+	g_psv_autoaim = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_SV_ONLY | FL_CV_SAVE), AUTOAIM_CVAR_NAME, "0", "Controls whether auto-aiming is enabled");
 
 	// Initialize physics
 	SV_Physics_Init();
