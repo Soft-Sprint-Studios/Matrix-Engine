@@ -13,3 +13,5 @@ For any questions or issues regarding the Parallax Engine, please contact our de
 Please read the original Pathos Engine License beforehand at https://github.com/Mythic-Legend-Interactive/Parallax-Engine/blob/main/Original-Readme
 
 The Parallax Engine is currently closed-source and proprietary to Mythic Legend Interactive. Unauthorized distribution or modification of the engine or its associated files is strictly prohibited.
+
+Copyright © [2024] [Mythic Legend Interactive]. All rights reserved.
