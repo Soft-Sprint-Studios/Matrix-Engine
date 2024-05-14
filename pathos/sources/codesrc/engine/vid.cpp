@@ -670,6 +670,17 @@ void VID_Draw( void )
 		return;
 	}
 
+	// Print watermark
+	if (!R_DrawWatermark())
+	{
+		CBasicDraw* pDraw = CBasicDraw::GetInstance();
+		Sys_ErrorPopup("Shader error: %s.\n", pDraw->GetShaderError());
+		Con_Printf("%s - Fatal error while drawing Watermark.\n", __FUNCTION__);
+		CL_Disconnect();
+		ens.exit = true;
+		return;
+	}
+
 	// Draw console debug prints
 	if(!gConsole.Draw())
 	{

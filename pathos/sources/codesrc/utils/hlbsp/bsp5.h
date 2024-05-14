@@ -20,8 +20,13 @@
 
 #define ENTITIES_VOID "entities.void"
 #define ENTITIES_VOID_EXT ".void"
+#define TESTING_HIGHER_MAP_LIMIT
 
+#ifndef TESTING_HIGHER_MAP_LIMIT
 #define	BOGUS_RANGE	144000
+#else
+#define	BOGUS_RANGE	288000
+#endif
 
 // the exact bounding box of the brushes is expanded some for the headnode
 // volume.  is this still needed?

@@ -1917,7 +1917,7 @@ bool CBSPRenderer::DrawFirst( void )
 			glLineWidth(1);
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-			m_pShader->SetUniform4f(m_attribs.u_color, 1.0, 1.0, 1.0, 1.0);
+			m_pShader->SetUniform4f(m_attribs.u_color, 0.0, 1.0, 1.0, 1.0);
 			if(!m_pShader->SetDeterminator(m_attribs.d_fogtype, fog_none, false)
 				|| !m_pShader->SetDeterminator(m_attribs.d_alphatest, ALPHATEST_DISABLED, false)
 				|| !m_pShader->SetDeterminator(m_attribs.d_specular, FALSE, false)

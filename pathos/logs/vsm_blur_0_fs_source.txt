@@ -1,0 +1,23 @@
+#version 460
+
+uniform sampler2D texture0;
+uniform float size;
+
+in vec2 ps_texcoord;
+out vec4 oColor;
+
+void main()
+{
+    float offset[3] = float[](0.0, 1.0);
+    float weight[3] = float[](0.5, 0.5);
+
+    vec4 outcolor;
+    outcolor = texture(texture0, ps_texcoord) * weight[0];
+
+        for(int i = 1; i < 2; i++) // Only two samples
+        {
+            outcolor += texture(texture0, ps_texcoord + vec2(0, offset[i] / size)) * weight[i];
+                outcolor += texture(texture0, ps_texcoord - vec2(0, offset[i] / size)) * weight[i];
+            }
+    oColor = outcolor;
+}

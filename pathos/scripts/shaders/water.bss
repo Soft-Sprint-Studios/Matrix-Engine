@@ -64,6 +64,8 @@ uniform sampler2D reflectMap;
 uniform sampler2DRect rectangleRefractMap;
 uniform sampler2D diffuseMap;
 uniform sampler2D lightvecsMap;
+uniform sampler2D flowMap;
+uniform float flowStrength;
 
 uniform mat4 normalmatrix;
 
@@ -181,7 +183,8 @@ void main()
 {
 	vec4 finalColor;
 
-	vec2 texcoord = ps_texcoords + scroll;
+    vec4 flow = texture(flowMap, ps_texcoords);
+    vec2 texcoord = ps_texcoords + flow.xy * flowStrength;
 
 	vec2 texc0 = vec2(texcoord.x+time*0.20, texcoord.y+time*0.15);
 	vec2 texc1 = vec2(texcoord.x-time*0.13, texcoord.y+time*0.11);

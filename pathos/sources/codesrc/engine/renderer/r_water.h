@@ -100,6 +100,7 @@ struct water_settings_t
 	Float texscale;
 	Float lightstrength;
 	Float specularstrength;
+	Float flowstrength;
 	Float phongexponent;
 	bool refractonly;
 	bool cheaprefraction;
@@ -174,6 +175,7 @@ struct water_attribs
 	Int32 u_lightmap;
 	Int32 u_refract;
 	Int32 u_reflect;
+	Int32 u_flowmap;
 	Int32 u_rectrefract;
 	Int32 u_diffusemap;
 	Int32 u_lightvecsmap;
@@ -193,6 +195,7 @@ struct water_attribs
 	Int32 u_lightstrength;
 	Int32 u_specularstrength;
 	Int32 u_phongexponent;
+	Int32 u_flowstrength;
 
 	Int32 u_modelview;
 	Int32 u_projection;
@@ -227,6 +230,8 @@ public:
 	static const Float DEFAULT_SPECULAR_FACTOR;
 	// Water shader normalmap texture path
 	static const Char WATER_NORMALMAP_PATH[];
+	// Water shader flowmap texture path
+	static const Char WATER_FLOWMAP_PATH[];
 	// Script base path
 	static const Char WATER_SCRIPT_BASEPATH[];
 	// Default water script name
@@ -346,6 +351,8 @@ private:
 private:
 	// Normalmap texture for water surface
 	en_texture_t *m_pNormalTexture;
+	// Flowmap texture for water surface
+	en_texture_t* m_pFlowTexture;
 
 	// View params for water
 	ref_params_t m_waterParams;

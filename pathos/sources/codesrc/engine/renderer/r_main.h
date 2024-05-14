@@ -517,6 +517,7 @@ extern inline void R_ValidateShader( CBasicDraw* pDraw );
 extern bool R_LoadTextureListFile( const Char* pstrTextureListFile, CArray<en_texture_t*>& texArray, rs_level_t level, const GLint* pborder, bool clamp );
 
 extern bool R_PrintCounters( void );
+extern bool R_DrawWatermark(void);
 extern void R_ResetFrameStates( void );
 
 extern bool R_DrawString( color32_t color, Int32 x, Int32 y, const Char* pstrString, const font_set_t* pfont );

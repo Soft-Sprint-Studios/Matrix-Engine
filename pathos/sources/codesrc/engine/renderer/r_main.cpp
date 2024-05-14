@@ -86,6 +86,7 @@ CCVar* g_pCvarGaussianBlur = nullptr;
 CCVar* g_pCvarDynamicLights = nullptr;
 CCVar* g_pCvarNoFBO = nullptr;
 CCVar* g_pCvarStats = nullptr;
+CCVar* g_pCvarWatermark = nullptr;
 CCVar* g_pCvarCubemaps = nullptr;
 CCVar* g_pCvarDrawOrigins = nullptr;
 CCVar* g_pCvarAnisotropy = nullptr;
@@ -176,6 +177,7 @@ bool R_Init( void )
 	g_pCvarDynamicLights = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_dynamiclights", "1", "Toggles dynamic light effects" );
 	g_pCvarNoFBO = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_nofbo", "0", "Enable/Disable FBO usage" );
 	g_pCvarStats = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_stats", "0", "Toggle render statistics info printing" );
+	g_pCvarWatermark = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_watermark", "1", "Engine Watermark");
 	g_pCvarCubemaps = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_cubemaps", "1", "Toggles cubemap reflections" );
 	g_pCvarDrawOrigins = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_draworigins", "0", "Toggle rendering of origin points");
 	g_pCvarAnisotropy = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_GL_DEPENDENT|FL_CV_CLIENT|FL_CV_SAVE), ANISOTROPY_CVAR_NAME, "0", "Controls texture anisotropy", R_AnisotropyCvarCallBack);
@@ -2894,6 +2896,31 @@ bool R_PrintCounters( void )
 	glDepthMask(GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
 	
+	return true;
+}
+
+//====================================
+//
+//====================================
+bool R_DrawWatermark(void)
+{
+	// Check if the watermark cvar is less than or equal to 0
+	if (g_pCvarWatermark->GetValue() <= 0)
+		return true;
+
+	glDepthMask(GL_FALSE);
+	glDisable(GL_DEPTH_TEST);
+
+	// Draw the watermark text
+	if (!R_DrawString(color32_t(255, 255, 255, 255), 1500, 15, "Parallax Engine Development Build Not For Retail", nullptr))
+	{
+		Sys_ErrorPopup("Shader error: %s.", gText.GetShaderError());
+		return false;
+	}
+
+	glDepthMask(GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
+
 	return true;
 }
 

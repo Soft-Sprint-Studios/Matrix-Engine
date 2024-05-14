@@ -8,6 +8,7 @@ causticscale 2
 causticstrength 1.0
 causticstimescale 1.0
 strength 0.8
+flowstrength 100.0
 timescale 0.7
 lightstrength 0.2
 specularstrength 0.85
