@@ -360,9 +360,6 @@
     <ClCompile Include="..\shared\r_basicdraw.cpp">
       <Filter>Source Files\shared</Filter>
     </ClCompile>
-    <ClCompile Include="bspv30.cpp">
-      <Filter>Source Files\bsp</Filter>
-    </ClCompile>
     <ClCompile Include="pbspv1.cpp">
       <Filter>Source Files\bsp</Filter>
     </ClCompile>
@@ -836,14 +833,8 @@
     <ClInclude Include="..\shared\r_basicdraw.h">
       <Filter>Header Files\shared</Filter>
     </ClInclude>
-    <ClInclude Include="..\common\bspv30file.h">
-      <Filter>Header Files\common</Filter>
-    </ClInclude>
     <ClInclude Include="..\common\pbspv1file.h">
       <Filter>Header Files\common</Filter>
-    </ClInclude>
-    <ClInclude Include="bspv30.h">
-      <Filter>Header Files\bsp</Filter>
     </ClInclude>
     <ClInclude Include="..\common\miptex.h">
       <Filter>Header Files\common</Filter>

@@ -49,11 +49,7 @@ static const Uint32 EXTRAINFO_ALLOC_SIZE = 128;
 static const Uint32 MAX_ENTITY_LIGHTS = 256;
 
 // Server dll path
-#ifdef _64BUILD
 static const Char CLIENT_DLL_PATH[] = "dlls/client_x64.dll";
-#else
-static const Char CLIENT_DLL_PATH[] = "dlls/client_x86.dll";
-#endif
 
 // Datatype for ClientDLLInit function in the game dll
 typedef bool (*pfnClientDLLInit_t)( Uint32 version, cldll_funcs_t& dllFuncs, const trace_interface_t& traceFuncs, const file_interface_t& fileFuncs, const cldll_engfuncs_t& engFuncs, const cl_efxapi_t& efxAPI, const r_interface_t& renderFuncs );

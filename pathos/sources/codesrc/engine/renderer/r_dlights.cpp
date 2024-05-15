@@ -17,7 +17,6 @@ All Rights Reserved.
 #include "r_dlights.h"
 #include "cache_model.h"
 #include "r_fbo.h"
-#include "bspv30.h"
 #include "console.h"
 #include "r_basic_vertex.h"
 #include "r_glextf.h"

@@ -14,7 +14,6 @@ All Rights Reserved.
 #include "brushmodel.h"
 #include "modelcache.h"
 #include "pbspv1file.h"
-#include "bspv30.h"
 #include "pbspv1.h"
 #include "system.h"
 #include "texturemanager.h"
@@ -335,23 +334,6 @@ cache_model_t* CModelCache::LoadBSPModel( const Char* pstrFilename, const byte* 
 			break;
 		}
 	}
-	else
-	{
-		// Get header info
-		const dheader_t* pheader = reinterpret_cast<const dheader_t*>(pfile);
-	
-		// Determine bsp version to load
-		switch(pheader->version)
-		{
-		case BSPV30_VERSION:
-			pmodel = BSPV30_Load(pfile, pheader, pstrFilename);
-			break;
-		default:
-			Con_EPrintf("%s - BSP file '%s' has wrong version number '%d', which should be '%d'.\n", __FUNCTION__, pstrFilename, pheader->version, BSPV30_VERSION);
-			return nullptr;
-			break;
-		}
-	}
 
 	// See if the load failed
 	if(!pmodel)
@@ -367,7 +349,6 @@ cache_model_t* CModelCache::LoadBSPModel( const Char* pstrFilename, const byte* 
 	// Set up PAS after loading submodel data
 	cache_model_t* pcache = m_modelCacheArray[0];
 	pmodel = pcache->getBrushmodel();
-	BSPV30_SetupPAS((*pmodel));
 
 	return pcache;
 }

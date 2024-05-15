@@ -574,11 +574,8 @@ bool CGLSLShader::LoadFromBSD( void )
 
 	bsdFilePath << "scripts/shaders/";
 		
-#ifdef _64BUILD
+
 	bsdFilePath << "binary_x64/";
-#else
-	bsdFilePath << "binary_x86/";
-#endif
 
 	bsdFilePath << basename << ".bsd";
 
@@ -819,11 +816,8 @@ bool CGLSLShader::CompileCSDShaderData( void )
 		CString folderPath;
 		folderPath << "scripts/shaders/";
 
-#ifdef _64BUILD
+
 		folderPath << "binary_x64/";
-#else
-		folderPath << "binary_x86/";
-#endif
 		if(!m_fileInterface.pfnCreateDirectory(folderPath.c_str()))
 		{
 			m_errorString << "Failed to create directory " << folderPath;

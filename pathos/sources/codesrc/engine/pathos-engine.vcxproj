@@ -235,7 +235,6 @@
     <ClCompile Include="..\shared\texturemanager.cpp" />
     <ClCompile Include="ald.cpp" />
     <ClCompile Include="brushmodel.cpp" />
-    <ClCompile Include="bspv30.cpp" />
     <ClCompile Include="client\cl_cmd.cpp" />
     <ClCompile Include="client\cl_efx.cpp" />
     <ClCompile Include="client\cl_main.cpp" />
@@ -334,7 +333,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\aldformat.h" />
-    <ClInclude Include="..\common\bspv30file.h" />
     <ClInclude Include="..\common\cache_model.h" />
     <ClInclude Include="..\common\carray.h" />
     <ClInclude Include="..\common\carray_inline.hpp" />
@@ -382,7 +380,6 @@
     <ClInclude Include="..\shared\flex_shared.h" />
     <ClInclude Include="..\shared\fontset.h" />
     <ClInclude Include="ald.h" />
-    <ClInclude Include="bspv30.h" />
     <ClInclude Include="buildcounter.h" />
     <ClInclude Include="client\cl_efx.h" />
     <ClInclude Include="client\cl_main.h" />

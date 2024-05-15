@@ -37,13 +37,8 @@ All Rights Reserved.
 #include "r_main.h"
 #include "window.h"
 
-#ifdef _64BUILD
 // OpenAL library path
 static const Char OPENAL_LIBRARY_PATH[] = "x64/OpenAL32.dll";
-#else
-// OpenAL library path
-static const Char OPENAL_LIBRARY_PATH[] = "x86/OpenAL32.dll";
-#endif
 
 // Max active tempent sounds
 const Uint32 CSoundEngine::MAX_ACTIVE_TEMP_SOUNDS = 4;

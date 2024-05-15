@@ -231,11 +231,7 @@ bool SV_Init( void )
 	}
 
 	// Retreive the export functions
-#ifdef _64BUILD
 	if(!Sys_GetDLLExports(SERVER_DLL_NAME, svs.pdllhandle, svs.exports))
-#else
-	if(!Sys_GetDLLExports(fulldllpath.c_str(), svs.pdllhandle, svs.exports))
-#endif
 	{
 		Sys_ErrorPopup("Failed to get exports for '%s'.\n", SERVER_DLL_PATH);
 		return false;

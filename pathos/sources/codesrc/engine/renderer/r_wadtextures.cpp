@@ -19,7 +19,6 @@ All Rights Reserved.
 #include "brushmodel.h"
 #include "miptex.h"
 #include "pbspv1file.h"
-#include "bspv30.h"
 
 // Path to legacy texture material type associations
 const Char CWADTextureResource::TEXTURE_MATERIAL_ASSOCIATION_FILE_PATH[] = "scripts/legacy/materials.txt";
@@ -163,17 +162,6 @@ bool CWADTextureResource::Init( const Char* pstrBSPName, const CArray<CString>& 
 		{
 			// Pathos BSP
 			ptexturelump = reinterpret_cast<const dmiptexlump_t*>(reinterpret_cast<byte*>(m_pBSPFile) + pheaderp1bsp->lumps[LUMP_TEXTURES].offset);
-		}
-		else
-		{
-			const dheader_t* pheaderv30bsp = reinterpret_cast<const dheader_t*>(m_pBSPFile);
-			if (pheaderv30bsp->version != BSPV30_VERSION)
-			{
-				Con_Printf("%s - Unknown BSP version %d.\n", __FUNCTION__, pheaderv30bsp->version);
-				return false;
-			}
-
-			ptexturelump = reinterpret_cast<const dmiptexlump_t*>(reinterpret_cast<byte*>(m_pBSPFile) + pheaderv30bsp->lumps[LUMP_TEXTURES].offset);
 		}
 
 		for (Int32 i = 0; i < ptexturelump->nummiptex; i++)
@@ -568,17 +556,6 @@ en_texture_t* CWADTextureResource::GetWADTexture( en_material_t* pmaterial, cons
 		{
 			// Pathos BSP
 			ptexturelump = reinterpret_cast<const dmiptexlump_t*>(reinterpret_cast<byte*>(m_pBSPFile) + pheaderp1bsp->lumps[LUMP_TEXTURES].offset);
-		}
-		else
-		{
-			const dheader_t* pheaderv30bsp = reinterpret_cast<const dheader_t*>(m_pBSPFile);
-			if(pheaderv30bsp->version != BSPV30_VERSION)
-			{
-				Con_Printf("%s - Unknown BSP version %d.\n", __FUNCTION__, pheaderv30bsp->version);
-				return nullptr;
-			}
-
-			ptexturelump = reinterpret_cast<const dmiptexlump_t*>(reinterpret_cast<const byte*>(m_pBSPFile) + pheaderv30bsp->lumps[LUMP_TEXTURES].offset);
 		}
 
 		for(Int32 i = 0; i < ptexturelump->nummiptex; i++)

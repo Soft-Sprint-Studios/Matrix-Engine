@@ -62,22 +62,15 @@ state variables and functionality.
 #include "shdrchk.h"
 #include "sentrysystem.h"
 
-#if defined WIN32 && _64BUILD
 #include <detours.h>
-#endif
 
 extern file_interface_t ENGINE_FILE_FUNCTIONS;
 
 // Ugly hack to manage SDL2 load before main is called
 CStartup gStartup;
 
-#ifdef _64BUILD
 // OpenAL library path
 static const Char SDL2_LIBRARY_PATH[] = "x64/SDL2.dll";
-#else
-// OpenAL library path
-static const Char SDL2_LIBRARY_PATH[] = "x86/SDL2.dll";
-#endif
 
 // Definition of engine state structure
 engine_state_t ens;
@@ -247,11 +240,7 @@ bool Sys_Init( CArray<CString>* argsArray )
 	strPrint << " - [color r255]DEBUG[/color] build";
 #endif
 
-#ifdef _64BUILD
 	strPrint << " - x64 platform";
-#else
-	strPrint << " - x86 platform";
-#endif
 
 	strPrint << "\n";
 
@@ -892,7 +881,6 @@ void Sys_SetPaused( bool paused, bool print )
 // @brief Manages think functions for the interface
 // 
 //=============================================
-#ifdef _64BUILD
 static BOOL CALLBACK ExportCallback( PVOID pContext, ULONG nOrdinal, LPCSTR szSymbol, PVOID pbTarget )
 {
 	dll_export_t newExport;
@@ -901,14 +889,6 @@ static BOOL CALLBACK ExportCallback( PVOID pContext, ULONG nOrdinal, LPCSTR szSy
 
 	return TRUE;
 }
-#else
-static void ExportCallback( Char* pstrSymbolName )
-{
-	dll_export_t newExport;
-	newExport.functionname = pstrSymbolName;
-	g_pExportsTargetArray->push_back(newExport);
-}
-#endif
 
 //=============================================
 // @brief Manages think functions for the interface
@@ -916,7 +896,6 @@ static void ExportCallback( Char* pstrSymbolName )
 //=============================================
 bool Sys_GetDLLExports( const Char* pstrDLLName, void* pDLLHandle, CArray<dll_export_t>& destArray )
 {
-#ifdef _64BUILD
 	HMODULE hDLL = GetModuleHandleA(pstrDLLName);
 	if(!hDLL)
 	{
@@ -933,16 +912,6 @@ bool Sys_GetDLLExports( const Char* pstrDLLName, void* pDLLHandle, CArray<dll_ex
 		Con_EPrintf("Couldn't get exports for '%s'.\n", pstrDLLName);
 		return false;
 	}
-#else
-	// Set the destination array
-	g_pExportsTargetArray = &destArray;
-
-	if(!EnumExportedFunctions(pstrDLLName, ExportCallback))
-	{
-		Con_EPrintf("Couldn't get exports for '%s'.\n", pstrDLLName);
-		return false;
-	}
-#endif
 	// Set the function pointers
 	for(Uint32 i = 0; i < destArray.size(); i++)
 	{

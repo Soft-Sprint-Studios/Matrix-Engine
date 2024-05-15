@@ -28,13 +28,8 @@ All Rights Reserved.
 const Uint32 CSaveRestore::STRING_ARRAY_ALLOC_SIZE = 512;
 // Allocation size for buffers
 const Uint32 CSaveRestore::BUFFER_ALLOC_SIZE = 1024;
-#ifdef _64BUILD
 // Save directory path
 const Char CSaveRestore::SAVE_DIR_PATH[] = "save_x64/";
-#else
-// Save directory path
-const Char CSaveRestore::SAVE_DIR_PATH[] = "save_x86/";
-#endif
 // Save file version
 const Uint32 CSaveRestore::SAVE_FILE_VERSION = 1;
 
