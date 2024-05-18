@@ -252,6 +252,7 @@ uniform sampler2D normalmap;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
+uniform sampler2D speculartex2;
 uniform sampler2D heightmap;
 uniform float parallaxscale;
 $branch luminance == 1
@@ -478,34 +479,39 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 }
 
 float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
-    // Eye vector (towards the camera)
     vec3 eyeVec = normalize(-v_origin);
-    
-    // Reflect vector (direction of the reflection of light)
     vec3 reflectVec = reflect(lightDir, v_normal);
-    
-    // Calculate cosine of the angle between the eye vector and the reflect vector,
-    // clamping it to the range [0, 1]
     float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
     
-    // Fetch specular color from the specular texture using the given texture coordinates
-    vec4 specularColor = texture(speculartex, v_origin.xy);
-    
-    // Calculate the specular intensity using the red channel of the specular color
-    float specularReflectance = specularColor.r;
-    
-    // Calculate the specular component using Phong shading model,
-    // scaled by the specular reflectance from the texture
-    // The specularColor RGB channels can affect the tint of the specular reflection
-    vec3 specularTint = specularColor.rgb;
-    float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
-    
-    // Apply the specular tint from the texture to the specular component
+    vec4 specularColor;
+    float specularReflectance;
+    vec3 specularTint;
+    float specularComponent;
+
+    $branch twoblended == 0
+    $begin
+        specularColor = texture(speculartex, v_origin.xy);
+        specularReflectance = specularColor.r;
+        specularTint = specularColor.rgb;
+        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    $end
+
+    $branch twoblended == 1
+    $begin
+        vec4 specularColor1 = texture(speculartex, v_origin.xy);
+        vec4 specularColor2 = texture(speculartex2, v_origin.xy);
+        vec4 blendValue = texture(blendmap, v_origin.xy);
+        
+        specularReflectance = mix(specularColor1.r, specularColor2.r, blendValue.r);
+        specularTint = mix(specularColor1.rgb, specularColor2.rgb, blendValue.rgb);
+        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    $end
+
     vec3 finalSpecular = specularComponent * specularTint;
     
-    // Return the scalar specular component, which can be combined with the diffuse component later in the shader
     return dot(finalSpecular, vec3(1.0));
 }
+
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
 {
@@ -1145,23 +1151,46 @@ void main()
 
 
 	$branch specular == 1 || cubemaps >= 1
-	$begin
-	$branch parallax != 1
-	$begin
-		vec4 specTexture = texture2D(speculartex, ps_texcoord);
-		specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
-	$end
-	$end
-	
-	$branch specular == 1 || cubemaps >= 1
-	$begin
-	$branch parallax == 1
-	$begin
-		vec4 specTexture = texture2D(speculartex, ParallaxTexCoords);
-		specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
-	$end
-	$end
-	
+$begin
+    $branch parallax != 1
+    $begin
+        $branch twoblended == 0
+        $begin
+            vec4 specTexture = texture2D(speculartex, ps_texcoord);
+            specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
+        $end
+
+        $branch twoblended == 1
+        $begin
+            vec4 specTexture1 = texture2D(speculartex, ps_texcoord);
+            vec4 specTexture2 = texture2D(speculartex2, ps_texcoord);
+            vec4 blendValue = texture2D(blendmap, ps_texcoord);
+            
+            vec3 blendedSpecTexture = mix(specTexture1.rgb, specTexture2.rgb, blendValue.rgb);
+            specularFactor = (blendedSpecTexture.x + blendedSpecTexture.y + blendedSpecTexture.z) / 3.0;
+        $end
+    $end
+
+    $branch parallax == 1
+    $begin
+        $branch twoblended == 0
+        $begin
+            vec4 specTexture = texture2D(speculartex, ParallaxTexCoords);
+            specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
+        $end
+
+        $branch twoblended == 1
+        $begin
+            vec4 specTexture1 = texture2D(speculartex, ParallaxTexCoords);
+            vec4 specTexture2 = texture2D(speculartex2, ParallaxTexCoords);
+            vec4 blendValue = texture2D(blendmap, ParallaxTexCoords);
+            
+            vec3 blendedSpecTexture = mix(specTexture1.rgb, specTexture2.rgb, blendValue.rgb);
+            specularFactor = (blendedSpecTexture.x + blendedSpecTexture.y + blendedSpecTexture.z) / 3.0;
+        $end
+    $end
+$end
+
 	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
 	$begin
 	$branch parallax != 1

@@ -261,6 +261,7 @@ bool CBSPRenderer::InitGL( void )
 		m_attribs.u_difflightmap = m_pShader->InitUniform("difflightmap", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_lightvecstex = m_pShader->InitUniform("lightvecstex", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_specular = m_pShader->InitUniform("speculartex", CGLSLShader::UNIFORM_INT1);
+		m_attribs.u_specular2 = m_pShader->InitUniform("speculartex2", CGLSLShader::UNIFORM_INT1);
 		m_attribs.u_color = m_pShader->InitUniform("color", CGLSLShader::UNIFORM_FLOAT4);
 		m_attribs.u_light_radius = m_pShader->InitUniform("light_radius", CGLSLShader::UNIFORM_FLOAT1);
 
@@ -299,6 +300,7 @@ bool CBSPRenderer::InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_difflightmap, "difflightmap", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_lightvecstex, "lightvecstex", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_specular, "speculartex", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_specular2, "speculartex2", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_color, "color", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_light_radius, "light_radius", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_fogcolor, "fogcolor", m_pShader, Sys_ErrorPopup)
@@ -2333,6 +2335,7 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 		normalTexBound = true;
 		
 		en_texture_t* pspecular = pmaterial->ptextures[MT_TX_SPECULAR];
+		en_texture_t* pspecular2 = pmaterial->ptextures[MT_TX_SPECULAR2];
 		if(pspecular && g_pCvarSpecular->GetValue() > 0)
 		{
 			if(!m_pShader->SetDeterminator(m_attribs.d_specular, TRUE, false))
@@ -2342,6 +2345,10 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 
 			m_pShader->SetUniform1i(m_attribs.u_specular, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, pspecular->palloc->gl_index);
+			if (pmaterial->ptextures[MT_TX_SPECULAR2] != nullptr) {
+				m_pShader->SetUniform1i(m_attribs.u_specular2, textureIndex);
+				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, pspecular->palloc->gl_index);
+			}
 			textureIndex++;
 
 			specularTexBound = true;
@@ -2464,6 +2471,10 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 		{
 			m_pShader->SetUniform1i(m_attribs.u_specular, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
+			m_pShader->SetUniform1i(m_attribs.u_specular2, textureIndex);
+			if (pmaterial->ptextures[MT_TX_SPECULAR2] != nullptr) {
+				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, pmaterial->ptextures[MT_TX_SPECULAR2]->palloc->gl_index);
+			}
 			textureIndex++;
 		}
 
@@ -3139,7 +3150,7 @@ bool CBSPRenderer::DrawLights( bool specular )
 			bsp_texture_t *ptexturehandle = &m_texturesArray[pworldtexture->infoindex];
 			en_material_t* pmaterial = ptexturehandle->pmaterial;
 
-			if(specular && (!pmaterial->ptextures[MT_TX_SPECULAR] || !pmaterial->ptextures[MT_TX_NORMALMAP]))
+			if (specular && (!pmaterial->ptextures[MT_TX_SPECULAR] || !pmaterial->ptextures[MT_TX_NORMALMAP] || !pmaterial->ptextures[MT_TX_SPECULAR2]))
 				continue;
 
 			msurface_t *pnext = ptexturehandle->psurfchain;
@@ -3171,6 +3182,9 @@ bool CBSPRenderer::DrawLights( bool specular )
 
 				R_Bind2DTexture(GL_TEXTURE0+texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
 				R_Bind2DTexture(GL_TEXTURE0+texunit+1, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
+				if (pmaterial->ptextures[MT_TX_SPECULAR2] != nullptr) {
+					R_Bind2DTexture(GL_TEXTURE0 + texunit + 1, pmaterial->ptextures[MT_TX_SPECULAR2]->palloc->gl_index);
+				}
 
 				m_pShader->EnableAttribute(m_attribs.a_tangent);
 				m_pShader->EnableAttribute(m_attribs.a_binormal);
@@ -3431,6 +3445,7 @@ bool CBSPRenderer::DrawFinal( void )
 			en_material_t* pmaterial = ptexturehandle->pmaterial;
 
 			en_texture_t* pspecular = pmaterial->ptextures[MT_TX_SPECULAR];
+			en_texture_t* pspecular2 = pmaterial->ptextures[MT_TX_SPECULAR2];
 			en_texture_t* pnormalmap = pmaterial->ptextures[MT_TX_NORMALMAP];
 			if(!pspecular || !pnormalmap)
 				continue;
@@ -3443,6 +3458,11 @@ bool CBSPRenderer::DrawFinal( void )
 
 			m_pShader->SetUniform1i(m_attribs.u_specular, 3);
 			R_Bind2DTexture(GL_TEXTURE3, pspecular->palloc->gl_index);
+
+			if (pmaterial->ptextures[MT_TX_SPECULAR2] != nullptr) {
+				m_pShader->SetUniform1i(m_attribs.u_specular2, 4);
+				R_Bind2DTexture(GL_TEXTURE4, pspecular2->palloc->gl_index);
+			}
 
 			R_ValidateShader(m_pShader);
 
@@ -3550,6 +3570,10 @@ bool CBSPRenderer::DrawFinal( void )
 			// Bind specular texture
 			m_pShader->SetUniform1i(m_attribs.u_specular, texbase);
 			R_Bind2DTexture(GL_TEXTURE0 + texbase, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
+			if (pmaterial->ptextures[MT_TX_SPECULAR2] != nullptr) {
+				m_pShader->SetUniform1i(m_attribs.u_specular2, texbase);
+				R_Bind2DTexture(GL_TEXTURE0 + texbase, pmaterial->ptextures[MT_TX_SPECULAR2]->palloc->gl_index);
+			}
 
 			if(pmaterial->ptextures[MT_TX_NORMALMAP])
 			{

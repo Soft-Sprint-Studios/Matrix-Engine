@@ -141,6 +141,7 @@ struct bsp_shader_attribs
 		u_difflightmap(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_lightvecstex(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_specular(CGLSLShader::PROPERTY_UNAVAILABLE),
+		u_specular2(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_color(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_light_radius(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_fogcolor(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -212,6 +213,7 @@ struct bsp_shader_attribs
 	Int32 u_difflightmap;
 	Int32 u_lightvecstex;
 	Int32 u_specular;
+	Int32 u_specular2;
 	Int32 u_color;
 	Int32 u_light_radius;
 

@@ -8,6 +8,7 @@ $texture
 	$texture blend world/redbrick01/redbrick01_blend.dds
 	$texture normal world/redbrick01/redbrick01_normal.dds
 	$texture specular world/redbrick01/redbrick01_specular.dds
+	$texture specular2 world/redbrick01/slatefloor01_specular.dds
 	$texture ao world/redbrick01/redbrick01_ao.dds
 	$texture detail detail/dt_conc.dds
 }

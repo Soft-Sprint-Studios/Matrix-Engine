@@ -561,6 +561,8 @@ mt_texture_t CTextureManager::GetTextureType( const Char* pstrTypename )
 		return MT_TX_DETAIL;
 	else if(!qstrcmp(pstrTypename, "specular"))
 		return MT_TX_SPECULAR;
+	else if (!qstrcmp(pstrTypename, "specular2"))
+		return MT_TX_SPECULAR2;
 	else if(!qstrcmp(pstrTypename, "luminance"))
 		return MT_TX_LUMINANCE;
 	else if (!qstrcmp(pstrTypename, "heightmap"))
@@ -1699,6 +1701,9 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 
 	if(pmaterial->ptextures[MT_TX_SPECULAR])
 		data << "\t$texture specular " << pmaterial->ptextures[MT_TX_SPECULAR]->filepath << NEWLINE;
+
+	if (pmaterial->ptextures[MT_TX_SPECULAR2])
+		data << "\t$texture specular2 " << pmaterial->ptextures[MT_TX_SPECULAR2]->filepath << NEWLINE;
 
 	if(pmaterial->ptextures[MT_TX_LUMINANCE])
 		data << "\t$texture luminance " << pmaterial->ptextures[MT_TX_LUMINANCE]->filepath << NEWLINE;

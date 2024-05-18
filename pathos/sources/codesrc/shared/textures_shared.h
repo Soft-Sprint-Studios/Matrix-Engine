@@ -53,6 +53,7 @@ enum mt_texture_t
 	MT_TX_NORMALMAP,
 	MT_TX_DETAIL,
 	MT_TX_SPECULAR,
+	MT_TX_SPECULAR2,
 	MT_TX_LUMINANCE,
 	MT_TX_HEIGHTMAP,
 	MT_TX_AO,
@@ -163,6 +164,7 @@ struct en_material_t
 	inline en_texture_t* getnormalmap( void ) { return ptextures[MT_TX_NORMALMAP]; }
 	inline en_texture_t* getdetail( void ) { return ptextures[MT_TX_DETAIL]; }
 	inline en_texture_t* getspecular( void ) { return ptextures[MT_TX_SPECULAR]; }
+	inline en_texture_t* getspecular2(void) { return ptextures[MT_TX_SPECULAR2]; }
 	inline en_texture_t* getluminance( void ) { return ptextures[MT_TX_LUMINANCE]; }
 	inline en_texture_t* getheightmap(void) { return ptextures[MT_TX_HEIGHTMAP]; }
 	inline en_texture_t* getao(void) { return ptextures[MT_TX_AO]; }
