@@ -41,12 +41,12 @@ All Rights Reserved.
 static const Char OPENAL_LIBRARY_PATH[] = "x64/OpenAL32.dll";
 
 // Max active tempent sounds
-const Uint32 CSoundEngine::MAX_ACTIVE_TEMP_SOUNDS = 4;
+const Uint32 CSoundEngine::MAX_ACTIVE_TEMP_SOUNDS = 256;
 
 // Minimum sound distance
-const Float CSoundEngine::MIN_DISTANCE = 32;
+const Float CSoundEngine::MIN_DISTANCE = 8;
 // Maximum sound distance
-const Float CSoundEngine::MAX_DISTANCE = 1024;
+const Float CSoundEngine::MAX_DISTANCE = 4096;
 
 // Rever blend time
 const Float CSoundEngine::REVERB_BLEND_TIME = 2;

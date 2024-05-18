@@ -1,5 +1,0 @@
-$clusterscript
-{
-	$script engine_railgun_heat.txt
-	$script engine_railgun_heat_smoke.txt
-}

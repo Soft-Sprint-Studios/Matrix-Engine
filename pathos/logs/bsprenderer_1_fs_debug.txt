@@ -1,0 +1,1 @@
+0(303) : error C1503: undefined variable "ps_blendtexcoord"

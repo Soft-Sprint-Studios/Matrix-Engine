@@ -1,5 +1,0 @@
-$clusterscript
-{
-	$script engine_blood_drops1.txt
-	$script engine_blood_drops2.txt
-}

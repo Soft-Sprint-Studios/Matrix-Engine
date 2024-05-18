@@ -100,6 +100,12 @@ bool Sys_ShouldExit( void )
 	return ens.exit;
 }
 
+bool DirectoryExists(const wchar_t* path)
+{
+	DWORD attrib = GetFileAttributesW(path);
+	return (attrib != INVALID_FILE_ATTRIBUTES && (attrib & FILE_ATTRIBUTE_DIRECTORY));
+}
+
 SentrySystem sentry;
 
 //=============================================
@@ -122,6 +128,25 @@ bool Sys_Init( CArray<CString>* argsArray )
 	{
 		Sys_ErrorPopup("SDL_Init returned an error: %s", SDL_GetError());
 		return false;
+	}
+
+	std::wstring logsDir = L"";
+
+	if (MultiByteToWideChar(CP_ACP, 0, DEFAULT_GAMEDIR, -1, NULL, 0) != 0)
+	{
+		wchar_t wideDefaultGameDir[MAX_PATH];
+		MultiByteToWideChar(CP_ACP, 0, DEFAULT_GAMEDIR, -1, wideDefaultGameDir, MAX_PATH);
+
+		logsDir = std::wstring(wideDefaultGameDir) + L"\\logs";
+	}
+
+	if (!DirectoryExists(logsDir.c_str()))
+	{
+		if (!CreateDirectoryW(logsDir.c_str(), NULL))
+		{
+			return false;
+		}
+
 	}
 
 	// Find out what mod we are running before doing

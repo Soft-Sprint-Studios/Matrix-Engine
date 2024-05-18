@@ -70,6 +70,10 @@ template <typename T> class CArray;
 #define force_assert(_Expression) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), __LINE__), 0) )
 #endif
 
+#ifndef _64BUILD
+#error 32bit Builds arent supported, Please attempt 64 bit builds
+#endif
+
 // NAN mask
 static const Int32 NANMASK = 0x7F800000;
 

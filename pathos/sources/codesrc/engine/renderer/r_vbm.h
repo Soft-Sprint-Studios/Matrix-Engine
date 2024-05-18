@@ -211,6 +211,7 @@ struct vbm_attribs
 		u_spectexture(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_lumtexture(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_aotexture(CGLSLShader::PROPERTY_UNAVAILABLE),
+		u_ao2texture(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_normalmap(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_sky_ambient(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_sky_diffuse(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -274,6 +275,7 @@ struct vbm_attribs
 	Int32 u_spectexture;
 	Int32 u_lumtexture;
 	Int32 u_aotexture;
+	Int32 u_ao2texture;
 	Int32 u_normalmap;
 
 	Int32 u_sky_ambient;

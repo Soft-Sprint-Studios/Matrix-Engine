@@ -10,7 +10,6 @@ All Rights Reserved.
 
 #ifndef WADTEXTURES_H
 #define WADTEXTURES_H
-
 struct dmiptex_t;
 struct en_texture_t;
 struct en_material_t;

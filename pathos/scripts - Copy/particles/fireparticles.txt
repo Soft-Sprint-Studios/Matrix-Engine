@@ -1,5 +1,0 @@
-$clusterscript
-{
-	$script fire_smokeclouds.txt
-	$script flames_big.txt
-}

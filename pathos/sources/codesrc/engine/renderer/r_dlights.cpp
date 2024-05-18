@@ -75,8 +75,8 @@ CDynamicLightManager::~CDynamicLightManager( void )
 bool CDynamicLightManager::Init( void )
 {
 	// init cvars
-	m_pCvarShadowmapSize = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_proj_size", "4096", "Controls resolution of projected light shadows.", R_CheckShadowmapSizeCvarCallBack );
-	m_pCvarCubeShadowmapSize = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_cube_size", "4096", "Controls resolution of point light shadows.", R_CheckShadowmapSizeCvarCallBack );
+	m_pCvarShadowmapSize = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_proj_size", "2048", "Controls resolution of projected light shadows.", R_CheckShadowmapSizeCvarCallBack );
+	m_pCvarCubeShadowmapSize = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_cube_size", "2048", "Controls resolution of point light shadows.", R_CheckShadowmapSizeCvarCallBack );
 	m_pCvarShadowmapBlit = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_blitting", "1", "Enable or disable shadowmap blitting." );
 
 	return true;

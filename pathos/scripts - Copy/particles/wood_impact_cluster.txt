@@ -1,6 +1,0 @@
-$clusterscript
-{
-	$script engine_wood_flecks1.txt
-	$script engine_wood_flecks2.txt
-	$script engine_wood_cloud.txt
-}

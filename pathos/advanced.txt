@@ -1,27 +1,3 @@
-
-"r_shadowmap_proj_size"
-{
-	"Projective shadowmap resolution"
-	{
-		UIDropDownList
-		"1024x1024" "1024"
-		"2048x2048" "2048"
-		"4096x4096" "4096"
-	}
-	{ "4096.000000" }
-}
-
-"r_shadowmap_cube_size"
-{
-	"Point light shadowmap resolution"
-	{
-		UIDropDownList
-		"2048x2048" "2048"
-		"4096x4096" "4096"
-	}
-	{ "2048.000000" }
-}
-
 "r_filmgrain"
 {
 	"Film grain"

@@ -15,8 +15,6 @@ All Rights Reserved.
 #include "r_glextf.h"
 #include "md5.h"
 #include "cbuffer.h"
-#include "string"
-#include "..\engine\enginestate.h"
 
 // Total duration of vertex shader compile calls
 Double CGLSLShader::g_vertexShaderCompileTotalDuration = 0;
@@ -233,12 +231,6 @@ void CGLSLShader::FreeData ( void )
 	FreeShaderData();
 }
 
-bool DirectoryExists(const wchar_t* path)
-{
-	DWORD attrib = GetFileAttributesW(path);
-	return (attrib != INVALID_FILE_ATTRIBUTES && (attrib & FILE_ATTRIBUTE_DIRECTORY));
-}
-
 //=============================================
 // @brief Compiles a single unique shader
 //
@@ -263,24 +255,6 @@ bool CGLSLShader::CompileShader( Uint32 index, glsl_shader_t* pshader, csdshader
 
 	CString basename;
 	Common::Basename(m_shaderFile.c_str(), basename);
-
-	std::wstring logsDir = L"";
-
-	if (MultiByteToWideChar(CP_ACP, 0, DEFAULT_GAMEDIR, -1, NULL, 0) != 0)
-	{
-		wchar_t wideDefaultGameDir[MAX_PATH];
-		MultiByteToWideChar(CP_ACP, 0, DEFAULT_GAMEDIR, -1, wideDefaultGameDir, MAX_PATH);
-
-		logsDir = std::wstring(wideDefaultGameDir) + L"\\logs";
-	}
-
-	if (!DirectoryExists(logsDir.c_str()))
-	{
-		if (!CreateDirectoryW(logsDir.c_str(), NULL))
-		{
-			return false;
-		}
-	}
 
 	CString vsOut;
 	vsOut << "logs/" << basename << "_" << (Int32)index << "_vs";
@@ -574,7 +548,6 @@ bool CGLSLShader::LoadFromBSD( void )
 
 	bsdFilePath << "scripts/shaders/";
 		
-
 	bsdFilePath << "binary_x64/";
 
 	bsdFilePath << basename << ".bsd";
