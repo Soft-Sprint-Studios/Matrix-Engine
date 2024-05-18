@@ -1,0 +1,4 @@
+0(40) : error C1503: undefined variable "FXAA_REDUCE_MIN"
+0(40) : error C1503: undefined variable "FXAA_REDUCE_MIN"
+0(41) : error C1503: undefined variable "FXAA_REDUCE_MAX"
+0(41) : error C1503: undefined variable "FXAA_REDUCE_MAX"

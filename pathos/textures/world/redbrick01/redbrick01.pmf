@@ -4,13 +4,8 @@ $texture
 	$int_height 1024
 	$material concrete
 	$texture diffuse world/redbrick01/redbrick01.dds
-	$texture diffuse2 world/redbrick01/slatefloor01.dds
-	$texture blend world/redbrick01/redbrick01_blend.dds
 	$texture normal world/redbrick01/redbrick01_normal.dds
-	$texture normal2 world/redbrick01/slatefloor01_normal.dds
 	$texture specular world/redbrick01/redbrick01_specular.dds
-	$texture specular2 world/redbrick01/slatefloor01_specular.dds
 	$texture ao world/redbrick01/redbrick01_ao.dds
-	$texture ao2 world/redbrick01/slatefloor01_ao.dds
 	$texture detail detail/dt_conc.dds
 }

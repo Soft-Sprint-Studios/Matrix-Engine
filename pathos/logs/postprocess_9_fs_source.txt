@@ -1,0 +1,55 @@
+#version 460
+#extension GL_ARB_texture_rectangle : enable
+
+uniform sampler2DRect texture0;
+uniform vec4 color;
+uniform float screenwidth;
+uniform float screenheight;
+
+in vec2 ps_texcoord;
+out vec4 oColor;
+
+uniform float FXAAStrength;
+void main()
+{
+	// FXAA implementation
+    vec2 inverseScreenSize = vec2(1.0 / screenwidth, 1.0 / screenheight);
+
+    vec3 rgbNW = texture(texture0, ps_texcoord + vec2(-1.0, -1.0) * inverseScreenSize).xyz;
+    vec3 rgbNE = texture(texture0, ps_texcoord + vec2(1.0, -1.0) * inverseScreenSize).xyz;
+    vec3 rgbSW = texture(texture0, ps_texcoord + vec2(-1.0, 1.0) * inverseScreenSize).xyz;
+    vec3 rgbSE = texture(texture0, ps_texcoord + vec2(1.0, 1.0) * inverseScreenSize).xyz;
+    vec3 rgbM  = texture(texture0, ps_texcoord).xyz;
+
+    vec3 luma = vec3(0.299, 0.587, 0.114);
+    float lumaNW = dot(rgbNW, luma);
+    float lumaNE = dot(rgbNE, luma);
+    float lumaSW = dot(rgbSW, luma);
+    float lumaSE = dot(rgbSE, luma);
+    float lumaM  = dot(rgbM,  luma);
+
+    float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
+    float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
+
+    vec2 dir;
+    dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
+    dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
+
+    float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * (1.0 / 4.0)), 0.001);
+    float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+    dir = min(vec2(FXAA_REDUCE_MIN, FXAA_REDUCE_MIN), 
+              max(vec2(-FXAA_REDUCE_MAX, -FXAA_REDUCE_MAX), dir * rcpDirMin)) * inverseScreenSize;
+
+    vec3 rgbA = 0.5 * (
+        texture(texture0, ps_texcoord + dir * vec2( 1.0/3.0 - 0.5)).xyz +
+        texture(texture0, ps_texcoord + dir * vec2( 2.0/3.0 - 0.5)).xyz);
+    vec3 rgbB = rgbA * 0.5 + 0.25 * (
+        texture(texture0, ps_texcoord + dir * vec2(0.0, -0.5)).xyz +
+        texture(texture0, ps_texcoord + dir * vec2(0.0,  0.5)).xyz);
+
+    float lumaB = dot(rgbB, luma);
+    if ((lumaB < lumaMin) || (lumaB > lumaMax))
+        oColor = vec4(rgbA, 1.0);
+    else
+        oColor = vec4(rgbB, 1.0);
+}

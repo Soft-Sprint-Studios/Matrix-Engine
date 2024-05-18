@@ -3204,7 +3204,7 @@ bool CBSPRenderer::DrawLights( bool specular )
 				m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 
 				if (pmaterial->ptextures[MT_TX_NORMALMAP] != nullptr) {
-					R_Bind2DTexture(GL_TEXTURE0 + texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
+				R_Bind2DTexture(GL_TEXTURE0+texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
 				}
 				if (pmaterial->ptextures[MT_TX_NORMALMAP2] != nullptr) {
 					R_Bind2DTexture(GL_TEXTURE0 + texunit, pmaterial->ptextures[MT_TX_NORMALMAP2]->palloc->gl_index);

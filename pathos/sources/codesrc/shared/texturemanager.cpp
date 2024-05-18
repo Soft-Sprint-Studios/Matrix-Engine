@@ -571,6 +571,8 @@ mt_texture_t CTextureManager::GetTextureType( const Char* pstrTypename )
 		return MT_TX_HEIGHTMAP;
 	else if (!qstrcmp(pstrTypename, "ao"))
 		return MT_TX_AO;
+	else if (!qstrcmp(pstrTypename, "ao2"))
+		return MT_TX_AO2;
 	else if (!qstrcmp(pstrTypename, "blend"))
 		return MT_TX_BLEND;
 	else

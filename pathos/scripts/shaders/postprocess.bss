@@ -282,45 +282,52 @@ void main()
     oColor.a = (colorR.a + colorG.a + colorB.a) / 3.0;
     $end
 	$branch pp_type == 9
-    $begin
-	// Sample the current pixel color
-    vec4 currentColor = texture(texture0, ps_texcoord);
-    
-    // Define pixel offsets for sampling surrounding pixels
-    vec2 offsets[4] = vec2[4](
-        vec2(-1.0, 0.0) * vec2(FXAAStrength / screenwidth, 0.0),
-        vec2(1.0, 0.0) * vec2(FXAAStrength / screenwidth, 0.0),
-        vec2(0.0, -1.0) * vec2(0.0, FXAAStrength / screenheight),
-        vec2(0.0, 1.0) * vec2(0.0, FXAAStrength / screenheight)
-    );
+$begin
+    // FXAA implementation
+    const float FXAA_REDUCE_MIN = 1.0 / 128.0;
+    const float FXAA_REDUCE_MUL = 1.0 / 8.0;
+    const float FXAA_SPAN_MAX = 8.0;
 
-    // Sample the four surrounding pixels
-    vec4 leftColor = texture(texture0, ps_texcoord + offsets[0]);
-    vec4 rightColor = texture(texture0, ps_texcoord + offsets[1]);
-    vec4 topColor = texture(texture0, ps_texcoord + offsets[2]);
-    vec4 bottomColor = texture(texture0, ps_texcoord + offsets[3]);
+    vec2 inverseScreenSize = vec2(1.0 / screenwidth, 1.0 / screenheight);
 
-    // Calculate the luminance difference with neighboring pixels
-    float lumaCurrent = dot(currentColor.rgb, vec3(0.299, 0.587, 0.114));
-    float lumaLeft = dot(leftColor.rgb, vec3(0.299, 0.587, 0.114));
-    float lumaRight = dot(rightColor.rgb, vec3(0.299, 0.587, 0.114));
-    float lumaTop = dot(topColor.rgb, vec3(0.299, 0.587, 0.114));
-    float lumaBottom = dot(bottomColor.rgb, vec3(0.299, 0.587, 0.114));
+    vec3 rgbNW = texture(texture0, ps_texcoord + vec2(-1.0, -1.0) * inverseScreenSize).xyz;
+    vec3 rgbNE = texture(texture0, ps_texcoord + vec2(1.0, -1.0) * inverseScreenSize).xyz;
+    vec3 rgbSW = texture(texture0, ps_texcoord + vec2(-1.0, 1.0) * inverseScreenSize).xyz;
+    vec3 rgbSE = texture(texture0, ps_texcoord + vec2(1.0, 1.0) * inverseScreenSize).xyz;
+    vec3 rgbM  = texture(texture0, ps_texcoord).xyz;
 
-    // Calculate the anti-aliasing effect
-    float lumaDiffX = abs(lumaLeft - lumaRight);
-    float lumaDiffY = abs(lumaTop - lumaBottom);
-    float maxLumaDiff = max(lumaDiffX, lumaDiffY);
+    vec3 luma = vec3(0.299, 0.587, 0.114);
+    float lumaNW = dot(rgbNW, luma);
+    float lumaNE = dot(rgbNE, luma);
+    float lumaSW = dot(rgbSW, luma);
+    float lumaSE = dot(rgbSE, luma);
+    float lumaM  = dot(rgbM,  luma);
 
-    vec4 smoothedColor = currentColor;
-    if (maxLumaDiff > FXAAStrength) {
-        // Interpolate the current color with the average of the neighboring pixels
-        smoothedColor = mix(currentColor, (leftColor + rightColor + topColor + bottomColor) / 4.0, maxLumaDiff / FXAAStrength);
-    }
+    float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
+    float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
 
-    // Output the final color
-    oColor = smoothedColor;
-	$end
+    vec2 dir;
+    dir.x = -((lumaNW + lumaNE) - (lumaSW + lumaSE));
+    dir.y =  ((lumaNW + lumaSW) - (lumaNE + lumaSE));
+
+    float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAA_REDUCE_MUL), FXAA_REDUCE_MIN);
+    float rcpDirMin = 1.0 / (min(abs(dir.x), abs(dir.y)) + dirReduce);
+    dir = min(vec2(FXAA_SPAN_MAX, FXAA_SPAN_MAX), 
+              max(vec2(-FXAA_SPAN_MAX, -FXAA_SPAN_MAX), dir * rcpDirMin)) * inverseScreenSize * FXAAStrength;
+
+    vec3 rgbA = 0.5 * (
+        texture(texture0, ps_texcoord + dir * vec2(1.0/3.0 - 0.5)).xyz +
+        texture(texture0, ps_texcoord + dir * vec2(2.0/3.0 - 0.5)).xyz);
+    vec3 rgbB = rgbA * 0.5 + 0.25 * (
+        texture(texture0, ps_texcoord + dir * vec2(0.0, -0.5)).xyz +
+        texture(texture0, ps_texcoord + dir * vec2(0.0,  0.5)).xyz);
+
+    float lumaB = dot(rgbB, luma);
+    if ((lumaB < lumaMin) || (lumaB > lumaMax))
+        oColor = vec4(rgbA, 1.0);
+    else
+        oColor = vec4(rgbB, 1.0);
+$end
 	$branch pp_type == 10
     $begin
     // Sample the texture at the current coordinates

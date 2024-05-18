@@ -1158,7 +1158,7 @@ $begin
         $branch twoblended == 0
         $begin
             vec4 specTexture = texture2D(speculartex, ps_texcoord);
-            specularFactor = (1.0 - specTexture.r);
+		    specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
         $end
 
         $branch twoblended == 1
@@ -1168,6 +1168,9 @@ $begin
             vec4 blendValue = texture2D(blendmap, ps_texcoord);
             
             specularFactor = mix(1.0 - specTexture1.r, 1.0 - specTexture2.r, blendValue.r);
+            
+            specularFactor = (specTexture1.x + specTexture1.y + specTexture1.z + 
+                              specTexture2.x + specTexture2.y + specTexture2.z) / 6.0;
         $end
     $end
 
@@ -1175,8 +1178,8 @@ $begin
     $begin
         $branch twoblended == 0
         $begin
-            vec4 specTexture = texture2D(speculartex, ParallaxTexCoords);
-            specularFactor = (1.0 - specTexture.r);
+            vec4 specTexture = texture2D(speculartex, ps_texcoord);
+		    specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
         $end
 
         $branch twoblended == 1
@@ -1186,6 +1189,9 @@ $begin
             vec4 blendValue = texture2D(blendmap, ParallaxTexCoords);
             
             specularFactor = mix(1.0 - specTexture1.r, 1.0 - specTexture2.r, blendValue.r);
+  
+            specularFactor = (specTexture1.x + specTexture1.y + specTexture1.z + 
+                              specTexture2.x + specTexture2.y + specTexture2.z) / 6.0;
         $end
     $end
 $end

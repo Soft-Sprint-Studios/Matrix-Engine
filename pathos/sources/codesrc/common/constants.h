@@ -249,7 +249,7 @@ static const Uint32 REFERENCE_FOV_VALUE = 90;
 static const Int32 DIRECTION_NODIR = -1;
 
 // Max rendered entities
-static const Int32 MAX_RENDER_ENTITIES = 32768;
+static const Int32 MAX_RENDER_ENTITIES = 65534;
 
 // Type for print functions
 typedef void (*pfnPrintf_t)( const Char *fmt, ... );
