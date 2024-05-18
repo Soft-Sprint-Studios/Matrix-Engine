@@ -249,6 +249,7 @@ uniform sampler2D blendmap;
 uniform sampler2D detailtex;
 uniform sampler2D chrometex;
 uniform sampler2D normalmap;
+uniform sampler2D normalmap2;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
@@ -1157,7 +1158,7 @@ $begin
         $branch twoblended == 0
         $begin
             vec4 specTexture = texture2D(speculartex, ps_texcoord);
-            specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
+            specularFactor = (1.0 - specTexture.r);
         $end
 
         $branch twoblended == 1
@@ -1166,8 +1167,7 @@ $begin
             vec4 specTexture2 = texture2D(speculartex2, ps_texcoord);
             vec4 blendValue = texture2D(blendmap, ps_texcoord);
             
-            vec3 blendedSpecTexture = mix(specTexture1.rgb, specTexture2.rgb, blendValue.rgb);
-            specularFactor = (blendedSpecTexture.x + blendedSpecTexture.y + blendedSpecTexture.z) / 3.0;
+            specularFactor = mix(1.0 - specTexture1.r, 1.0 - specTexture2.r, blendValue.r);
         $end
     $end
 
@@ -1176,7 +1176,7 @@ $begin
         $branch twoblended == 0
         $begin
             vec4 specTexture = texture2D(speculartex, ParallaxTexCoords);
-            specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
+            specularFactor = (1.0 - specTexture.r);
         $end
 
         $branch twoblended == 1
@@ -1185,40 +1185,79 @@ $begin
             vec4 specTexture2 = texture2D(speculartex2, ParallaxTexCoords);
             vec4 blendValue = texture2D(blendmap, ParallaxTexCoords);
             
-            vec3 blendedSpecTexture = mix(specTexture1.rgb, specTexture2.rgb, blendValue.rgb);
-            specularFactor = (blendedSpecTexture.x + blendedSpecTexture.y + blendedSpecTexture.z) / 3.0;
+            specularFactor = mix(1.0 - specTexture1.r, 1.0 - specTexture2.r, blendValue.r);
         $end
     $end
 $end
 
 	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
-	$begin
-	$branch parallax != 1
-	$begin
-		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
-		finalColor = finalColor*color;
-		
-		$branch cubemaps >= 1
-		$begin
-			finalColor += AddCubemaps(specularFactor);
-		$end
-	$end
-	$end
-	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
-	$begin
-	$branch parallax == 1
-	$begin
-		vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
-		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
-		finalColor = finalColor*color;
-		
-		$branch cubemaps >= 1
-		$begin
-			finalColor += AddCubemaps(specularFactor);
-		$end
-	$end
-	$end
+$begin
+    $branch twoblended == 0
+    $begin
+        $branch parallax != 1
+        $begin
+            vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+
+            finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
+            finalColor *= color;
+            
+            $branch cubemaps >= 1
+            $begin
+                finalColor += AddCubemaps(specularFactor);
+            $end
+        $end
+
+        $branch parallax == 1
+        $begin
+            vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
+
+            finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
+            finalColor *= color;
+            
+            $branch cubemaps >= 1
+            $begin
+                finalColor += AddCubemaps(specularFactor);
+            $end
+        $end
+    $end
+
+    $branch twoblended == 1
+    $begin
+        $branch parallax != 1
+        $begin
+            vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
+            vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+            vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
+            vec3 v_normal = mix(v_normal1, v_normal2, step(0.5, blendValueNormal.r)); // Only use normalmap2 where blend map is red
+
+            finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
+            finalColor *= color;
+            
+            $branch cubemaps >= 1
+            $begin
+                finalColor += AddCubemaps(specularFactor);
+            $end
+        $end
+
+        $branch parallax == 1
+        $begin
+            vec4 blendValueNormal = texture2D(blendmap, ParallaxTexCoords);
+            vec3 v_normal1 = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
+            vec3 v_normal2 = GetTangentSpaceNormal(ParallaxTexCoords, normalmap2, ps_normal);
+            vec3 v_normal = mix(v_normal1, v_normal2, step(0.5, blendValueNormal.r));
+
+            finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
+            finalColor *= color;
+            
+            $branch cubemaps >= 1
+            $begin
+                finalColor += AddCubemaps(specularFactor);
+            $end
+        $end
+    $end
+$end
+
+
 	$branch shadertype == 3 || shadertype == 22
 	$begin
 		finalColor = texture2D(baselightmap, ps_lmapcoord) * color;

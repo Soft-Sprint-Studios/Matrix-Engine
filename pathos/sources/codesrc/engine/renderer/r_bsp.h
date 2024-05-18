@@ -135,6 +135,7 @@ struct bsp_shader_attribs
 		u_detailtex(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_chrometex(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_normalmap(CGLSLShader::PROPERTY_UNAVAILABLE),
+		u_normalmap2(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_luminance(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_aomap(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_aomap2(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -206,6 +207,7 @@ struct bsp_shader_attribs
 	Int32 u_detailtex;
 	Int32 u_chrometex;
 	Int32 u_normalmap;
+	Int32 u_normalmap2;
 	Int32 u_luminance;
 	Int32 u_aomap;
 	Int32 u_aomap2;

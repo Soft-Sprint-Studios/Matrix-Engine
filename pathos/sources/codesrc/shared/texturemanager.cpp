@@ -557,6 +557,8 @@ mt_texture_t CTextureManager::GetTextureType( const Char* pstrTypename )
 		return MT_TX_DIFFUSE2;
 	else if(!qstrcmp(pstrTypename, "normalmap") || !qstrcmp(pstrTypename, "normal"))
 		return MT_TX_NORMALMAP;
+	else if (!qstrcmp(pstrTypename, "normalmap2") || !qstrcmp(pstrTypename, "normal2"))
+		return MT_TX_NORMALMAP2;
 	else if(!qstrcmp(pstrTypename, "detail"))
 		return MT_TX_DETAIL;
 	else if(!qstrcmp(pstrTypename, "specular"))
@@ -1695,6 +1697,9 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 
 	if(pmaterial->ptextures[MT_TX_NORMALMAP])
 		data << "\t$texture normalmap " << pmaterial->ptextures[MT_TX_NORMALMAP]->filepath << NEWLINE;
+
+	if (pmaterial->ptextures[MT_TX_NORMALMAP2])
+		data << "\t$texture normalmap2 " << pmaterial->ptextures[MT_TX_NORMALMAP2]->filepath << NEWLINE;
 
 	if(pmaterial->ptextures[MT_TX_DETAIL])
 		data << "\t$texture detail " << pmaterial->ptextures[MT_TX_DETAIL]->filepath << NEWLINE;
