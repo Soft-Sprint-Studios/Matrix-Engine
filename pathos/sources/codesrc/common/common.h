@@ -70,8 +70,8 @@ template <typename T> class CArray;
 #define force_assert(_Expression) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), __LINE__), 0) )
 #endif
 
-#ifndef _64BUILD
-#error 32bit Builds arent supported, Please attempt 64 bit builds
+#ifndef _WIN64
+#error 32-bit Builds are not supported. Please attempt a 64-bit build.
 #endif
 
 // NAN mask

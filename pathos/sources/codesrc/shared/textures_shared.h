@@ -56,7 +56,6 @@ enum mt_texture_t
 	MT_TX_SPECULAR,
 	MT_TX_SPECULAR2,
 	MT_TX_LUMINANCE,
-	MT_TX_HEIGHTMAP,
 	MT_TX_AO,
 	MT_TX_AO2,
 	MT_TX_BLEND,
@@ -147,7 +146,6 @@ struct en_material_t
 		int_height(0),
 		alpha(0),
 		phong_exp(0),
-		parallaxscale(0),
 		aoscale(0),
 		spec_factor(0),
 		scale(0),
@@ -168,7 +166,6 @@ struct en_material_t
 	inline en_texture_t* getspecular( void ) { return ptextures[MT_TX_SPECULAR]; }
 	inline en_texture_t* getspecular2(void) { return ptextures[MT_TX_SPECULAR2]; }
 	inline en_texture_t* getluminance( void ) { return ptextures[MT_TX_LUMINANCE]; }
-	inline en_texture_t* getheightmap(void) { return ptextures[MT_TX_HEIGHTMAP]; }
 	inline en_texture_t* getao(void) { return ptextures[MT_TX_AO]; }
 	inline en_texture_t* getao2(void) { return ptextures[MT_TX_AO2]; }
 	inline en_texture_t* getblend(void) { return ptextures[MT_TX_BLEND]; }
@@ -184,7 +181,6 @@ struct en_material_t
 
 	Float alpha;
 	Float phong_exp;
-	Float parallaxscale;
 	Float aoscale;
 	Float spec_factor;
 	Float scale;

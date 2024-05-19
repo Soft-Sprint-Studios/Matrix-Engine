@@ -74,7 +74,6 @@ All Rights Reserved.
 
 // Global cvars
 CCVar* g_pCvarBumpMaps = nullptr;
-CCVar* g_pCvarParallaxMap = nullptr;
 CCVar* g_pCvarDrawEntities = nullptr;
 CCVar* g_pCvarPhongExponent = nullptr;
 CCVar* g_pCvarWireFrame = nullptr;
@@ -165,7 +164,6 @@ bool R_Init( void )
 {
 	// Init cvars
 	g_pCvarBumpMaps = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_bumpmaps", "1", "Toggles normal mapping");
-	g_pCvarParallaxMap = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_parallaxmap", "1", "Toggles parallax mapping");
 	g_pCvarSpecular = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_specular", "1", "Toggles specular highlights");
 	g_pCvarDrawEntities = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_drawentities", "1", "Toggles rendering of entities");
 	g_pCvarPhongExponent = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_phong_exponent", "8", "Phong exponent setting");

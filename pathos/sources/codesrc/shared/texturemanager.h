@@ -42,8 +42,6 @@ public:
 	static const Float DEFAULT_SPECFACTOR;
 	// Default phong exponent value
 	static const Float DEFAULT_PHONG_EXP;
-	// Default parallax value
-	static const Float DEFAULT_PARALLAX_SCALE;
 	// Anisotropy off value
 	static const Uint32 ANISOTROPY_OFF_VALUE;
 

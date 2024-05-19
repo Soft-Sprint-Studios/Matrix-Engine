@@ -28,8 +28,6 @@ All Rights Reserved.
 const Float CTextureManager::DEFAULT_SPECFACTOR = 2.0f;
 // Default phong exponent value
 const Float CTextureManager::DEFAULT_PHONG_EXP = 16.0f;
-// Default parallax value
-const Float CTextureManager::DEFAULT_PARALLAX_SCALE = 0.0f;
 // Anisotropy off value
 const Uint32 CTextureManager::ANISOTROPY_OFF_VALUE = 1;
 
@@ -567,8 +565,6 @@ mt_texture_t CTextureManager::GetTextureType( const Char* pstrTypename )
 		return MT_TX_SPECULAR2;
 	else if(!qstrcmp(pstrTypename, "luminance"))
 		return MT_TX_LUMINANCE;
-	else if (!qstrcmp(pstrTypename, "heightmap"))
-		return MT_TX_HEIGHTMAP;
 	else if (!qstrcmp(pstrTypename, "ao"))
 		return MT_TX_AO;
 	else if (!qstrcmp(pstrTypename, "ao2"))
@@ -679,7 +675,6 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		pmaterial->alpha = 1.0;
 		pmaterial->spec_factor = DEFAULT_SPECFACTOR;
 		pmaterial->phong_exp = DEFAULT_PHONG_EXP;
-		pmaterial->parallaxscale = DEFAULT_PARALLAX_SCALE;
 		pmaterial->aoscale = 1;
 	}
 
@@ -774,7 +769,6 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 			else if(!qstrcmp(token, "$dt_scalex") || !qstrcmp(token, "$dt_scaley")
 					|| !qstrcmp(token, "$int_width") || !qstrcmp(token, "$int_height")
 					|| !qstrcmp(token, "$alpha") || !qstrcmp(token, "$phong_exp")
-				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxscale")
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$aoscale")
 					|| !qstrcmp(token, "$spec") || !qstrcmp(token, "$scopescale") 
 					|| !qstrcmp(token, "$cubemapstrength") || !qstrcmp(token, "$container")
@@ -808,8 +802,6 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 					pmaterial->alpha = (Float)SDL_atof(value);
 				else if(!qstrcmp(token, "$phong_exp"))
 					pmaterial->phong_exp = (Float)SDL_atof(value);
-				else if (!qstrcmp(token, "$parallaxscale"))
-					pmaterial->parallaxscale = (Float)SDL_atof(value);
 				else if (!qstrcmp(token, "$aoscale"))
 					pmaterial->aoscale = (Float)SDL_atof(value);
 				else if(!qstrcmp(token, "$spec"))
@@ -1676,9 +1668,6 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if(pmaterial->cubemapstrength)
 		data << "\t$cubemapstrength " << pmaterial->cubemapstrength << NEWLINE;
 
-	if (pmaterial->parallaxscale)
-	 data << "\t$parallaxscale " << pmaterial->parallaxscale << NEWLINE;
-
 	if (pmaterial->aoscale)
 		data << "\t$aoscale " << pmaterial->aoscale << NEWLINE;
 
@@ -1714,9 +1703,6 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 
 	if(pmaterial->ptextures[MT_TX_LUMINANCE])
 		data << "\t$texture luminance " << pmaterial->ptextures[MT_TX_LUMINANCE]->filepath << NEWLINE;
-
-	if (pmaterial->ptextures[MT_TX_HEIGHTMAP])
-	 data << "\t$texture heightmap " << pmaterial->ptextures[MT_TX_HEIGHTMAP]->filepath << NEWLINE;
 
 	if (pmaterial->ptextures[MT_TX_AO])
 		data << "\t$texture ao " << pmaterial->ptextures[MT_TX_AO]->filepath << NEWLINE;

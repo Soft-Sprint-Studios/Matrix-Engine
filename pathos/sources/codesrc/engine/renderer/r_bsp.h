@@ -98,7 +98,6 @@ struct bsp_shader_attribs
 		d_luminance(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_ao(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_blend(CGLSLShader::PROPERTY_UNAVAILABLE),
-		d_parallax(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_numlights(CGLSLShader::PROPERTY_UNAVAILABLE),
 		a_position(CGLSLShader::PROPERTY_UNAVAILABLE),
 		a_tangent(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -119,7 +118,6 @@ struct bsp_shader_attribs
 		u_vright(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_uvoffset(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_phong_exponent(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_parallaxscale(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_aoscale(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_specularfactor(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_interpolant(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -158,7 +156,6 @@ struct bsp_shader_attribs
 	Int32 d_luminance;
 	Int32 d_ao;
 	Int32 d_blend;
-	Int32 d_parallax;
 	Int32 d_numlights;
 
 	// vertex attribs
@@ -189,7 +186,6 @@ struct bsp_shader_attribs
 	Int32 u_uvoffset;
 
 	Int32 u_phong_exponent;
-	Int32 u_parallaxscale;
 	Int32 u_aoscale;
 	Int32 u_specularfactor;
 	Int32 u_interpolant;
@@ -211,7 +207,6 @@ struct bsp_shader_attribs
 	Int32 u_luminance;
 	Int32 u_aomap;
 	Int32 u_aomap2;
-	Int32 u_heightmap;
 	Int32 u_difflightmap;
 	Int32 u_lightvecstex;
 	Int32 u_specular;

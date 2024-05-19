@@ -44,9 +44,9 @@ static const Char OPENAL_LIBRARY_PATH[] = "x64/OpenAL32.dll";
 const Uint32 CSoundEngine::MAX_ACTIVE_TEMP_SOUNDS = 256;
 
 // Minimum sound distance
-const Float CSoundEngine::MIN_DISTANCE = 8;
+const Float CSoundEngine::MIN_DISTANCE = 2;
 // Maximum sound distance
-const Float CSoundEngine::MAX_DISTANCE = 4096;
+const Float CSoundEngine::MAX_DISTANCE = 8192;
 
 // Rever blend time
 const Float CSoundEngine::REVERB_BLEND_TIME = 2;
@@ -61,9 +61,9 @@ const Float CSoundEngine::SPEED_OF_SOUND = 17847.76902887139;
 const Float CSoundEngine::CACHED_MSG_DELETE_TIME = 60;
 
 // Average nb of samples for 8-bit sounds
-const Uint32 CSoundEngine::AVERAGE_SAMPLES_8BIT = 768;
+const Uint32 CSoundEngine::AVERAGE_SAMPLES_8BIT = 1024;
 // Average nb of samples for 16-bit sounds
-const Uint32 CSoundEngine::AVERAGE_SAMPLES_16BIT = 2048;
+const Uint32 CSoundEngine::AVERAGE_SAMPLES_16BIT = 3072;
 
 // Default change time for SND_CHANGE_PITCH/SND_CHANGE_VOL flags
 const Float CSoundEngine::DEFAULT_SND_CHANGE_TIME = 0.2;

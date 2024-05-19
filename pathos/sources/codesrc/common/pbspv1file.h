@@ -20,24 +20,24 @@ All Rights Reserved.
 
 #define PBSPV1_MAX_MAP_HULLS			4
 
-#define PBSPV1_MAX_MAP_MODELS			4096
-#define PBSPV1_MAX_MAP_BRUSHES			262144
-#define PBSPV1_MAX_MAP_ENTITIES			65535
-#define PBSPV1_MAX_MAP_ENTSTRING		2097152
+#define PBSPV1_MAX_MAP_MODELS         131072
+#define PBSPV1_MAX_MAP_BRUSHES        524288
+#define PBSPV1_MAX_MAP_ENTITIES       131072
+#define PBSPV1_MAX_MAP_ENTSTRING      4194304
 
-#define PBSPV1_MAX_MAP_PLANES			262144
-#define PBSPV1_MAX_MAP_NODES			262144
-#define PBSPV1_MAX_MAP_CLIPNODES		262144
-#define PBSPV1_MAX_MAP_LEAFS			262144
-#define PBSPV1_MAX_MAP_VERTS			262144
-#define PBSPV1_MAX_MAP_FACES			262144
-#define PBSPV1_MAX_MAP_MARKSURFACES		262144
-#define PBSPV1_MAX_MAP_TEXINFO			262144
-#define PBSPV1_MAX_MAP_EDGES			524288
-#define PBSPV1_MAX_MAP_SURFEDGES		1048576
-#define PBSPV1_MAX_MAP_TEXTURES			16384
-#define PBSPV1_MAX_MAP_LIGHTING			16777216
-#define PBSPV1_MAX_MAP_VISIBILITY		33554432
+#define PBSPV1_MAX_MAP_PLANES         524288
+#define PBSPV1_MAX_MAP_NODES          524288
+#define PBSPV1_MAX_MAP_CLIPNODES      524288
+#define PBSPV1_MAX_MAP_LEAFS          524288
+#define PBSPV1_MAX_MAP_VERTS          524288
+#define PBSPV1_MAX_MAP_FACES          524288
+#define PBSPV1_MAX_MAP_MARKSURFACES   524288
+#define PBSPV1_MAX_MAP_TEXINFO        524288
+#define PBSPV1_MAX_MAP_EDGES          1048576
+#define PBSPV1_MAX_MAP_SURFEDGES      2097152
+#define PBSPV1_MAX_MAP_TEXTURES       32768
+#define PBSPV1_MAX_MAP_LIGHTING       33554432
+#define PBSPV1_MAX_MAP_VISIBILITY     67108864
 
 #define PBSPV1_MAX_LIGHTMAPS			4
 #define PBSPV1_LM_SAMPLE_SIZE			16
@@ -45,7 +45,7 @@ All Rights Reserved.
 #define PBSPV1_NUM_AMBIENTS				4
 
 #define PBSP_HEADER						(('P'<<24)+('S'<<16)+('B'<<8)+'P')
-#define PBSP_VERSION					1
+#define PBSP_VERSION					2
 
 //
 // BSP lumps
@@ -104,8 +104,8 @@ struct dpbspv1model_t
 		memset(headnode, 0, sizeof(headnode));
 	}
 
-	Float mins[3];
-	Float maxs[3];
+	float mins[3];
+	float maxs[3];
 	Float origin[3];
 
 	Int32 headnode[PBSPV1_MAX_MAP_HULLS];
@@ -232,8 +232,8 @@ struct dpbspv1leaf_t
 	Int32 contents;
 	Int32 visoffset;
 
-	Int16 mins[3];
-	Int16 maxs[3];
+	Int32 mins[3];
+	Int32 maxs[3];
 
 	Uint32 firstmarksurface;
 	Uint32 nummarksurfaces;

@@ -1,0 +1,20 @@
+#version 460
+
+uniform mat4 projection;
+uniform mat4 modelview;
+
+in vec4 in_position;
+in vec2 in_texcoord;
+in vec4 in_color;
+
+out vec4 ps_color;
+out vec2 ps_texcoord;
+out vec3 ps_vertexpos;
+
+void main()
+{
+ps_color = in_color;
+	vec4 position = in_position*modelview;
+	
+	gl_Position = position*projection;
+}

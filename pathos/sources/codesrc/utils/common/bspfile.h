@@ -5,60 +5,49 @@
 #if _MSC_VER >= 1000
 #pragma once
 #endif
+#include "../../common/datatypes.h"
 
 // upper design bounds
 
 #define MAX_MAP_HULLS            4
 // hard limit
 
-#define MAX_MAP_MODELS         65536 // arbitrary
-// variable, but 400 brush entities is very stressful on the engine and network code as it is
+#define MAX_MAP_MODELS            131072
 
-#define MAX_MAP_BRUSHES       262144
-// arbitrary, but large numbers of brushes generally require more lightmap's than the compiler can handle
+#define MAX_MAP_BRUSHES           524288
 
-#define MAX_ENGINE_ENTITIES   65535 // Maximum number of entities managed by the engine
-#define MAX_MAP_ENTITIES      65535 // Maximum number of entities managed by the engine
+#define MAX_ENGINE_ENTITIES       131072
+#define MAX_MAP_ENTITIES          131072
 
-#define MAX_MAP_ENTSTRING   (2048*1024) //(512*1024) //vluzacn
-// abitrary, 512Kb of string data should be plenty even with TFC FGD's
+#define MAX_MAP_ENTSTRING         (4194304) // 4MB
 
-#define MAX_MAP_PLANES			262144 // Actual limit is the limit of uint32
-#define MAX_INTERNAL_MAP_PLANES 262144 // Actual limit is the limit of uint32
+#define MAX_MAP_PLANES            524288
+#define MAX_INTERNAL_MAP_PLANES   524288
 
-#define MAX_MAP_NODES        262144 // Actual limit is the limit of int32
-#define MAX_MAP_CLIPNODES    262144 // Actual limit is the limit of int32
+#define MAX_MAP_NODES             524288
+#define MAX_MAP_CLIPNODES         524288
 
-#define MAX_MAP_LEAFS        262144 // Limit is arbitrary
-#define MAX_MAP_LEAFS_ENGINE 262144 // Limit is arbitrary
-#define MAX_MAP_VERTS        262144 // Actual limit is the size of uint32
-#define MAX_MAP_FACES        262144 // Actual limit is the size of uint32
-#define MAX_MAP_WORLDFACES   262144
+#define MAX_MAP_LEAFS             524288
+#define MAX_MAP_LEAFS_ENGINE      524288
+#define MAX_MAP_VERTS             524288
+#define MAX_MAP_FACES             524288
+#define MAX_MAP_WORLDFACES        524288
 
-#define MAX_MAP_MARKSURFACES 262144 // Actual limit is the size of uint32
-// hard limit (data structures store them as unsigned shorts)
+#define MAX_MAP_MARKSURFACES      524288
 
-#define MAX_MAP_TEXTURES      65536 // This limit is arbitrary
-// hard limit (halflife limitation) // I used 2048 different textures in a test map and everything looks fine in both opengl and d3d mode.
+#define MAX_MAP_TEXTURES          65536
 
-#define MAX_MAP_TEXINFO      262144 // Actual limit is limit of int32
+#define MAX_MAP_TEXINFO           524288
 
-#ifdef HLCSG_HLBSP_REDUCETEXTURE
-#define MAX_MAP_TEXINFO 262144
-#endif
+#define MAX_MAP_EDGES             1048576
+#define MAX_MAP_SURFEDGES         2097152
 
-#define MAX_MAP_EDGES       524288 // Actual limit is the limit of Uint32
-#define MAX_MAP_SURFEDGES   1048576 // Actual limit is the limit of Int32
+#define DEFAULT_MAX_MAP_MIPTEX    0x2000000 // 32MB
 
-#define DEFAULT_MAX_MAP_MIPTEX      0x2000000 //0x400000 //vluzacn
-// 4Mb of textures is enough especially considering the number of people playing the game
-// still with voodoo1 and 2 class cards with limited local memory.
+#define DEFAULT_MAX_MAP_LIGHTDATA 0x3000000 // 48MB
 
-#define DEFAULT_MAX_MAP_LIGHTDATA	0x3000000 //0x600000 //vluzacn
-// arbitrary
+#define MAX_MAP_VISIBILITY        0x800000 // 8MB
 
-#define MAX_MAP_VISIBILITY  0x800000 //0x200000 //vluzacn
-// arbitrary
 
 // these are for entity key:value pairs
 #define MAX_KEY                 128 //32 //vluzacn
@@ -79,7 +68,7 @@
 //=============================================================================
 
 #define PBSP_HEADER						(('P'<<24)+('S'<<16)+('B'<<8)+'P')
-#define PBSP_VERSION					1
+#define PBSP_VERSION					2
 
 #define TOOLVERSION 2
 
@@ -255,8 +244,8 @@ typedef struct
     int             contents;
     int             visofs;                                // -1 = no visibility info
 
-    short           mins[3];                               // for frustum culling
-    short           maxs[3];
+    Int32           mins[3];                               // for frustum culling
+    Int32           maxs[3];
 
     unsigned int  firstmarksurface;
     unsigned int  nummarksurfaces;

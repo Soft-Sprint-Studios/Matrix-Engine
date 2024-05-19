@@ -548,8 +548,8 @@ bool PBSPV1_LoadLeafs( const byte* pfile, brushmodel_t& model, const lump_t& lum
 
 		for(Uint32 j = 0; j < 3; j++)
 		{
-			pout->mins[j] = Common::ByteToInt16((const byte*)&pinleafs[i].mins[j]);
-			pout->maxs[j] = Common::ByteToInt16((const byte*)&pinleafs[i].maxs[j]);
+			pout->mins[j] = Common::ByteToInt32((const byte*)&pinleafs[i].mins[j]);
+			pout->maxs[j] = Common::ByteToInt32((const byte*)&pinleafs[i].maxs[j]);
 		}
 
 		pout->contents = pinleafs[i].contents;

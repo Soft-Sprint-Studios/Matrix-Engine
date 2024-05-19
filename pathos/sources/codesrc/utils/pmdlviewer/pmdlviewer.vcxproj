@@ -21,6 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{2A1B8E14-9516-4EFC-9EEE-274D04877875}</ProjectGuid>
     <ProjectName>pmdlviewer</ProjectName>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -30,6 +31,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v100</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -178,10 +180,6 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>$(OutDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
-    <PostBuildEvent>
-      <Command>copy /Y "$(OutDir)/pmdlviewer.exe" "$(SolutionDir)/../../../progs/pmdlviewer/pmdlviewer.exe"</Command>
-      <Message>Copy exe to working directory</Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -275,7 +273,7 @@
       <OutputFile>$(OutDir)/pmdlviewer.exe</OutputFile>
       <Version>1.2</Version>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>.\x64\Release;..\mxtk\msvc\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\codesrc\x64\Release;..\mxtk\msvc\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ProgramDatabaseFile>$(TargetDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
@@ -286,10 +284,6 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <OutputFile>$(OutDir)$(TargetName).bsc</OutputFile>
     </Bscmake>
-    <PostBuildEvent>
-      <Command>copy /Y "$(OutDir)/pmdlviewer.exe" "$(SolutionDir)/../../../progs/pmdlviewer/pmdlviewer.exe"</Command>
-      <Message>Copy exe to working directory</Message>
-    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\common\animevent.h" />
