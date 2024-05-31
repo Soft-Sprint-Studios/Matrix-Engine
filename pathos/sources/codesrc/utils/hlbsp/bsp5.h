@@ -20,13 +20,8 @@
 
 #define ENTITIES_VOID "entities.void"
 #define ENTITIES_VOID_EXT ".void"
-#define TESTING_HIGHER_MAP_LIMIT
 
-#ifndef TESTING_HIGHER_MAP_LIMIT
-#define	BOGUS_RANGE	144000
-#else
 #define	BOGUS_RANGE	288000
-#endif
 
 // the exact bounding box of the brushes is expanded some for the headnode
 // volume.  is this still needed?
@@ -34,11 +29,11 @@
 
 //============================================================================
 
-#define MIN_SUBDIVIDE_SIZE      128
+#define MIN_SUBDIVIDE_SIZE      64
 
-#define MAX_SUBDIVIDE_SIZE      128
+#define MAX_SUBDIVIDE_SIZE      512
 
-#define DEFAULT_SUBDIVIDE_SIZE  128 //#define DEFAULT_SUBDIVIDE_SIZE  240 //--vluzacn
+#define DEFAULT_SUBDIVIDE_SIZE  264 //#define DEFAULT_SUBDIVIDE_SIZE  240 //--vluzacn
 
 #define MIN_MAXNODE_SIZE        64
 #define MAX_MAXNODE_SIZE        65536

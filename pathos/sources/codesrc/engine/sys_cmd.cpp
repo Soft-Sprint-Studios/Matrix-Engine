@@ -39,6 +39,7 @@ All Rights Reserved.
 #include "filewriterthread.h"
 #include <iostream>
 #include <vector>
+#include <sstream>
 
 // Port CVAR
 CCVar* g_pCVarPort = nullptr;
@@ -74,8 +75,8 @@ void Cmd_LoadMap( void )
 	const Char* pstrFilename = gCommands.Cmd_Argv(1);
 	CString filepath;
 	filepath << "maps/" << pstrFilename;
-	if(!qstrstr(pstrFilename, ".bsp"))
-		filepath << ".bsp";
+	if(!qstrstr(pstrFilename, ".pbsp"))
+		filepath << ".pbsp";
 
 	if(!FL_FileExists(filepath.c_str()))
 	{
@@ -92,7 +93,7 @@ void Cmd_LoadMap( void )
 //=============================================
 void Cmd_ListMaps() {
 	const std::string mapDirectory = std::string(DEFAULT_GAMEDIR) + "\\maps\\";
-	const std::string filePattern = "*.bsp";
+	const std::string filePattern = "*.pbsp";
 	std::string searchPath = mapDirectory + filePattern;
 	std::vector<std::string> mapList;
 	WIN32_FIND_DATA fileData;
@@ -129,6 +130,19 @@ void Cmd_Pause( void )
 
 	Sys_SetPaused(svs.paused ? false : true, true);
 }
+
+//=============================================
+// @brief Position of the player in the world
+// 
+//=============================================
+void Cmd_Pos(void)
+{
+	std::stringstream ss;
+	ss << "Current Pos: " << rns.view.v_origin.x << ", " << rns.view.v_origin.y << ", " << rns.view.v_origin.z;
+	std::string position_str = ss.str();
+	Con_Printf(position_str.c_str());
+}
+
 
 //=============================================
 // @brief Saves the game state to a file
@@ -599,10 +613,69 @@ void GetWindowsVersion() {
 	}
 }
 
-void Cmd_Version() {
+#pragma comment(lib, "Advapi32.lib")
+
+void GetCPUInfo() {
+	HKEY hKey;
+	LONG lResult;
+	char cpuName[256];
+	DWORD dwSize = sizeof(cpuName);
+
+	lResult = RegOpenKeyEx(HKEY_LOCAL_MACHINE,
+		"HARDWARE\\DESCRIPTION\\System\\CentralProcessor\\0",
+		0,
+		KEY_READ,
+		&hKey);
+	if (lResult == ERROR_SUCCESS) {
+		lResult = RegQueryValueEx(hKey,
+			"ProcessorNameString",
+			NULL,
+			NULL,
+			(LPBYTE)cpuName,
+			&dwSize);
+		if (lResult == ERROR_SUCCESS) {
+			Con_Printf("CPU Name: %s\n", cpuName);
+		}
+		else {
+			Con_Printf("Failed to retrieve CPU name.\n");
+		}
+		RegCloseKey(hKey);
+	}
+	else {
+		Con_Printf("Failed to open registry key for CPU information.\n");
+	}
+}
+
+void GetGPUInfo() {
+	DISPLAY_DEVICE dd;
+	ZeroMemory(&dd, sizeof(dd));
+	dd.cb = sizeof(dd);
+	if (EnumDisplayDevices(NULL, 0, &dd, 0)) {
+		Con_Printf("GPU Name: %s\n", dd.DeviceString);
+	}
+	else {
+		Con_Printf("Failed to retrieve GPU information.\n");
+	}
+}
+
+void GetMemoryInfo() {
+	MEMORYSTATUSEX statex;
+	statex.dwLength = sizeof(statex);
+	if (GlobalMemoryStatusEx(&statex)) {
+		Con_Printf("Total System Memory: %lld MB\n", statex.ullTotalPhys / (1024 * 1024));
+	}
+	else {
+		Con_Printf("Failed to retrieve memory information.\n");
+	}
+}
+
+void Cmd_Debug() {
 	Con_Printf("Engine Version Information:\n");
 	Con_Printf("Build Time: %s\n", BUILD_TIME);
 	GetWindowsVersion();
+	GetCPUInfo();
+	GetGPUInfo();
+	GetMemoryInfo();
 }
 
 //=============================================
@@ -612,6 +685,7 @@ void Cmd_Version() {
 void Sys_InitCommands( void )
 {
 	gCommands.CreateCommand("pause", Cmd_Pause, "Pauses the game");
+	gCommands.CreateCommand("pos", Cmd_Pos, "Position of the player in the world");
 	gCommands.CreateCommand("quit", Cmd_Sys_Quit, "Exits the application");
 	gCommands.CreateCommand("map", Cmd_LoadMap, "Loads a map");
 	gCommands.CreateCommand("maps", Cmd_ListMaps, "List of all maps");
@@ -626,7 +700,7 @@ void Sys_InitCommands( void )
 	gCommands.CreateCommand("god", Cmd_God, "Toggles godmode cheat", (CMD_FL_SERVERCOMMAND|CMD_FL_CL_RELEVANT|CMD_FL_CHEAT));
 	gCommands.CreateCommand("notarget", Cmd_Notarget, "Toggles notarget cheat", (CMD_FL_SERVERCOMMAND|CMD_FL_CL_RELEVANT|CMD_FL_CHEAT));
 	gCommands.CreateCommand("noclip", Cmd_Noclip, "Toggles noclip cheat", (CMD_FL_SERVERCOMMAND|CMD_FL_CL_RELEVANT|CMD_FL_CHEAT));
-	gCommands.CreateCommand("version", Cmd_Version, "Version info.");
+	gCommands.CreateCommand("debuginfo", Cmd_Debug, "Debug info.");
 }
 
 //=============================================

@@ -21,7 +21,7 @@ std::string cleanMapName(const std::string& mapName) {
         cleanedMapName.erase(0, 5);
     }
 
-    size_t pos = cleanedMapName.rfind(".bsp");
+    size_t pos = cleanedMapName.rfind(".pbsp");
     if (pos != std::string::npos && pos == cleanedMapName.size() - 4) {
         cleanedMapName.erase(pos, 4);
     }

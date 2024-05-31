@@ -10,15 +10,6 @@
   ftglyph.c
   ftgzip.c
   ftinit.c
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(179,34): warning C4389: '==': signed/unsigned mismatch
-  (compiling source file '../../../src/autofit/autofit.c')
-  
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(141,32): warning C4245: 'initializing': conversion from 'int' to 'FT_UInt', signed/unsigned mismatch
-  (compiling source file '../../../src/autofit/autofit.c')
-  
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afmodule.c(106,34): warning C4389: '==': signed/unsigned mismatch
-  (compiling source file '../../../src/autofit/autofit.c')
-  
   ftlzw.c
   ftstroke.c
   ftsystem.c
@@ -30,8 +21,6 @@ D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\fr
   fttype1.c
   ftwinfnt.c
   ftxf86.c
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(604,1): warning C4701: potentially uninitialized local variable 'p_first' used
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(653,1): warning C4701: potentially uninitialized local variable 'p_last' used
   ftlcdfil.c
   ftgxval.c
   ftotval.c
@@ -39,21 +28,26 @@ D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\fr
   pcf.c
   pfr.c
   psaux.c
-  psmodule.c
   pshinter.c
+  psmodule.c
   raster.c
   sfnt.c
   truetype.c
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(179,34): warning C4389: '==': signed/unsigned mismatch
+  (compiling source file '../../../src/autofit/autofit.c')
+  
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afglobal.c(141,32): warning C4245: 'initializing': conversion from 'int' to 'FT_UInt', signed/unsigned mismatch
+  (compiling source file '../../../src/autofit/autofit.c')
+  
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\afmodule.c(106,34): warning C4389: '==': signed/unsigned mismatch
+  (compiling source file '../../../src/autofit/autofit.c')
+  
   type1.c
   type1cid.c
   type42.c
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(604,1): warning C4701: potentially uninitialized local variable 'p_first' used
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\autofit\aflatin.c(653,1): warning C4701: potentially uninitialized local variable 'p_last' used
   winfnt.c
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(102,38): warning C4244: '=': conversion from 'FT_Pos' to 'FT_Short', possible loss of data
-  (compiling source file '../../../src/truetype/truetype.c')
-  
-D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(108,40): warning C4244: '=': conversion from 'FT_Pos' to 'FT_Short', possible loss of data
-  (compiling source file '../../../src/truetype/truetype.c')
-  
 D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(504,7): warning C4244: '=': conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
   (compiling source file '../../../src/sfnt/sfnt.c')
   
@@ -80,6 +74,12 @@ D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\fr
   
 D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\sfobjs.c(648,7): warning C4244: '=': conversion from 'FT_ULong' to 'FT_Byte', possible loss of data
   (compiling source file '../../../src/sfnt/sfnt.c')
+  
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(102,38): warning C4244: '=': conversion from 'FT_Pos' to 'FT_Short', possible loss of data
+  (compiling source file '../../../src/truetype/truetype.c')
+  
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\truetype\ttgload.c(108,40): warning C4244: '=': conversion from 'FT_Pos' to 'FT_Short', possible loss of data
+  (compiling source file '../../../src/truetype/truetype.c')
   
 D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\libs\freetype\src\sfnt\ttsbit.c(291,27): warning C4244: '=': conversion from 'FT_UInt' to 'FT_UShort', possible loss of data
   (compiling source file '../../../src/sfnt/sfnt.c')

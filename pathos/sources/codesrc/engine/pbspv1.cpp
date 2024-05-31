@@ -592,8 +592,8 @@ bool PBSPV1_LoadNodes( const byte* pfile, brushmodel_t& model, const lump_t& lum
 
 		for(Uint32 j = 0; j < 3; j++)
 		{
-			pout->mins[j] = Common::ByteToInt16((const byte*)&pinnodes[i].mins[j]);
-			pout->maxs[j] = Common::ByteToInt16((const byte*)&pinnodes[i].maxs[j]);
+			pout->mins[j] = Common::ByteToInt32((const byte*)&pinnodes[i].mins[j]);
+			pout->maxs[j] = Common::ByteToInt32((const byte*)&pinnodes[i].maxs[j]);
 		}
 
 		pout->pplane = &model.pplanes[pinnodes[i].planenum];
@@ -819,8 +819,8 @@ bool PBSPV1_CalcSurfaceExtents( msurface_t* psurf, brushmodel_t& model )
 
 	for(Uint32 i = 0; i < 2; i++)
 	{
-		Int16 boundsmin = (Int16)SDL_floor(mins[i]/PBSPV1_LM_SAMPLE_SIZE);
-		Int16 boundsmax = (Int16)SDL_ceil(maxs[i]/PBSPV1_LM_SAMPLE_SIZE);
+		Int32 boundsmin = (Int32)SDL_floor(mins[i]/PBSPV1_LM_SAMPLE_SIZE);
+		Int32 boundsmax = (Int32)SDL_ceil(maxs[i]/PBSPV1_LM_SAMPLE_SIZE);
 
 		psurf->texturemins[i] = boundsmin*PBSPV1_LM_SAMPLE_SIZE;
 		psurf->extents[i] = (boundsmax - boundsmin) * PBSPV1_LM_SAMPLE_SIZE;

@@ -65,7 +65,7 @@ void            ResetTmpFiles()
     {
         char            filename[_MAX_PATH];
 
-        safe_snprintf(filename, _MAX_PATH, "%s.bsp", g_Mapname);
+        safe_snprintf(filename, _MAX_PATH, "%s.pbsp", g_Mapname);
         _unlink(filename);
 
         safe_snprintf(filename, _MAX_PATH, "%s.inc", g_Mapname);

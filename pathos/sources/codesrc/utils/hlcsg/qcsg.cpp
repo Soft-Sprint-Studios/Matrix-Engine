@@ -1196,7 +1196,7 @@ void WriteBSP(const char* const name)
 {
     char path[_MAX_PATH];
 
-	safe_snprintf(path, _MAX_PATH, "%s.bsp", name);
+	safe_snprintf(path, _MAX_PATH, "%s.pbsp", name);
 
     SetModelNumbers();
 	ReuseModel();
@@ -1604,6 +1604,7 @@ static void     Usage()
     Log("    -wadautodetect   : Force auto-detection of wadfiles\n");
 
 	Log("    -scale #         : Scale the world. Use at your own risk.\n");
+    Log("    -worldextent #   : Extend map geometry limits beyond +/-32768.\n");
     Log("    mapfile          : The mapfile to compile\n\n");
 
     exit(1);
@@ -2321,7 +2322,7 @@ int             main(const int argc, char** argv)
     {
         char            out[_MAX_PATH];
 
-        safe_snprintf(out, _MAX_PATH, "%s.bsp", g_Mapname);
+        safe_snprintf(out, _MAX_PATH, "%s.pbsp", g_Mapname);
         LoadBSPFile(out);
 
         // Write it all back out again.

@@ -1,0 +1,332 @@
+#version 460
+
+uniform sampler2D baselightmap;
+uniform sampler2D maintexture;
+uniform sampler2D maintexture2;
+uniform sampler2D blendmap;
+uniform sampler2D detailtex;
+uniform sampler2D chrometex;
+uniform sampler2D normalmap;
+uniform sampler2D normalmap2;
+uniform sampler2D difflightmap;
+uniform sampler2D lightvecstex;
+uniform sampler2D speculartex;
+uniform sampler2D speculartex2;
+uniform sampler2D aomaptex;
+uniform sampler2D aomaptex2;
+uniform float aoscale;
+
+uniform float phong_exponent;
+uniform float specfactor;
+uniform float interpolant;
+uniform float cubemapstrength;
+uniform float decalalpha;
+uniform float light_radius;
+
+uniform vec3 fogcolor;
+uniform vec2 fogparams;// end, 1/(end-start)
+
+uniform vec4 color;
+
+in vec2 ps_lmapcoord;
+in vec2 ps_texcoord;
+in vec2 ps_dtexcoord;
+in vec2 ps_chromecoord;
+in vec3 ps_normal;
+in vec3 ps_tangent;
+in vec3 ps_binormal;
+
+in vec4 ps_light_0_vertexcoord; // projection space
+in vec4 ps_light_1_vertexcoord; // projection space
+in vec4 ps_light_2_vertexcoord; // projection space
+in vec4 ps_light_3_vertexcoord; // projection space
+
+in float ps_fogcoord; // static fogcoord
+in vec3 ps_vertexpos; // for radial fog
+
+
+
+out vec4 oColor;
+
+float CalcShininess( vec3 v_origin, vec3 v_normal, vec3 l_origin )
+{
+return 1.0;
+}
+
+float LinearStep(float in1, float in2, float pmax)  
+{  
+	float value = (pmax-in1)/(in2-in1);
+	return clamp(value, 0.0, 1.0);
+}
+
+float ReduceLightBleeding(float p_max, float Amount)  
+{    
+	return LinearStep(Amount, 1, p_max);  
+}
+
+float DepthTestCube( float depthcoord, samplerCube shadowmap, vec3 coord )
+{
+	vec4 momments = texture(shadowmap, coord);
+	momments.xy = momments.xy+momments.zw/32;
+
+	float diff = depthcoord-momments.x;
+	float sgn = max(sign(diff), 0);
+
+	float variance = momments.y-(momments.x*momments.x);
+	variance = max(variance, 0.00005);
+	
+	float d = depthcoord-momments.x;
+	float p_max = variance/(variance+d*d);
+	return p_max*sgn+(1.0-sgn);
+}
+
+float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
+{
+	vec4 momments = textureProj(shadowmap, coord);
+	momments.xy = momments.xy+momments.zw/32;
+
+	float diff = depthcoord-momments.x;
+	float sgn = max(sign(diff), 0);
+
+	float variance = momments.y-(momments.x*momments.x);
+	variance = max(variance, 0.00005);
+	
+	float d = depthcoord-momments.x;
+	float p_max = variance/(variance+d*d);
+	return p_max*sgn+(1.0-sgn);
+}
+
+float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
+    vec3 eyeVec = normalize(-v_origin);
+    vec3 reflectVec = reflect(lightDir, v_normal);
+    float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
+    
+    vec4 specularColor;
+    float specularReflectance;
+    vec3 specularTint;
+    float specularComponent;
+
+    vec4 specularColor1 = texture(speculartex, v_origin.xy);
+        vec4 specularColor2 = texture(speculartex2, v_origin.xy);
+        vec4 blendValue = texture(blendmap, v_origin.xy);
+        
+        specularReflectance = mix(specularColor1.r, specularColor2.r, blendValue.r);
+        specularTint = mix(specularColor1.rgb, specularColor2.rgb, blendValue.rgb);
+        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    vec3 finalSpecular = specularComponent * specularTint;
+    
+    return dot(finalSpecular, vec3(1.0));
+}
+
+
+vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
+{
+	// Inverse squared radius
+	float rad = l_radius * l_radius;
+	vec3 dir = l_origin - v_origin;
+	
+	float dist = dot(dir, dir);
+	float attn = (dist/rad-1)*-1;
+	
+	dir = normalize(dir);
+	attn = clamp(attn, 0.0, 1.0);
+	float dp = dot(dir, v_normal);
+
+	attn = max(dp, 0)*attn;
+	vec4 outColor;
+	outColor.xyz = attn*l_color;
+	
+	outColor.w = 0.0;
+	return outColor;
+}
+
+float GetPointLightShadowing( float l_radius, vec4 v_coord, samplerCube l_shadowmap )
+{
+	float fldistance = clamp((length(v_coord.xyz)/l_radius), 0.0, 1.0);
+	float flresult = DepthTestCube(fldistance, l_shadowmap, normalize(v_coord.xyz));
+	return ReduceLightBleeding(flresult, 0.4);
+}
+
+vec4 AddProjLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec4 v_coord, vec3 v_normal, sampler2D l_texture, float specularStrength )
+{
+	float rad = l_radius*l_radius;
+	vec3 dir = l_origin-v_origin;
+	
+	float dist = dot(dir, dir);
+	float attn = (dist/rad-1)*-1;
+	attn = clamp(attn, 0.0, 1.0);
+	
+	dir = normalize(dir);
+	float dp = max(dot(dir, v_normal), 0);
+	vec4 texclamp = max(v_coord, 0);
+
+	vec4 texColor = textureProj(l_texture, texclamp);
+	
+	vec4 outColor;
+	outColor.xyz = attn*texColor.xyz*l_color*dp;
+	
+	return outColor;
+}
+
+float GetProjLightShadowing( float l_radius, vec3 l_origin, vec3 v_origin, vec4 v_coord, vec3 v_normal, sampler2D l_shadowmap )
+{
+	vec4 texclamp = max(v_coord, 0);
+	float fldistance = clamp((length(l_origin-v_origin)/l_radius), 0.0, 1.0);
+	float flresult = DepthTestProj(fldistance, l_shadowmap, texclamp);
+	return ReduceLightBleeding(flresult, 0.4);
+}
+
+vec3 AddDiffuseLight ( vec3 colorIn1, vec3 colorIn2 )
+{
+	vec3 outValue = colorIn1;
+	outValue += colorIn2;
+
+	return outValue;
+}
+
+vec3 AddDiffuseDynamicLight ( vec3 colorIn1, vec3 colorIn2 )
+{
+	vec3 outValue = colorIn1;
+	outValue += colorIn2;
+	return outValue;
+}
+
+vec3 AddSpecularLight ( vec3 colorIn1, float specularStrength, vec3 colorIn2 )
+{
+	vec3 outValue = colorIn1;
+	return outValue;
+}
+
+vec4 EncodeDepth( vec3 v_origin, float l_radius )
+{
+	float depth = length(v_origin);
+	depth = clamp((depth/l_radius), 0.0, 1.0);
+
+	vec2 momments = vec2(depth, depth*depth);
+	float dx = dFdx(depth);
+	float dy = dFdy(depth);
+	momments.y += 0.25*(dx*dx+dy*dy);
+
+	vec2 fracval = fract(momments*32);
+
+	vec4 finalColor;
+	finalColor.x = momments.x-(fracval.x/32);
+	finalColor.y = momments.y-(fracval.y/32);
+	finalColor.zw = fracval;
+	
+	return finalColor;
+}
+
+vec3 GetLightDir( sampler2D vecsLightmap )
+{
+	vec3 lightVec;
+return vec3(0, 0, 0);
+}
+
+vec4 GetDiffuseLight( sampler2D diffuseTexture )
+{
+return vec4(0, 0, 0, 0);
+}
+
+vec3 GetTangentSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal )
+{
+return v_normal;
+}
+
+vec3 GetEyeSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal, mat3 tbnMatrix )
+{
+return v_normal;
+}
+
+vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
+{
+vec4 lightmapColor = texture2D(ambLightmap, ps_lmapcoord);
+	return clamp(lightmapColor, 0, 1); // To prevent multipass inconsistencies
+}
+
+float SplineFraction( float value, float scale )
+{
+	float valueSquared;
+
+	value = scale * value;
+	valueSquared = value * value;
+
+	// Nice little ease-in, ease-out spline-like curve
+	return 3 * valueSquared - 2 * valueSquared * value;
+}
+
+float CalcFogFactor_Radial( vec3 v_origin, float fogcoord, vec2 f_params )
+{
+	float fp_fogcoord = length(v_origin);
+	float fp_fogfactor = (f_params.x - fp_fogcoord)*f_params.y;
+	fp_fogfactor = SplineFraction(clamp(fp_fogfactor, 0.0, 1.0), 1.0);
+	
+	return 1.0-fp_fogfactor;
+}
+
+float CalcFogFactor_FogCoord( vec3 v_origin, float fogcoord, vec2 f_params )
+{
+	float fp_fogfactor = (f_params.x - fogcoord)*f_params.y;
+	return 1.0-clamp(fp_fogfactor, 0.0, 1.0);
+}
+
+float CalcFogFactor( vec3 v_origin, float fogcoord, vec2 f_params )
+{
+return 0;
+}
+
+vec4 CombineTextureLayers(vec3 v_origin, vec3 v_normal, float specularStrength) {
+    vec3 lightDir = GetLightDir(lightvecstex);
+    vec4 lightDiffuse = GetDiffuseLight(difflightmap);
+    vec4 finalColor = AddBaseLight(baselightmap, lightDiffuse, lightDir, v_normal);
+
+    return finalColor;
+}
+vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength)
+{
+    vec3 lightDir = GetLightDir(lightvecstex);
+    vec4 lightDiffuse = GetDiffuseLight(difflightmap);
+
+    // Add specular if any
+    mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
+    vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
+    vec3 eyeSpaceNormal = normalize(tbnMatrix * v_normal);
+    
+    float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
+    float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
+
+    // Calculate view direction in eye space
+    vec3 viewDir = normalize(v_origin);
+    
+    // Calculate the Fresnel effect
+    float fresnel = pow(1.0 - dot(eyeSpaceNormal, viewDir), 5.0);
+
+    // Modulate the specular value by the Fresnel effect
+    specularValue *= fresnel;
+
+    vec4 finalColor = specularValue * lightDiffuse * shineFactor;
+    return finalColor;
+}
+
+vec4 AddCubemaps( float reflectivity )
+{ 
+	return vec4(0, 0, 0, 0);
+	}
+
+void main()
+{
+	float specularFactor = 0.0;
+	vec4 specularColor = vec4(0, 0, 0, 0);
+	vec4 finalColor = vec4(0, 0, 0, 0);
+
+
+	vec3 lightDir = GetLightDir( lightvecstex );
+		vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+        vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
+        vec3 v_normal = mix(v_normal1, v_normal2, blendValueNormal.r);
+		vec4 diffuseLight = GetDiffuseLight( difflightmap );
+		
+		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
+		finalColor.w = finalColor.w * texture2D(maintexture, ps_texcoord).w;
+	oColor = finalColor;
+}

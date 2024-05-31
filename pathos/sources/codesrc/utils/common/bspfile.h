@@ -12,14 +12,14 @@
 #define MAX_MAP_HULLS            4
 // hard limit
 
-#define MAX_MAP_MODELS            131072
+#define MAX_MAP_MODELS            262144
 
-#define MAX_MAP_BRUSHES           524288
+#define MAX_MAP_BRUSHES           1048576
 
-#define MAX_ENGINE_ENTITIES       131072
-#define MAX_MAP_ENTITIES          131072
+#define MAX_ENGINE_ENTITIES       262144
+#define MAX_MAP_ENTITIES          262144
 
-#define MAX_MAP_ENTSTRING         (4194304) // 4MB
+#define MAX_MAP_ENTSTRING         (8388608) // 8MB
 
 #define MAX_MAP_PLANES            524288
 #define MAX_INTERNAL_MAP_PLANES   524288
@@ -35,7 +35,7 @@
 
 #define MAX_MAP_MARKSURFACES      524288
 
-#define MAX_MAP_TEXTURES          65536
+#define MAX_MAP_TEXTURES          262144
 
 #define MAX_MAP_TEXINFO           524288
 
@@ -64,7 +64,7 @@
 #define TEXTURE_STEP        16 // this constant was previously defined in lightmap.cpp. --vluzacn
 #define MAX_SURFACE_EXTENT  32 // if lightmap extent exceeds 16, the map will not be able to load in 'Software' renderer and HLDS. //--vluzacn
 
-#define ENGINE_ENTITY_RANGE 32768
+#define ENGINE_ENTITY_RANGE 262144
 //=============================================================================
 
 #define PBSP_HEADER						(('P'<<24)+('S'<<16)+('B'<<8)+'P')
@@ -182,8 +182,8 @@ typedef struct
 {
     int             planenum;
     int				children[2];                           // negative numbers are -(leafs+1), not nodes
-    short           mins[3];                               // for sphere culling
-    short           maxs[3];
+    Int32           mins[3];                               // for sphere culling
+    Int32           maxs[3];
     unsigned int	firstface;
     unsigned int	numfaces;                              // counting both sides
 }

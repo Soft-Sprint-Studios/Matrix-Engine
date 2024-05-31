@@ -36,7 +36,7 @@ bool ALD_Load( daystage_t stage )
 
 	// Try to load the original file first
 	CString filename = pworldcache->name;
-	Uint32 begin = filename.find(0, ".bsp");
+	Uint32 begin = filename.find(0, ".pbsp");
 	if(begin != -1)
 		filename.erase(begin, 4);
 	filename << ".ald";
@@ -166,7 +166,7 @@ void ALD_ExportLightmaps( void )
 
 	// Try to load the original file first
 	CString filepath = pworldcache->name;
-	Uint32 begin = filepath.find(0, ".bsp");
+	Uint32 begin = filepath.find(0, ".pbsp");
 	if(begin != -1)
 		filepath.erase(begin, 4);
 	filepath << ".ald";

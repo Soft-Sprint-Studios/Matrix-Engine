@@ -1546,7 +1546,7 @@ static void     ProcessFile(const char* const filename)
 	}
 
     // load the output of csg
-    safe_snprintf(g_bspfilename, _MAX_PATH, "%s.bsp", filename);
+    safe_snprintf(g_bspfilename, _MAX_PATH, "%s.pbsp", filename);
     LoadBSPFile(g_bspfilename);
     ParseEntities();
 

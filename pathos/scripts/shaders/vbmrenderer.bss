@@ -250,7 +250,6 @@ uniform vec3 skylight_diffuse;
 uniform vec3 skylight_dir;
 
 uniform float light_radius;
-uniform float parallaxscale;
 
 uniform vec3 fogcolor;
 uniform vec2 fogparams;

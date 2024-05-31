@@ -97,7 +97,7 @@ static const Float STEPTIME_SPRINT = 475.0f;
 static const Int32 MAX_EDICT_LEAFNUMS = 256;
 
 // Max entities on server side(client ones start after this index)
-static const Uint32 MAX_SERVER_ENTITIES = 65535;
+static const Uint32 MAX_SERVER_ENTITIES = 262140;
 // Reserved space mins for client-side identifiers
 static const Uint32 ENTITY_IDENTIFIER_RESERVED_MIN = MAX_SERVER_ENTITIES+1;
 // Reserved space mins for client-side identifiers
@@ -231,12 +231,12 @@ static const Vector NULL_MAXS(-999999999, -999999999, -999999999);
 // env_elight radius multiplier
 static const Float ENV_ELIGHT_RADIUS_MULTIPLIER = 9.5;
 // Max entities on client side(reserved entities start after this + MAX_SERVER_ENTITIES
-static const Uint32 MAX_CLIENTSIDE_ENTITIES = 65535;
+static const Uint32 MAX_CLIENTSIDE_ENTITIES = 262140;
 // Entity index offset for client-side entities
 static const Uint32 CL_ENTITY_INDEX_BASE = MAX_SERVER_ENTITIES;
 
 // Max surface extents size
-static const Uint32 MAX_SURFACE_EXTENTS = 2048;
+static const Uint32 MAX_SURFACE_EXTENTS = 8192;
 // Size of a light block(1024x1024 chop size should give 64x64, but we pad by 2)
 static const Uint32 BLOCKLIGHTS_SIZE = (66*66);
 

@@ -3,12 +3,8 @@ $texture
 	$int_width 1024
 	$int_height 1024
 	$material concrete
-	$texture diffuse world/redbrick01/redbrick02.dds
-	$texture diffuse2 world/redbrick01/redbrick01.dds
-	$texture blend world/redbrick01/redbrick01_blend.dds
+	$texture diffuse world/redbrick01/redbrick01_diffuse.dds
 	$texture normal world/redbrick01/redbrick01_normal.dds
-	$texture normal2 world/redbrick01/redbrick02_normal2.dds
 	$texture specular world/redbrick01/redbrick01_specular.dds
-	$texture specular2 world/redbrick01/redbrick02_specular2.dds
 	$texture detail detail/dt_conc.dds
 }

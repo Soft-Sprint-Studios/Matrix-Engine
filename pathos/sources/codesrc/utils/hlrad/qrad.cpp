@@ -4040,7 +4040,7 @@ int             main(const int argc, char** argv)
 
     // normalise maxlight
 
-	safe_snprintf(g_source, _MAX_PATH, "%s.bsp", g_Mapname);
+	safe_snprintf(g_source, _MAX_PATH, "%s.pbsp", g_Mapname);
     LoadBSPFile(g_source);
 #ifndef PLATFORM_CAN_CALC_EXTENT
 	char extentfilename[_MAX_PATH];

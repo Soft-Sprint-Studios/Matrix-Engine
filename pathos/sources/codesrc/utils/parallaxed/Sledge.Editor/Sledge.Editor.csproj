@@ -1,0 +1,169 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{0F7EBC7C-8FF3-484C-ACD2-6682450A91DB}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sledge.Editor</RootNamespace>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <AssemblyName>Hammertime.Editor</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
+    <Platforms>AnyCPU;x86</Platforms>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28Extra%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug %28Extra%29\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEBUG_EXTRA</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeneratedAssemblyInfoFile>assemblyinfo.cs</GeneratedAssemblyInfoFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Translations\Sledge.Editor.en.json" />
+    <None Remove="Translations\Sledge.Editor.fr.json" />
+    <None Remove="Translations\Sledge.Editor.it.json" />
+    <None Remove="Translations\Sledge.Editor.jp.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Sledge.BspEditor.Editing\Sledge.BspEditor.Editing.csproj">
+      <Project>{d33e1027-1956-44c4-b920-85281f703704}</Project>
+      <Name>Sledge.BspEditor.Editing</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.BspEditor.Rendering\Sledge.BspEditor.Rendering.csproj">
+      <Project>{d27bb6a7-fe81-45b5-9b68-b23e4169f16d}</Project>
+      <Name>Sledge.BspEditor.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.BspEditor.Tools\Sledge.BspEditor.Tools.csproj">
+      <Project>{f5715cfa-8f04-4892-a1ef-c3e2c3017750}</Project>
+      <Name>Sledge.BspEditor.Tools</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.BspEditor\Sledge.BspEditor.csproj">
+      <Project>{37c3fe6b-16f4-431f-ab67-fba7c681ccee}</Project>
+      <Name>Sledge.BspEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.Common\Sledge.Common.csproj">
+      <Project>{5d414ac8-8b93-489f-9960-877923400fed}</Project>
+      <Name>Sledge.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.Shell\Sledge.Shell.csproj">
+      <Project>{1E0BEB41-CF2E-4F48-838E-452C1DCF575F}</Project>
+      <Name>Sledge.Shell</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="LogicAndTrick.Oy" Version="1.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+    <PackageReference Include="Vortice.D3DCompiler" Version="3.2.0" />
+    <PackageReference Include="Vortice.DXGI" Version="3.2.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\Sledge.ico" />
+    <Content Include="Translations\Sledge.Editor.en.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translations\Sledge.Editor.fr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translations\Sledge.Editor.it.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translations\Sledge.Editor.jp.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <StartupObject>Sledge.Editor.Program</StartupObject>
+    <ApplicationIcon>Resources\Sledge.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <BaseOutputPath>bin\</BaseOutputPath>
+  </PropertyGroup>
+  
+  <ItemGroup Condition="'$(Platform)'=='x86'">
+    <Content Include="..\cimgui_x86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>cimgui.dll</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup Condition="'$(Platform)'=='AnyCPU'">
+    <Content Include="..\cimgui_x64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>cimgui.dll</Link>
+    </Content>
+  </ItemGroup>
+<ItemGroup>
+  <None Include="..\Resources\plugins\**" CopyToOutputDirectory="PreserveNewest" LinkBase="plugins\" />
+</ItemGroup>
+</Project>

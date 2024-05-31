@@ -659,8 +659,8 @@ bool SV_SpawnGame( const Char* pstrLevelName, const Char* pstrSaveFile, const Ch
 	// Try to load the file
 	CString filepath;
 	filepath << "maps/" << svs.mapname;
-	if(!qstrstr(filepath.c_str(), ".bsp"))
-		filepath << ".bsp";
+	if(!qstrstr(filepath.c_str(), ".pbsp"))
+		filepath << ".pbsp";
 
 	// Print message
 	CString message;

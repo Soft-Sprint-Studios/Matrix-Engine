@@ -113,7 +113,7 @@ bool CWADTextureResource::Init( const Char* pstrBSPName, const CArray<CString>& 
 
 	// Save BSP file basename
 	Common::Basename(pstrBSPName, m_BSPFileName);
-	m_BSPFileName << ".bsp";
+	m_BSPFileName << ".pbsp";
 
 	// Now check WAD files if any
 	for(Uint32 i = 0; i < wadFilesList.size(); i++)
@@ -131,7 +131,7 @@ bool CWADTextureResource::Init( const Char* pstrBSPName, const CArray<CString>& 
 		pfile = FL_LoadFile(wadpath.c_str(), &filesize);
 		if(!pfile)
 		{
-			Con_Printf("%s - Wad file '%s' is missing.\n", __FUNCTION__, wadpath.c_str());
+			//Con_Printf("%s - Wad file '%s' is missing.\n", __FUNCTION__, wadpath.c_str());
 			continue;
 		}
 

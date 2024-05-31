@@ -1,0 +1,2 @@
+0(35) : error C1503: undefined variable "rgbB_SSAO"
+0(35) : error C1503: undefined variable "rgbA_SSAO"

@@ -71,8 +71,10 @@ All Rights Reserved.
 #include "r_sky.h"
 
 #include "stepsound.h"
+#include "iostream"
 
 // Global cvars
+CCVar* g_pCvarFullBright = nullptr;
 CCVar* g_pCvarBumpMaps = nullptr;
 CCVar* g_pCvarDrawEntities = nullptr;
 CCVar* g_pCvarPhongExponent = nullptr;
@@ -168,6 +170,7 @@ bool R_Init( void )
 	g_pCvarDrawEntities = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_drawentities", "1", "Toggles rendering of entities");
 	g_pCvarPhongExponent = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_phong_exponent", "8", "Phong exponent setting");
 	g_pCvarWireFrame = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_wireframe", "0", "Toggle wireframe rendering");
+	g_pCvarFullBright = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_PROTECTED, "r_fullbright", "0", "Toggle fullbright rendering");
 	g_pCvarCaustics = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_water_caustics", "1", "Toggle water caustics");
 	g_pCvarFarZ = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_farz", "16384", "Far clipping plane distance");
 	g_pCvarShadows = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadows", "1", "Controls rendering of shadows" );
@@ -1033,7 +1036,7 @@ void R_SetupRefDef( cl_entity_t* pclient, ref_params_t& params )
 //====================================
 //
 //====================================
-void R_SetupView( const ref_params_t& params )
+void R_SetupView(const ref_params_t& params)
 {
 	// Reset counters
 	rns.counters.brushpolies = 0;
@@ -1051,7 +1054,7 @@ void R_SetupView( const ref_params_t& params )
 	Math::AngleVectors(rns.view.v_angles, &rns.view.v_forward, &rns.view.v_right, &rns.view.v_up);
 
 	// Set frustum
-	if(!rns.monitorpass)
+	if (!rns.monitorpass)
 		rns.view.fov = R_GetRenderFOV(params.viewsize);
 	else
 		rns.view.fov = params.viewsize;
@@ -1064,24 +1067,25 @@ void R_SetupView( const ref_params_t& params )
 	R_SetModelViewMatrix(rns.view.v_origin, rns.view.v_angles);
 
 	// Set the projection matrix
-	if(!rns.mirroring && !rns.cubemapdraw)
+	if (!rns.mirroring && !rns.cubemapdraw)
 		R_SetProjectionMatrix(rns.view.nearclip, rns.view.fov);
 
-	if(rns.fog.settings.active)
+	// Clear the color and depth buffers
+	if (rns.fog.settings.active)
 		glClearColor(rns.fog.settings.color.x, rns.fog.settings.color.y, rns.fog.settings.color.z, GL_ONE);
 	else
 		glClearColor(GL_ZERO, GL_ZERO, GL_ZERO, GL_ZERO);
 
-	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Tell client our view information
 	cls.dllfuncs.pfnSetupView(params);
 
 	// Mark visible leaves
-	if(!rns.sky.skybox || rns.fog.settings.affectsky || rns.water_skydraw)
+	if (!rns.sky.skybox || rns.fog.settings.affectsky || rns.water_skydraw)
 	{
 		Vector vieworigin;
-		if(rns.usevisorigin)
+		if (rns.usevisorigin)
 			vieworigin = rns.view.v_visorigin;
 		else
 			vieworigin = rns.view.v_origin;

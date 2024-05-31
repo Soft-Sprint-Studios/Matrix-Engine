@@ -59,7 +59,7 @@ public:
 	// Retrieves the name
 	const Char* GetName( void ) const { return m_name.c_str(); }
 	
-private:
+public:
 	// These should never be called outside CConsole
 	// Sets a string value for the cvar
 	virtual bool SetValue( const Char* pstrValue ) = 0;

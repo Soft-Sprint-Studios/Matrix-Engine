@@ -616,7 +616,7 @@ Uint32 CWindow::GetHeight ( void ) const
 
 //=============================================
 // Class: CWindow
-// Function: GetHeight
+// Function: GetRefreshRate
 //=============================================
 Uint32 CWindow::GetRefreshRate ( void ) const
 {

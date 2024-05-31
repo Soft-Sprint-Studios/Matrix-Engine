@@ -10,7 +10,7 @@
 #undef BOGUS_RANGE
 #undef ON_EPSILON
 
-#define	BOGUS_RANGE	80000.0
+#define BOGUS_RANGE 320000.0
 #define ON_EPSILON epsilon
 
 //

@@ -1597,7 +1597,7 @@ int             main(const int argc, char** argv)
     start = I_FloatTime();
 
     safe_strncpy(source, g_Mapname, _MAX_PATH);
-    safe_strncat(source, ".bsp", _MAX_PATH);
+    safe_strncat(source, ".pbsp", _MAX_PATH);
     safe_strncpy(portalfile, g_Mapname, _MAX_PATH);
     safe_strncat(portalfile, ".prt", _MAX_PATH);
 

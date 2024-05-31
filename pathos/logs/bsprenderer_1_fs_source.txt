@@ -3,27 +3,17 @@
 uniform sampler2D baselightmap;
 uniform sampler2D maintexture;
 uniform sampler2D maintexture2;
-uniform sampler2D maintexture3;
-uniform sampler2D maintexture4;
+uniform sampler2D blendmap;
 uniform sampler2D detailtex;
 uniform sampler2D chrometex;
 uniform sampler2D normalmap;
 uniform sampler2D normalmap2;
-uniform sampler2D normalmap3;
-uniform sampler2D normalmap4;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
 uniform sampler2D speculartex2;
-uniform sampler2D speculartex3;
-uniform sampler2D speculartex4;
-uniform sampler2D blendtexture;
-uniform sampler2D heightmap;
-uniform float parallaxscale;
 uniform sampler2D aomaptex;
 uniform sampler2D aomaptex2;
-uniform sampler2D aomaptex3;
-uniform sampler2D aomaptex4;
 uniform float aoscale;
 
 uniform float phong_exponent;
@@ -107,34 +97,27 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 }
 
 float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
-    // Eye vector (towards the camera)
     vec3 eyeVec = normalize(-v_origin);
-    
-    // Reflect vector (direction of the reflection of light)
     vec3 reflectVec = reflect(lightDir, v_normal);
-    
-    // Calculate cosine of the angle between the eye vector and the reflect vector,
-    // clamping it to the range [0, 1]
     float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
     
-    // Fetch specular color from the specular texture using the given texture coordinates
-    vec4 specularColor = texture(speculartex, v_origin.xy);
-    
-    // Calculate the specular intensity using the red channel of the specular color
-    float specularReflectance = specularColor.r;
-    
-    // Calculate the specular component using Phong shading model,
-    // scaled by the specular reflectance from the texture
-    // The specularColor RGB channels can affect the tint of the specular reflection
-    vec3 specularTint = specularColor.rgb;
-    float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
-    
-    // Apply the specular tint from the texture to the specular component
+    vec4 specularColor;
+    float specularReflectance;
+    vec3 specularTint;
+    float specularComponent;
+
+    vec4 specularColor1 = texture(speculartex, v_origin.xy);
+        vec4 specularColor2 = texture(speculartex2, v_origin.xy);
+        vec4 blendValue = texture(blendmap, v_origin.xy);
+        
+        specularReflectance = mix(specularColor1.r, specularColor2.r, blendValue.r);
+        specularTint = mix(specularColor1.rgb, specularColor2.rgb, blendValue.rgb);
+        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
     vec3 finalSpecular = specularComponent * specularTint;
     
-    // Return the scalar specular component, which can be combined with the diffuse component later in the shader
     return dot(finalSpecular, vec3(1.0));
 }
+
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
 {
@@ -240,10 +223,13 @@ vec3 GetLightDir( sampler2D vecsLightmap )
 return vec3(0, 0, 0);
 }
 
-vec4 GetDiffuseLight( sampler2D diffuseTexture )
+vec4 GetDiffuseLight(sampler2D diffuseTexture, sampler2D blendmap)
 {
-return vec4(0, 0, 0, 0);
-}
+    vec4 blendValue = texture2D(blendmap, ps_lmapcoord);
+    vec2 modifiedCoords = ps_lmapcoord * blendValue.xy; // Modify texture coordinates based on blend value
+
+    return vec4(0, 0, 0, 0);
+    }
 
 vec3 GetTangentSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal )
 {
@@ -254,11 +240,13 @@ vec3 GetEyeSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal, mat3 
 {
 return v_normal;
 }
-	vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
+
+vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
 {
 vec4 lightmapColor = texture2D(ambLightmap, ps_lmapcoord);
 	return clamp(lightmapColor, 0, 1); // To prevent multipass inconsistencies
 }
+
 float SplineFraction( float value, float scale )
 {
 	float valueSquared;
@@ -290,25 +278,18 @@ float CalcFogFactor( vec3 v_origin, float fogcoord, vec2 f_params )
 return 0;
 }
 
-vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength )
-{
-    vec3 lightDir = GetLightDir( lightvecstex );
-    vec4 lightDiffuse = GetDiffuseLight( difflightmap );
+vec4 CombineTextureLayers(vec3 v_origin, vec3 v_normal, float specularStrength) {
+    vec3 lightDir = GetLightDir(lightvecstex);
+    vec4 lightDiffuse = GetDiffuseLight(difflightmap);
     vec4 finalColor = AddBaseLight(baselightmap, lightDiffuse, lightDir, v_normal);
 
-    vec4 texColor = texture2D(maintexture, ps_texcoord);
+    vec4 texColor1 = texture2D(maintexture, ps_texcoord);
+        vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
+        vec4 blendValue = texture2D(blendmap, ps_texcoord);
+        vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
+        
         vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
-        
-        // Perform four-way blending based on blend texture
-        vec4 blendTexColor = texture2D(blendtexture, ps_blendtexcoord);
-        vec4 tex2Color = texture2D(maintexture2, ps_texcoord);
-        vec4 tex3Color = texture2D(maintexture3, ps_texcoord);
-        vec4 tex4Color = texture2D(maintexture4, ps_texcoord);
-        
-        vec4 blendedColor = mix(tex2Color, tex3Color, blendTexColor.g);
-        blendedColor = mix(blendedColor, tex4Color, blendTexColor.b);
-        
-        finalColor = finalColor * texColor * detailTexColor * blendedColor;
+        finalColor = finalColor * blendedTexColor * detailTexColor;
         finalColor.xyz = finalColor.xyz * 4;
     return finalColor;
 }
@@ -342,6 +323,7 @@ vec4 AddCubemaps( float reflectivity )
 { 
 	return vec4(0, 0, 0, 0);
 	}
+
 void main()
 {
 	float specularFactor = 0.0;
@@ -349,9 +331,13 @@ void main()
 	vec4 finalColor = vec4(0, 0, 0, 0);
 
 
-	vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-		finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
-		finalColor = finalColor*color;
-		
-		oColor = finalColor;
+	vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
+            vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+            vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
+            vec3 v_normal = mix(v_normal1, v_normal2, step(0.5, blendValueNormal.r)); // Only use normalmap2 where blend map is red
+
+            finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
+            finalColor *= color;
+            
+            oColor = finalColor;
 }

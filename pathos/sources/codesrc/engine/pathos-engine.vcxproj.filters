@@ -411,6 +411,9 @@
     <ClCompile Include="sentrysystem.cpp">
       <Filter>Source Files\sentry</Filter>
     </ClCompile>
+    <ClCompile Include="bmp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="system.h">
@@ -898,6 +901,12 @@
     </ClInclude>
     <ClInclude Include="sentrysystem.h">
       <Filter>Header Files\sentry</Filter>
+    </ClInclude>
+    <ClInclude Include="bmp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bmpformat.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

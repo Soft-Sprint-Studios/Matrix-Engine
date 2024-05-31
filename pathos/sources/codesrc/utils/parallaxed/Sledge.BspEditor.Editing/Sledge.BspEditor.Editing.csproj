@@ -1,0 +1,191 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D33E1027-1956-44C4-B920-85281F703704}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sledge.BspEditor.Editing</RootNamespace>
+    <AssemblyName>Sledge.BspEditor.Editing</AssemblyName>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <FileAlignment>512</FileAlignment>
+    <Platforms>AnyCPU;x86</Platforms>
+    <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
+
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>CS0169</NoWarn>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug %28Extra%29|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug %28Extra%29\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;DEBUG_EXTRA</DefineConstants>
+    <NoWarn>CS0169</NoWarn>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GeneratedAssemblyInfoFile>assemblyinfo.cs</GeneratedAssemblyInfoFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="Resources\Menu_Interrupt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Sledge.Formats.Map">
+      <HintPath>..\Resources\Sledge.Formats.Map.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HammerTime.Formats.Copy\HammerTime.Formats.csproj" />
+    <ProjectReference Include="..\Sledge.BspEditor.Rendering\Sledge.BspEditor.Rendering.csproj">
+      <Project>{d27bb6a7-fe81-45b5-9b68-b23e4169f16d}</Project>
+      <Name>Sledge.BspEditor.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.BspEditor\Sledge.BspEditor.csproj">
+      <Project>{37c3fe6b-16f4-431f-ab67-fba7c681ccee}</Project>
+      <Name>Sledge.BspEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.Common\Sledge.Common.csproj">
+      <Project>{5d414ac8-8b93-489f-9960-877923400fed}</Project>
+      <Name>Sledge.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.DataStructures\Sledge.DataStructures.csproj">
+      <Project>{26a974c9-e495-4fa3-8e87-1e00019d04f5}</Project>
+      <Name>Sledge.DataStructures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.FileSystem\Sledge.FileSystem.csproj">
+      <Project>{1C2C012D-DBA5-4C7F-994F-E3034AC60DCC}</Project>
+      <Name>Sledge.FileSystem</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.Providers\Sledge.Providers.csproj">
+      <Project>{C7BD4AC8-1F8D-4520-AF2D-D279C0601AB4}</Project>
+      <Name>Sledge.Providers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.QuickForms\Sledge.QuickForms.csproj">
+      <Project>{7FED88F3-717C-408A-85D9-28DD125DB61A}</Project>
+      <Name>Sledge.QuickForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.Rendering\Sledge.Rendering.csproj">
+      <Project>{4DA7F88D-64FF-4036-8A11-6175169DA851}</Project>
+      <Name>Sledge.Rendering</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Sledge.Shell\Sledge.Shell.csproj">
+      <Project>{1e0beb41-cf2e-4f48-838e-452c1dcf575f}</Project>
+      <Name>Sledge.Shell</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="LogicAndTrick.Oy">
+      <Version>1.2.0</Version>
+    </PackageReference>
+    <PackageReference Include="Sledge.Formats" Version="1.2.4" />
+    <PackageReference Include="System.Numerics.Vectors">
+      <Version>4.5.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Reactive">
+      <Version>4.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Resources.Extensions" Version="7.0.0" />
+    <PackageReference Include="System.Text.Json" Version="7.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Resources\Button_ColourPicker.png" />
+    <Content Include="Resources\Menu_AutosizeViews.png" />
+    <Content Include="Resources\Menu_Carve.png" />
+    <Content Include="Resources\Menu_CenterSelection2D.png" />
+    <Content Include="Resources\Menu_CenterSelection3D.png" />
+    <Content Include="Resources\Menu_CenterSelectionAll.png" />
+    <Content Include="Resources\Menu_CheckForProblems.png" />
+    <Content Include="Resources\Menu_EntityReport.png" />
+    <Content Include="Resources\Menu_GoToBrushID.png" />
+    <Content Include="Resources\Menu_GoToCoordinates.png" />
+    <Content Include="Resources\Menu_HideClipTextures.png" />
+    <Content Include="Resources\Menu_HideNullTextures.png" />
+    <Content Include="Resources\Menu_HideSelected.png" />
+    <Content Include="Resources\Menu_HideUnselected.png" />
+    <Content Include="Resources\Menu_Hollow.png" />
+    <Content Include="Resources\Menu_LoadPointfile.png" />
+    <Content Include="Resources\Menu_MapProperties.png" />
+    <Content Include="Resources\Menu_ObjectProperties.png" />
+    <Content Include="Resources\Menu_PasteSpecial.png" />
+    <Content Include="Resources\Menu_QuickLoadPointfile.png" />
+    <Content Include="Resources\Menu_Redo.png" />
+    <Content Include="Resources\Menu_Interrupt.png" />
+    <Content Include="Resources\Menu_Run.png" />
+    <Content Include="Resources\Menu_ShowBrushID.png" />
+    <Content Include="Resources\Menu_ShowHidden.png" />
+    <Content Include="Resources\Menu_ShowInformation.png" />
+    <Content Include="Resources\Menu_ShowLogicalTree.png" />
+    <Content Include="Resources\Menu_SnapSelection.png" />
+    <Content Include="Resources\Menu_SnapSelectionIndividual.png" />
+    <Content Include="Resources\Menu_TextureLock.png" />
+    <Content Include="Resources\Menu_TextureScalingLock.png" />
+    <Content Include="Resources\Menu_TieToEntity.png" />
+    <Content Include="Resources\Menu_TieToWorld.png" />
+    <Content Include="Resources\Menu_Transform.png" />
+    <Content Include="Resources\Menu_Undo.png" />
+    <Content Include="Resources\Menu_UnloadPointfile.png" />
+    <Content Include="Translations\Sledge.BspEditor.Editing.en.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Specifications\Goldsource.vdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Translations\Sledge.BspEditor.Editing.fr.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Translations\Sledge.BspEditor.Editing.it.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sledge_large.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+</Project>

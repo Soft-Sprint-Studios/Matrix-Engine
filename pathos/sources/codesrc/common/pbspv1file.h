@@ -20,10 +20,10 @@ All Rights Reserved.
 
 #define PBSPV1_MAX_MAP_HULLS			4
 
-#define PBSPV1_MAX_MAP_MODELS         131072
-#define PBSPV1_MAX_MAP_BRUSHES        524288
-#define PBSPV1_MAX_MAP_ENTITIES       131072
-#define PBSPV1_MAX_MAP_ENTSTRING      4194304
+#define PBSPV1_MAX_MAP_MODELS         262144
+#define PBSPV1_MAX_MAP_BRUSHES        1048576
+#define PBSPV1_MAX_MAP_ENTITIES       262144
+#define PBSPV1_MAX_MAP_ENTSTRING      8388608
 
 #define PBSPV1_MAX_MAP_PLANES         524288
 #define PBSPV1_MAX_MAP_NODES          524288
@@ -32,10 +32,10 @@ All Rights Reserved.
 #define PBSPV1_MAX_MAP_VERTS          524288
 #define PBSPV1_MAX_MAP_FACES          524288
 #define PBSPV1_MAX_MAP_MARKSURFACES   524288
-#define PBSPV1_MAX_MAP_TEXINFO        524288
+#define PBSPV1_MAX_MAP_TEXINFO        262144
 #define PBSPV1_MAX_MAP_EDGES          1048576
 #define PBSPV1_MAX_MAP_SURFEDGES      2097152
-#define PBSPV1_MAX_MAP_TEXTURES       32768
+#define PBSPV1_MAX_MAP_TEXTURES       262144
 #define PBSPV1_MAX_MAP_LIGHTING       33554432
 #define PBSPV1_MAX_MAP_VISIBILITY     67108864
 
@@ -154,8 +154,8 @@ struct dpbspv1node_t
 
 	Int32 planenum;
 	Int32 children[2];
-	Int16 mins[3];
-	Int16 maxs[3];
+	Int32 mins[3];
+	Int32 maxs[3];
 
 	Uint32 firstface;
 	Uint32 numfaces;

@@ -32,6 +32,7 @@ enum pp_shadertypes_t
 	SHADER_SSAO,
 	SHADER_TONEMAP,
 	SHADER_SEPIA,
+	SHADER_BOKEH,
 };
 
 struct pp_shader_attribs
@@ -63,6 +64,8 @@ struct pp_shader_attribs
 	Int32	u_screenheight;
 	Int32	u_timer;
 	Int32	u_chromaticStrength;
+	Int32	u_bokehStrength;
+	Int32	u_bokehRadius;
 	Int32	u_SepiaStrength;
 	Int32	u_FXAAStrength;
 	Int32	u_BWStrength;
@@ -129,6 +132,8 @@ private:
 	bool DrawFilmGrain( void );
 	// Draws screen chromatic
 	bool DrawChromatic(void);
+	// Draws screen bokeh
+	bool DrawBokeh(void);
 	// Draws screen FXAA
 	bool DrawFXAA(void);
 	// Draws screen BW
@@ -200,6 +205,12 @@ private:
 	CCVar* m_pCvarChromatic;
 	// Chromatic strength cvar
 	CCVar* m_pCvarChromaticStrength;
+	// Bokeh cvar
+	CCVar* m_pCvarBokeh;
+	// Bokeh strength cvar
+	CCVar* m_pCvarBokehStrength;
+	// Bokeh radius cvar
+	CCVar* m_pCvarBokehRadius;
 	// FXAA cvar
 	CCVar* m_pCvarFXAA;
 	// FXAA strength cvar

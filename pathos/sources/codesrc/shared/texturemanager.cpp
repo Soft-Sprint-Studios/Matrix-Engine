@@ -15,6 +15,8 @@ All Rights Reserved.
 
 #include "tga.h"
 #include "dds.h"
+#include "bmp.h"
+#include "r_main.h"
 
 #ifndef GL_MAX_TEXTURE_MAX_ANISOTROPY
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY 0x84FF
@@ -537,6 +539,9 @@ texture_format_t CTextureManager::GetFormat(const Char* pstrFilename)
 	else if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "dds")) {
 		return TX_FORMAT_DDS;
 	}
+	else if (!qstrcicmp(pstrFilename + qstrlen(pstrFilename) - 3, "bmp")) {
+		return TX_FORMAT_BMP;
+	}
 	else {
 		return TX_FORMAT_UNDEFINED;
 	}
@@ -733,6 +738,10 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		}
 		else
 		{
+			if (g_pCvarFullBright->GetValue() >= 1)
+			{
+				pmaterial->flags |= TX_FL_FULLBRIGHT;
+			}
 			// Identify the field
 			if(!qstrcmp(token, "$cubemaps"))
 				pmaterial->flags |= TX_FL_CUBEMAPS;
@@ -1007,6 +1016,14 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 			pfile = m_fileFuncs.pfnLoadFile(filePath.c_str(), nullptr);
 		}
 
+		if (filePath.find(0, ".bmp") != -1 || filePath.find(0, ".BMP") != -1)
+		{
+			filePath.erase(filePath.length() - 3, 3);
+			filePath << "bmp";
+
+			pfile = m_fileFuncs.pfnLoadFile(filePath.c_str(), nullptr);
+		}
+	
 		if(!pfile)
 		{
 			m_printErrorFunction("Failed to load texture '%s'.\n", filePath.c_str());
@@ -1031,6 +1048,13 @@ en_texture_t* CTextureManager::LoadTexture( const Char* pstrFilename, rs_level_t
 	else if (format == TX_FORMAT_DDS) {
 		if (!DDS_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction)) {
 			m_printErrorFunction("Failed to load DDS image file '%s'.\n", pstrFilename);
+			m_fileFuncs.pfnFreeFile(pfile);
+			return nullptr;
+		}
+	}
+	else if (format == TX_FORMAT_BMP) {
+		if (!BMP_Load(pstrFilename, pfile, pdata, width, height, bpp, datasize, compression, m_printErrorFunction)) {
+			m_printErrorFunction("Failed to load BMP image file '%s'.\n", pstrFilename);
 			m_fileFuncs.pfnFreeFile(pfile);
 			return nullptr;
 		}
@@ -1712,6 +1736,7 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 
 	if (pmaterial->ptextures[MT_TX_BLEND])
 		data << "\t$texture blend " << pmaterial->ptextures[MT_TX_BLEND]->filepath << NEWLINE;
+	
 
 	data << "}" << NEWLINE;
 

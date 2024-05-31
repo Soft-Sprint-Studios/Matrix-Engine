@@ -234,6 +234,7 @@
     <ClCompile Include="..\shared\stepsound.cpp" />
     <ClCompile Include="..\shared\texturemanager.cpp" />
     <ClCompile Include="ald.cpp" />
+    <ClCompile Include="bmp.cpp" />
     <ClCompile Include="brushmodel.cpp" />
     <ClCompile Include="client\cl_cmd.cpp" />
     <ClCompile Include="client\cl_efx.cpp" />
@@ -380,6 +381,8 @@
     <ClInclude Include="..\shared\flex_shared.h" />
     <ClInclude Include="..\shared\fontset.h" />
     <ClInclude Include="ald.h" />
+    <ClInclude Include="bmp.h" />
+    <ClInclude Include="bmpformat.h" />
     <ClInclude Include="buildcounter.h" />
     <ClInclude Include="client\cl_efx.h" />
     <ClInclude Include="client\cl_main.h" />

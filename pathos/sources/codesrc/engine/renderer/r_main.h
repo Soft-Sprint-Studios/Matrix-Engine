@@ -10,6 +10,8 @@ All Rights Reserved.
 #ifndef R_MAIN_H
 #define R_MAIN_H
 
+#pragma once
+
 #include "matrix.h"
 #include "ref_params.h"
 #include "brushmodel.h"
@@ -17,6 +19,7 @@ All Rights Reserved.
 #include "frustum.h"
 #include "mlight.h"
 #include "vid.h"
+#include "cvar.h"
 
 class Vector;
 class CFrustum;
@@ -448,6 +451,7 @@ struct lightbatch_t
 extern renderer_state_t rns;
 
 extern CCVar* g_pCvarBumpMaps;
+extern CCVar* g_pCvarFullBright;
 extern CCVar* g_pCvarDrawEntities;
 extern CCVar* g_pCvarPhongExponent;
 extern CCVar* g_pCvarWireFrame;

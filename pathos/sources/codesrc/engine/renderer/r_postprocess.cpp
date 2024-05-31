@@ -51,6 +51,7 @@ CPostProcess::CPostProcess( void ):
 	m_pVBO(nullptr),
 	m_pCvarFilmGrain(nullptr),
 	m_pCvarChromatic(nullptr),
+	m_pCvarBokeh(nullptr),
 	m_pCvarFXAA(nullptr),
 	m_pCvarBW(nullptr),
 	m_pCvarBleachbypass(nullptr),
@@ -84,8 +85,11 @@ bool CPostProcess :: Init( void )
 	m_pCvarFilmGrain = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_filmgrain", "1", "Toggle film grain." );
 	m_pCvarChromatic = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_chromatic", "1", "Toggle Chromatic Abberation.");
 	m_pCvarChromaticStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_chromaticstrength", "1", "Chromatic Abberation Strength.");
+	m_pCvarBokeh = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_bokeh", "1", "Toggle Bokeh.");
+	m_pCvarBokehStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_bokehstrength", "1", "Bokeh Strength.");
+	m_pCvarBokehRadius = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_bokehradius", "1", "Bokeh Radius");
 	m_pCvarFXAA = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_fxaa", "1", "Toggle FXAA.");
-	m_pCvarFXAAStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_fxaastrength", "1", "FXAA Strength.");
+	m_pCvarFXAAStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_fxaastrength", "3.5", "FXAA Strength.");
 	m_pCvarBW = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_bw", "0", "Toggle Black and White.");
 	m_pCvarBWStrength = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_bwstrength", "1", "Black and White Strength.");
 	m_pCvarBleachbypass = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_bleachbypass", "0", "Toggle Bleach Bypass.");
@@ -147,6 +151,8 @@ bool CPostProcess :: InitGL( void )
 		m_attribs.u_screenheight = m_pShader->InitUniform("screenheight", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_timer = m_pShader->InitUniform("timer", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_chromaticStrength = m_pShader->InitUniform("chromaticStrength", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_bokehStrength = m_pShader->InitUniform("bokehStrength", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_bokehRadius = m_pShader->InitUniform("bokehRadius", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_BWStrength = m_pShader->InitUniform("BWStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_FXAAStrength = m_pShader->InitUniform("FXAAStrength", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_BleachStrength = m_pShader->InitUniform("bleachStrength", CGLSLShader::UNIFORM_FLOAT1);
@@ -170,6 +176,8 @@ bool CPostProcess :: InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_screenheight, "screenheight", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_timer, "timer", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_chromaticStrength, "chromaticStrength", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_bokehStrength, "bokehStrength", m_pShader, Sys_ErrorPopup)
+			|| !R_CheckShaderUniform(m_attribs.u_bokehRadius, "bokehRadius", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_FXAAStrength, "FXAAStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_BWStrength, "BWStrength", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_BleachStrength, "bleachStrength", m_pShader, Sys_ErrorPopup)
@@ -486,6 +494,25 @@ bool CPostProcess::DrawChromatic(void)
 
 	m_pShader->SetUniform1f(m_attribs.u_chromaticStrength, m_pCvarChromaticStrength->GetValue());
 	if (!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_CHROMATIC))
+		return false;
+
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+	return true;
+}
+
+//=============================================
+// @brief
+//
+//=============================================
+bool CPostProcess::DrawBokeh(void)
+{
+	// Fetch screen contents
+	FetchScreen(&m_pScreenRTT);
+	R_BindRectangleTexture(GL_TEXTURE0_ARB, m_pScreenRTT->palloc->gl_index);
+
+	m_pShader->SetUniform1f(m_attribs.u_bokehStrength, m_pCvarBokehStrength->GetValue());
+	m_pShader->SetUniform1f(m_attribs.u_bokehRadius, m_pCvarBokehRadius->GetValue());
+	if (!m_pShader->SetDeterminator(m_attribs.d_type, SHADER_BOKEH))
 		return false;
 
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -840,6 +867,18 @@ bool CPostProcess :: Draw( void )
 	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarChromatic->GetValue() > 0)
 	{
 		if (!DrawChromatic())
+		{
+			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
+			m_pShader->DisableShader();
+			m_pVBO->UnBind();
+			return false;
+		}
+	}
+
+	// Render bokeh
+	if (m_pCvarPostProcess->GetValue() > 0 && m_pCvarBokeh->GetValue() > 0)
+	{
+		if (!DrawBokeh())
 		{
 			Sys_ErrorPopup("Shader error: %s.", m_pShader->GetError());
 			m_pShader->DisableShader();
