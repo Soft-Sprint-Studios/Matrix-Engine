@@ -556,26 +556,16 @@ mt_texture_t CTextureManager::GetTextureType( const Char* pstrTypename )
 {
 	if(!qstrcmp(pstrTypename, "diffuse"))
 		return MT_TX_DIFFUSE;
-	if (!qstrcmp(pstrTypename, "diffuse2"))
-		return MT_TX_DIFFUSE2;
 	else if(!qstrcmp(pstrTypename, "normalmap") || !qstrcmp(pstrTypename, "normal"))
 		return MT_TX_NORMALMAP;
-	else if (!qstrcmp(pstrTypename, "normalmap2") || !qstrcmp(pstrTypename, "normal2"))
-		return MT_TX_NORMALMAP2;
 	else if(!qstrcmp(pstrTypename, "detail"))
 		return MT_TX_DETAIL;
 	else if(!qstrcmp(pstrTypename, "specular"))
 		return MT_TX_SPECULAR;
-	else if (!qstrcmp(pstrTypename, "specular2"))
-		return MT_TX_SPECULAR2;
 	else if(!qstrcmp(pstrTypename, "luminance"))
 		return MT_TX_LUMINANCE;
 	else if (!qstrcmp(pstrTypename, "ao"))
 		return MT_TX_AO;
-	else if (!qstrcmp(pstrTypename, "ao2"))
-		return MT_TX_AO2;
-	else if (!qstrcmp(pstrTypename, "blend"))
-		return MT_TX_BLEND;
 	else
 		return MT_TX_UNKNOWN;
 }
@@ -1707,14 +1697,8 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if(pmaterial->ptextures[MT_TX_DIFFUSE])
 		data << "\t$texture diffuse " << pmaterial->ptextures[MT_TX_DIFFUSE]->filepath << NEWLINE;
 
-	if (pmaterial->ptextures[MT_TX_DIFFUSE2])
-		data << "\t$texture diffuse2 " << pmaterial->ptextures[MT_TX_DIFFUSE2]->filepath << NEWLINE;
-
 	if(pmaterial->ptextures[MT_TX_NORMALMAP])
 		data << "\t$texture normalmap " << pmaterial->ptextures[MT_TX_NORMALMAP]->filepath << NEWLINE;
-
-	if (pmaterial->ptextures[MT_TX_NORMALMAP2])
-		data << "\t$texture normalmap2 " << pmaterial->ptextures[MT_TX_NORMALMAP2]->filepath << NEWLINE;
 
 	if(pmaterial->ptextures[MT_TX_DETAIL])
 		data << "\t$texture detail " << pmaterial->ptextures[MT_TX_DETAIL]->filepath << NEWLINE;
@@ -1722,20 +1706,11 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if(pmaterial->ptextures[MT_TX_SPECULAR])
 		data << "\t$texture specular " << pmaterial->ptextures[MT_TX_SPECULAR]->filepath << NEWLINE;
 
-	if (pmaterial->ptextures[MT_TX_SPECULAR2])
-		data << "\t$texture specular2 " << pmaterial->ptextures[MT_TX_SPECULAR2]->filepath << NEWLINE;
-
 	if(pmaterial->ptextures[MT_TX_LUMINANCE])
 		data << "\t$texture luminance " << pmaterial->ptextures[MT_TX_LUMINANCE]->filepath << NEWLINE;
 
 	if (pmaterial->ptextures[MT_TX_AO])
 		data << "\t$texture ao " << pmaterial->ptextures[MT_TX_AO]->filepath << NEWLINE;
-
-	if (pmaterial->ptextures[MT_TX_AO2])
-		data << "\t$texture ao2 " << pmaterial->ptextures[MT_TX_AO2]->filepath << NEWLINE;
-
-	if (pmaterial->ptextures[MT_TX_BLEND])
-		data << "\t$texture blend " << pmaterial->ptextures[MT_TX_BLEND]->filepath << NEWLINE;
 	
 
 	data << "}" << NEWLINE;

@@ -6,7 +6,6 @@ $global_determinator specular 0 1
 $global_determinator cubemaps 0 2
 $global_determinator luminance 0 1
 $global_determinator ao 0 1
-$global_determinator twoblended 0 1
 $global_determinator numlights 0 4
 $global_determinator light0_shadowmap 0 1
 $global_determinator light1_shadowmap 0 1
@@ -243,22 +242,17 @@ $end
 
 uniform sampler2D baselightmap;
 uniform sampler2D maintexture;
-uniform sampler2D maintexture2;
-uniform sampler2D blendmap;
 uniform sampler2D detailtex;
 uniform sampler2D chrometex;
 uniform sampler2D normalmap;
-uniform sampler2D normalmap2;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
-uniform sampler2D speculartex2;
 $branch luminance == 1
 $begin
 uniform sampler2D luminance;
 $end
 uniform sampler2D aomaptex;
-uniform sampler2D aomaptex2;
 uniform float aoscale;
 
 $branch numlights >= 1
@@ -458,31 +452,16 @@ float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularSt
     float specularReflectance;
     vec3 specularTint;
     float specularComponent;
-
-    $branch twoblended == 0
-    $begin
-        specularColor = texture(speculartex, v_origin.xy);
-        specularReflectance = specularColor.r;
-        specularTint = specularColor.rgb;
-        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
-    $end
-
-    $branch twoblended == 1
-    $begin
-        vec4 specularColor1 = texture(speculartex, v_origin.xy);
-        vec4 specularColor2 = texture(speculartex2, v_origin.xy);
-        vec4 blendValue = texture(blendmap, v_origin.xy);
-        
-        specularReflectance = mix(specularColor1.r, specularColor2.r, blendValue.r);
-        specularTint = mix(specularColor1.rgb, specularColor2.rgb, blendValue.rgb);
-        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
-    $end
+	
+    specularColor = texture(speculartex, ps_texcoord.xy);
+    specularReflectance = specularColor.r;
+    specularTint = specularColor.rgb;
+    specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
 
     vec3 finalSpecular = specularComponent * specularTint;
     
     return dot(finalSpecular, vec3(1.0));
 }
-
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
 {
@@ -729,8 +708,6 @@ $begin
 $end
 }
 
-$branch twoblended == 0
-$begin
 vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength )
 {
 	vec3 lightDir = GetLightDir( lightvecstex );
@@ -779,69 +756,6 @@ vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength 
 	
 	return finalColor;
 }
-$end
-
-$branch twoblended == 1
-$begin
-vec4 CombineTextureLayers(vec3 v_origin, vec3 v_normal, float specularStrength) {
-    vec3 lightDir = GetLightDir(lightvecstex);
-    vec4 lightDiffuse = GetDiffuseLight(difflightmap);
-    vec4 finalColor = AddBaseLight(baselightmap, lightDiffuse, lightDir, v_normal);
-
-    $branch shadertype == 0
-    $begin
-        vec4 texColor1 = texture2D(maintexture, ps_texcoord);
-        vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
-        vec4 blendValue = texture2D(blendmap, ps_texcoord);
-        vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
-        
-        vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
-        finalColor = finalColor * blendedTexColor * detailTexColor;
-        finalColor.xyz = finalColor.xyz * 4;
-    $end
-
-    $branch shadertype == 1
-    $begin
-        vec4 texColor1 = texture2D(maintexture, ps_texcoord);
-        vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
-        vec4 blendValue = texture2D(blendmap, ps_texcoord);
-        vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
-        
-        finalColor = finalColor * blendedTexColor;
-        finalColor.xyz = finalColor.xyz * 2;
-    $end
-
-    $branch shadertype == 2
-    $begin
-        vec4 lightColor = finalColor;
-
-        vec4 texColor1 = texture2D(maintexture, ps_texcoord);
-        vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
-        vec4 blendValue = texture2D(blendmap, ps_texcoord);
-        vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
-
-        finalColor = lightColor * blendedTexColor;
-        finalColor.xyz = finalColor.xyz * 2;
-
-        vec4 chromeTex = texture2D(chrometex, ps_chromecoord);
-        finalColor.xyz += chromeTex.xyz * lightColor.xyz * 2 * color.w;
-    $end
-
-    $branch specular == 1
-    $begin
-        mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-        vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
-        vec3 eyeSpaceNormal = normalize(tbnMatrix * v_normal);
-        
-        float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
-        float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
-        
-        finalColor += specularValue * lightDiffuse * shineFactor;
-    $end
-
-    return finalColor;
-}
-$end
 
 vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength)
 {
@@ -902,17 +816,7 @@ vec4 AddCubemaps( float reflectivity )
 		$branch bumpmapping == 1
 		$begin
 			mat3 tbnMatrix = mat3(ps_cubetangent, ps_cubebinormal, ps_cubenormal);
-			$branch twoblended == 0
-			$begin
 			vec3 tex_normal = (2.0 * texture2D (normalmap, ps_texcoord).xyz) - 1.0;
-			$end
-			$branch twoblended == 1
-			$begin
-			vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-            vec3 tex_normal1 = (2.0 * texture2D(normalmap, ps_texcoord).xyz) - 1.0;
-            vec3 tex_normal2 = (2.0 * texture2D(normalmap2, ps_texcoord).xyz) - 1.0;
-            vec3 tex_normal = mix(tex_normal1, tex_normal2, blendValueNormal.r);
-			$end
 			vec3 eye_texnormal = normalize(tbnMatrix * tex_normal);
 			
 			float normalstrength = 0.025;
@@ -937,29 +841,12 @@ void main()
 
 	$branch specular == 1 || cubemaps >= 1
 $begin
-        $branch twoblended == 0
-        $begin
             vec4 specTexture = texture2D(speculartex, ps_texcoord);
 		    specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
-        $end
-
-        $branch twoblended == 1
-        $begin
-            vec4 specTexture1 = texture2D(speculartex, ps_texcoord);
-            vec4 specTexture2 = texture2D(speculartex2, ps_texcoord);
-            vec4 blendValue = texture2D(blendmap, ps_texcoord);
-            
-            specularFactor = mix(1.0 - specTexture1.r, 1.0 - specTexture2.r, blendValue.r);
-            
-            specularFactor = (specTexture1.x + specTexture1.y + specTexture1.z + 
-                              specTexture2.x + specTexture2.y + specTexture2.z) / 6.0;
-        $end
 $end
 
 	$branch shadertype == 0 || shadertype == 1 || shadertype == 2
 $begin
-    $branch twoblended == 0
-    $begin
             vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
 
             finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
@@ -969,23 +856,6 @@ $begin
             $begin
                 finalColor += AddCubemaps(specularFactor);
             $end
-    $end
-
-    $branch twoblended == 1
-    $begin
-            vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-            vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-            vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
-            vec3 v_normal = mix(v_normal1, v_normal2, step(0.5, blendValueNormal.r)); // Only use normalmap2 where blend map is red
-
-            finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
-            finalColor *= color;
-            
-            $branch cubemaps >= 1
-            $begin
-                finalColor += AddCubemaps(specularFactor);
-            $end
-    $end
 $end
 
 
@@ -999,37 +869,13 @@ $end
 	$end
 	$branch shadertype == 4
 $begin
-    $branch twoblended == 0
-    $begin
             finalColor = texture2D(maintexture, ps_texcoord) * color;
-    $end
-
-    $branch twoblended == 1
-    $begin
-            vec4 texColor1 = texture2D(maintexture, ps_texcoord);
-            vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
-            vec4 blendValue = texture2D(blendmap, ps_texcoord);
-            vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
-
-            finalColor = blendedTexColor * color;
-    $end
 $end
 	$branch shadertype == 5
-	$begin
-	$branch twoblended == 0
 	$begin
 		// Build the TBN matrix and get the vertex normal
 		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
 		vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
-		$end
-		$branch twoblended == 1
-		$begin
-        mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-        vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-        vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-        vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
-        vec3 v_normal = mix(v_normal1, v_normal2, blendValueNormal.r);
-		$end
 		
 		//
 		// Light 1
@@ -1109,20 +955,9 @@ $end
 	$end
 	$branch shadertype == 7
 	$begin
-	$branch twoblended == 0
-	$begin
 		// Build the TBN matrix and get the vertex normal
 		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
 		vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
-	$end
-	$branch twoblended == 1
-	$begin
-	mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-    vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-    vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-    vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
-    vec3 v_normal = mix(v_normal1, v_normal2, blendValueNormal.r);
-	$end
 		
 		//
 		// Light 1
@@ -1202,59 +1037,20 @@ $end
 	$end
 	$branch shadertype == 9
 $begin
-    $branch twoblended == 1
-    $begin
-            vec4 texColor1 = texture2D(maintexture, ps_texcoord);
-            vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
-            vec4 blendValue = texture2D(blendmap, ps_texcoord);
-            vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
-            
-            vec4 caustics1 = texture2D(detailtex, ps_texcoord);
-            vec4 caustics2 = caustics1; // Just to prevent error
-            
-            finalColor = blendedTexColor * (1.0 - interpolant) + caustics2 * interpolant;
-    $end
-
-    $branch twoblended == 0
-    $begin
             vec4 caustics1 = texture2D(maintexture, ps_texcoord);
             vec4 caustics2 = texture2D(detailtex, ps_texcoord);
             
             finalColor = caustics1 * (1.0 - interpolant) + caustics2 * interpolant;
-    $end
 $end
 
 	$branch shadertype == 10
 	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
-		$branch twoblended == 0
-		$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-		$end
-		$branch twoblended == 1
-		$begin
-		vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-		vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-        vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
-        vec3 v_normal = mix(v_normal1, v_normal2, blendValueNormal.r);
-		$end
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
-		$branch twoblended == 0
-$begin
 		finalColor.w = finalColor.w * texture2D(maintexture, ps_texcoord).w;
-		$end
-		
-		$branch twoblended == 1
-$begin
-    vec4 texColor1 = texture2D(maintexture, ps_texcoord);
-    vec4 texColor2 = texture2D(maintexture2, ps_texcoord);
-    vec4 blendValue = texture2D(blendmap, ps_texcoord);
-    vec4 blendedTexColor = mix(texColor1, texColor2, blendValue.r);
-    finalColor = blendedTexColor;
-    finalColor.w *= texture2D(maintexture2, ps_texcoord).w;
-$end
 	$end
 	$branch shadertype == 11
 	$begin
@@ -1288,24 +1084,12 @@ $end
 	$branch shadertype == 16
 	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
-		$branch twoblended == 0
-		$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-		$end
-		$branch twoblended == 1
-		$begin
-		vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-        vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-        vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
-        vec3 v_normal = mix(v_normal1, v_normal2, blendValueNormal.r);
-		$end
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
 	$end
 	$branch shadertype == 17
-$begin
-$branch twoblended == 0
 $begin
 		vec4 tex0 = texture2D(maintexture, ps_texcoord);
 		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
@@ -1313,35 +1097,9 @@ $begin
 		finalColor.xyz = finalColor.xyz*2;
 		finalColor = finalColor*color;
 	$end
-	$end
-
-$branch shadertype == 17
-$begin
-$branch twoblended == 1
-$begin
-    vec4 tex01 = texture2D(maintexture2, ps_texcoord);
-    vec4 tex11 = texture2D(maintexture, ps_texcoord);
-    vec4 blendValue = texture2D(blendmap, ps_texcoord);
-    vec4 blendedTexColor = mix(tex01, tex11, blendValue.r);
-    vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
-    finalColor = blendedTexColor * detailTexColor;
-    finalColor.xyz *= 2;
-    finalColor *= color;
-$end
-$end
 	$branch shadertype == 18
 	$begin
-	$branch twoblended == 0
-	$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-		$end
-		$branch twoblended == 1
-		$begin
-		vec4 blendValueNormal = texture2D(blendmap, ps_texcoord);
-        vec3 v_normal1 = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-        vec3 v_normal2 = GetTangentSpaceNormal(ps_texcoord, normalmap2, ps_normal);
-        vec3 v_normal = mix(v_normal1, v_normal2, blendValueNormal.r);
-		$end
 		finalColor = GetLightmappedSpecular( ps_vertexpos, v_normal, specularFactor );
 	$end
 	$branch shadertype == 19
@@ -1350,50 +1108,16 @@ $end
 	$end
 	$branch shadertype == 20
 $begin
-$branch twoblended == 0
-$begin
-    vec4 tex01111 = texture2D(maintexture, ps_texcoord);
-    vec4 tex11111 = texture2D(detailtex, ps_dtexcoord);
-    finalColor = texture2D(maintexture2, ps_texcoord);
-    finalColor.a *= tex11111.a;
+    vec4 tex01 = texture2D(maintexture, ps_texcoord);
+    vec4 tex11 = texture2D(detailtex, ps_dtexcoord);
+    finalColor.a *= tex11.a;
     finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
-$end
-
-$branch shadertype == 20
-$begin
-$branch twoblended == 1
-$begin
-    vec4 tex011111 = texture2D(maintexture2, ps_texcoord);
-    vec4 tex111111 = texture2D(maintexture, ps_texcoord);
-    vec4 blendValue = texture2D(blendmap, ps_texcoord);
-    vec4 blendedTexColor = mix(tex011111, tex111111, blendValue.r);
-    vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
-    finalColor = blendedTexColor;
-    finalColor.a *= detailTexColor.a;
-    finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
 $end
 
 $branch shadertype == 21
-$begin
-$branch twoblended == 0
 $begin
     finalColor = texture2D(maintexture, ps_texcoord);
     finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
-$end
-
-$branch shadertype == 21
-$begin
-$branch twoblended == 1
-$begin
-    vec4 tex011 = texture2D(maintexture2, ps_texcoord);
-    vec4 tex111 = texture2D(maintexture, ps_texcoord);
-	vec4 blendValue = texture2D(blendmap, ps_texcoord);
-    finalColor = mix(tex011, tex111, blendValue.r);
-    finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
-	$end
 $end
 
 	$branch fogtype != 0
@@ -1414,20 +1138,8 @@ $end
 	
 	$branch ao == 1
 $begin
-    $branch twoblended == 0
-    $begin
         float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
         finalColor.rgb *= aoFactor;
-    $end
-
-    $branch twoblended == 1
-    $begin
-        vec4 ao1 = texture2D(aomaptex, ps_texcoord);
-        vec4 ao2 = texture2D(aomaptex2, ps_texcoord);
-        vec4 blendValueAO = texture2D(blendmap, ps_texcoord);
-        float aoFactor = mix(ao1.r, ao2.r, blendValueAO.r) * aoscale;
-        finalColor.rgb *= aoFactor;
-    $end
 $end
 
 	oColor = finalColor;

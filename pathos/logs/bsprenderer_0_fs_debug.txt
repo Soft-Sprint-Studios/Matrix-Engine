@@ -1,0 +1,2 @@
+0(291) : error C7011: implicit cast from "float" to "vec2"
+0(291) : error C1103: too few parameters in function call
