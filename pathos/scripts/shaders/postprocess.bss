@@ -186,16 +186,18 @@ uniform float bokehStrength;
 uniform float bokehRadius;
 $end
 
-// ACES tonemapping function
-vec3 acesFilm(vec3 x)
+$branch pp_type == 15
+$begin
+vec3 ACESFilm(vec3 x)
 {
     float a = 2.51;
     float b = 0.03;
     float c = 2.43;
     float d = 0.59;
     float e = 0.14;
-    return (x * (a * x + b)) / (x * (c * x + d) + e);
+    return clamp((x*(a*x+b))/(x*(c*x+d)+e), 0.0, 1.0);
 }
+$end
 
 void main()
 {
@@ -305,7 +307,6 @@ $begin
     vec3 rgbSE = texture(texture0, texCoord + vec2(1, 1) * texelSize).rgb;
     vec3 rgbM = texture(texture0, texCoord).rgb;
 
-    // Convert to grayscale
     vec3 luma = vec3(0.299, 0.587, 0.114);
     float lumaNW = dot(rgbNW, luma);
     float lumaNE = dot(rgbNE, luma);
@@ -316,13 +317,11 @@ $begin
     float lumaMin = min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE)));
     float lumaMax = max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)));
 
-    // Compute direction
     vec2 dir = vec2(-((lumaNW + lumaNE) - (lumaSW + lumaSE)), ((lumaNW + lumaSW) - (lumaNE + lumaSE)));
     float dirReduce = max((lumaNW + lumaNE + lumaSW + lumaSE) * (0.25 * FXAAStrength), 0.001);
     float rcpDirMin = 1.0 / min(abs(dir.x), abs(dir.y));
     dir = min(vec2(FXAAStrength), max(vec2(-FXAAStrength), dir * rcpDirMin)) * dirReduce;
 
-    // Sample neighboring pixels
     vec3 rgbA = 0.5 * (texture(texture0, texCoord + dir * (1.0 / 3.0 - 0.5)).rgb + 
                        texture(texture0, texCoord + dir * (2.0 / 3.0 - 0.5)).rgb);
     vec3 rgbB = rgbA * 0.5 + 0.25 * (texture(texture0, texCoord + dir * -0.5).rgb + 
@@ -333,31 +332,17 @@ $begin
 $end
 	$branch pp_type == 10
     $begin
-    // Sample the texture at the current coordinates
     vec4 color = texture(texture0, ps_texcoord);
-
-    // Calculate luminance using the formula (0.3 * R + 0.59 * G + 0.11 * B)
     float luminance = 0.3 * color.r + 0.59 * color.g + 0.11 * color.b;
-
-    // Mix the original color with grayscale based on the black and white strength parameter
     vec4 grayscaleColor = vec4(vec3(luminance), color.a);
     oColor = mix(color, grayscaleColor, BWStrength);
     $end
 	$branch pp_type == 11
     $begin
-	 // Sample the color from the input texture
         vec4 color = texture(texture0, ps_texcoord);
-        
-        // Calculate the grayscale value using the luminance formula
         float grayscale = dot(color.rgb, vec3(0.299, 0.587, 0.114));
-        
-        // Apply desaturation using a linear interpolation between color and grayscale
         vec3 desaturatedColor = mix(color.rgb, vec3(grayscale), bleachStrength);
-
-        // Increase contrast based on the bleachStrength uniform
         vec3 contrastColor = desaturatedColor * bleachStrength + (1.0 - bleachStrength) * desaturatedColor;
-
-        // Assign the output color
         oColor = vec4(contrastColor, color.a);
 	$end
 	$branch pp_type == 12
@@ -392,21 +377,12 @@ $end
     $end
 	$branch pp_type == 13
     $begin
-	// Sample the texture color
     vec4 color = texture(texture0, ps_texcoord);
-
-    // Calculate the normalized screen coordinates
     vec2 uv = vec2(ps_texcoord.x / screenwidth, ps_texcoord.y / screenheight);
-
-    // Calculate the distance from the center
     vec2 centeredUV = uv - vec2(0.5, 0.5);
     float distance = length(centeredUV);
-
-    // Apply the vignette effect
     float vignette = smoothstep(vignetteRadius, vignetteRadius - vignetteStrength, distance);
     color.rgb *= vignette;
-
-    // Output the final color
     oColor = color;
 	$end
 	$branch pp_type == 14
@@ -444,18 +420,11 @@ $begin
 $end
 	$branch pp_type == 15
 	$begin
-		vec4 color = texture(texture0, ps_texcoord);
-
-		// Apply under-exposure
-		color.rgb *= underExposure;
-
-		// ACES tonemapping
-		color.rgb = acesFilm(color.rgb);
-
-		// Apply over-exposure
-		color.rgb = min(color.rgb, overExposure);
-
-		oColor = color;
+	vec3 color = texture(texture0, ps_texcoord).rgb;
+    color *= exp2(overExposure);
+    color = ACESFilm(color);
+    color *= exp2(underExposure);
+    oColor = vec4(color, 1.0);
 	$end
 	$branch pp_type == 16
     $begin
@@ -484,7 +453,6 @@ $begin
     for (int i = -kernelSize/2; i <= kernelSize/2; ++i) {
         outColor += texture(texture0, ps_texcoord + vec2(0.0, float(i) / screenheight)).rgb * kernel[i + kernelSize/2];
     }
-    // Apply bokeh effect based on distance from center
     vec2 uv = ps_texcoord * 2.0 - 1.0;
     float distance = length(uv);
     float bokeh = smoothstep(0.0, bokehRadius, distance);

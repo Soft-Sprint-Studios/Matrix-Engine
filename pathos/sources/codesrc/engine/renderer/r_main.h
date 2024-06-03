@@ -451,6 +451,7 @@ struct lightbatch_t
 extern renderer_state_t rns;
 
 extern CCVar* g_pCvarBumpMaps;
+extern CCVar* g_pCvarAoMaps;
 extern CCVar* g_pCvarFullBright;
 extern CCVar* g_pCvarDrawEntities;
 extern CCVar* g_pCvarPhongExponent;

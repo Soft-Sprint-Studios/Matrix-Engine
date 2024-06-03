@@ -76,6 +76,7 @@ All Rights Reserved.
 // Global cvars
 CCVar* g_pCvarFullBright = nullptr;
 CCVar* g_pCvarBumpMaps = nullptr;
+CCVar* g_pCvarAoMaps = nullptr;
 CCVar* g_pCvarDrawEntities = nullptr;
 CCVar* g_pCvarPhongExponent = nullptr;
 CCVar* g_pCvarWireFrame = nullptr;
@@ -166,6 +167,7 @@ bool R_Init( void )
 {
 	// Init cvars
 	g_pCvarBumpMaps = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_bumpmaps", "1", "Toggles normal mapping");
+	g_pCvarAoMaps = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT | FL_CV_SAVE), "r_aomaps", "1", "Toggles Ambient occlusion Mapping");
 	g_pCvarSpecular = gConsole.CreateCVar(CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_specular", "1", "Toggles specular highlights");
 	g_pCvarDrawEntities = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_drawentities", "1", "Toggles rendering of entities");
 	g_pCvarPhongExponent = gConsole.CreateCVar(CVAR_FLOAT, FL_CV_CLIENT, "r_phong_exponent", "8", "Phong exponent setting");
