@@ -169,7 +169,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_64BUILD;NDEBUG;_WINDOWS;_USRDLL;CLIENT_EXPORTS;_CRT_SECURE_NO_WARNINGS;CLIENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\libs\stb_image;..\common;..\libs\sdl2.0\include\;..\client;..\shared;..\shared\renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\libs\sdl2.0\include;..\libs\stb_image;..\common;..\libs\sdl2.0\include\;..\client;..\shared;..\shared\renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4244;4305</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <LanguageStandard>Default</LanguageStandard>
@@ -180,8 +180,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalDependencies>..\x64\Release\SDL2.lib;opengl32.lib;%(AdditionalDependencies);stb_image.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\x64\Release;</AdditionalLibraryDirectories>
+      <AdditionalDependencies>..\x64\Release\SDL2.lib;opengl32.lib;%(AdditionalDependencies);stb_image.lib;SDL2test.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\libs\sdl2.0\lib;..\x64\Release;</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>copy /Y "$(OutDir)$(TargetName)$(TargetExt)" "$(SolutionDir)../../dlls/$(TargetName)$(TargetExt)"</Command>

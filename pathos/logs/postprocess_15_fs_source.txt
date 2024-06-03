@@ -1,0 +1,27 @@
+#version 460
+#extension GL_ARB_texture_rectangle : enable
+
+uniform sampler2DRect texture0;
+uniform vec4 color;
+uniform float screenwidth;
+uniform float screenheight;
+
+in vec2 ps_texcoord;
+out vec4 oColor;
+
+uniform float underExposure;
+uniform float overExposure;
+void main()
+{
+	vec4 color = texture(texture0, ps_texcoord);
+        
+        // Calculate luminance (using a re-mapped value to avoid clipping)
+        float luminance = max(0.0, dot(color.rgb, vec3(0.299, 0.587, 0.114)));
+        luminance = log2(luminance + 1.0); // Re-map to log scale
+
+        // Apply exposure based on luminance
+        float exposureFactor = exp(luminance * exposure); 
+        color.rgb *= exposureFactor;
+
+        oColor = color;
+    }

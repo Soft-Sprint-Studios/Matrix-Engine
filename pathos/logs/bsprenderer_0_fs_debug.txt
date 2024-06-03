@@ -1,2 +1,6 @@
-0(291) : error C7011: implicit cast from "float" to "vec2"
-0(291) : error C1103: too few parameters in function call
+0(145) : error C7623: implicit narrowing of type from "vec3" to "float"
+0(145) : error C7623: implicit narrowing of type from "vec3" to "float"
+0(145) : error C1104: too many parameters in function call
+0(145) : error C7623: implicit narrowing of type from "vec3" to "float"
+0(145) : error C7623: implicit narrowing of type from "vec3" to "float"
+0(145) : error C1104: too many parameters in function call

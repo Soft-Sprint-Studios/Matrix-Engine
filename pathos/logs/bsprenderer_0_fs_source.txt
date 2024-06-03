@@ -91,18 +91,64 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 	return p_max*sgn+(1.0-sgn);
 }
 
-float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, vec2 texCoords, float specularStrength) {
+#define PI 3.14159265359
+
+// Microfacet distribution function (GGX/Trowbridge-Reitz)
+float DistributionGGX(vec3 N, vec3 H, float roughness) {
+    float a = roughness * roughness;
+    float a2 = a * a;
+    float NdotH = max(dot(N, H), 0.0);
+    float NdotH2 = NdotH * NdotH;
+
+    float num = a2;
+    float denom = (NdotH2 * (a2 - 1.0) + 1.0);
+    denom = PI * denom * denom;
+
+    return num / denom;
+}
+
+// Geometry function using Schlick's approximation for GGX
+float GeometrySchlickGGX(float NdotV, float roughness) {
+    float r = roughness * roughness;
+    float k = (r + 1.0) / 8.0;
+
+    float num = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return num / denom;
+}
+
+// Fresnel-Schlick approximation for the specular reflectance
+vec3 FresnelSchlick(float cosTheta, vec3 F0) {
+    return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+}
+
+float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
     vec3 eyeVec = normalize(-v_origin);
     vec3 reflectVec = reflect(lightDir, v_normal);
     float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
-
-    vec4 specularColor = texture(speculartex, texCoords); // Ensure texCoords is vec2
-    float specularReflectance = specularColor.r;
-    vec3 specularTint = specularColor.rgb;
-    float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    
+    vec4 specularColor;
+    float specularReflectance;
+    vec3 specularTint;
+    float specularComponent;
+	
+    specularColor = texture(speculartex, ps_texcoord.xy);
+    specularReflectance = specularColor.r;
+    specularTint = specularColor.rgb;
+    
+    // Adjust the exponent for more physically plausible specular highlights
+    float roughness = 1.0 - phong_exponent;
+    
+    // Calculate Cook-Torrance specular model
+    float D = DistributionGGX(v_normal, reflectVec, roughness);
+    float G = GeometrySchlickGGX(v_normal, eyeVec, roughness) * GeometrySchlickGGX(v_normal, lightDir, roughness);
+    vec3 F = FresnelSchlick(cosAlpha, specularTint);
+    
+    specularComponent = D * G * F.x * specularStrength * specularReflectance;
 
     vec3 finalSpecular = specularComponent * specularTint;
-
+    
     return dot(finalSpecular, vec3(1.0));
 }
 

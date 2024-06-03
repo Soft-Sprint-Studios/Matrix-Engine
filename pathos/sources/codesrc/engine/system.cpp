@@ -64,6 +64,8 @@ state variables and functionality.
 
 #include <detours.h>
 
+#define SDL_RWclose_old(ctx)        (ctx)->close(ctx)
+
 extern file_interface_t ENGINE_FILE_FUNCTIONS;
 
 // Ugly hack to manage SDL2 load before main is called
@@ -550,7 +552,7 @@ bool Sys_CheckGameDir( const CArray<CString>* argsArray )
 		return false;
 	}
 
-	SDL_RWclose(pf);
+	SDL_RWclose_old(pf);
 	return true;
 }
 

@@ -63,15 +63,6 @@
 "origin" "20248 -544 176"
 }
 {
-"classname" "light"
-"_falloff" "0"
-"_fade" "1.0"
-"style" "0"
-"_light" "140 255 169 200"
-"angles" "10 31 0"
-"origin" "20400 -576 480"
-}
-{
 "classname" "item_shoulderlight"
 "body" "25"
 "delay" "0"
@@ -108,4 +99,43 @@
 "renderfx" "0"
 "angles" "0 0 0"
 "origin" "20224 -297 128"
+}
+{
+"classname" "env_dlight"
+"spawnflags" "1"
+"sequence" "0"
+"skin" "0"
+"oscillationh" "0"
+"oscillationv" "0"
+"rendercolor" "255 255 255"
+"renderamt" "300"
+"interp" "0"
+"lightstyle" "0"
+"renderfx" "0"
+"targetname" "dlight01"
+"origin" "20456 -352 192"
+}
+{
+"classname" "light"
+"_falloff" "0"
+"_fade" "1.0"
+"style" "0"
+"_light" "140 255 169 50"
+"angles" "10 31 0"
+"origin" "20400 -576 480"
+}
+{
+"classname" "trigger_timer"
+"duration" "5z"
+"delay" "0"
+"sounds" "0"
+"netname" "dlight01"
+{
+( 20288 -224 256 ) ( 20288 -224 80 ) ( 20288 -448 256 ) AAATRIGGER [ 0 1 0 0 ] [ 0 0 -1 0 ] 0 1 1
+( 20096 -448 256 ) ( 20096 -448 80 ) ( 20096 -224 256 ) AAATRIGGER [ 0 -1 0 0 ] [ 0 0 -1 0 ] 0 1 1
+( 20288 -448 256 ) ( 20288 -448 80 ) ( 20096 -448 256 ) AAATRIGGER [ 1 0 0 0 ] [ 0 0 -1 0 ] 0 1 1
+( 20096 -224 256 ) ( 20096 -224 80 ) ( 20288 -224 256 ) AAATRIGGER [ -1 0 0 0 ] [ 0 0 -1 0 ] 0 1 1
+( 20096 -224 80 ) ( 20096 -448 80 ) ( 20288 -224 80 ) AAATRIGGER [ -1 0 0 0 ] [ 0 -1 0 0 ] 0 1 1
+( 20288 -448 256 ) ( 20096 -448 256 ) ( 20288 -224 256 ) AAATRIGGER [ 1 0 -0 0 ] [ 0 -1 0 0 ] 0 1 1
+}
 }

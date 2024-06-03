@@ -5,6 +5,7 @@ $texture
 	$material concrete
 	$cubemaps
 	$cubemapstrength 1
+	$spec 100
 	$texture diffuse world/redbrick01/slatefloor01.dds
 	$texture normal world/redbrick01/slatefloor01_normal.dds
 	$texture specular world/redbrick01/slatefloor01_specular.dds

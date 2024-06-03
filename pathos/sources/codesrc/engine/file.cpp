@@ -18,6 +18,12 @@ All Rights Reserved.
 #include "enginestate.h"
 #include "file_interface.h"
 
+#define SDL_RWseek_old(ctx, offset, whence) (ctx)->seek(ctx, offset, whence)
+#define SDL_RWtell_old(ctx)         (ctx)->seek(ctx, 0, RW_SEEK_CUR)
+#define SDL_RWread_old(ctx, ptr, size, n)   (ctx)->read(ctx, ptr, size, n)
+#define SDL_RWwrite_old(ctx, ptr, size, n)  (ctx)->write(ctx, ptr, size, n)
+#define SDL_RWclose_old(ctx)        (ctx)->close(ctx)
+
 //
 // Engine file functions
 //
@@ -72,8 +78,8 @@ bool FL_WriteFile( const byte* pdata, Uint32 size, const Char* pstrpath, bool ap
 		return false;
 	}
 
-	size_t numbytes = SDL_RWwrite(pf, pdata, 1, size);
-	SDL_RWclose(pf);
+	size_t numbytes = SDL_RWwrite_old(pf, pdata, 1, size);
+	SDL_RWclose_old(pf);
 
 	if(!append)
 		Con_DPrintf("Wrote %d bytes for %s.\n", numbytes, pstrpath);
@@ -98,8 +104,8 @@ bool FL_WriteLogFile( const byte* pdata, Uint32 size, const Char* pstrpath, bool
 		return false;
 	}
 
-	size_t numbytes = SDL_RWwrite(pf, pdata, 1, size);
-	SDL_RWclose(pf);
+	size_t numbytes = SDL_RWwrite_old(pf, pdata, 1, size);
+	SDL_RWclose_old(pf);
 
 	return (numbytes == size) ? true : false;
 }
@@ -138,8 +144,8 @@ bool FL_WriteFileRoot( const byte* pdata, Uint32 size, const Char* pstrpath, boo
 		return false;
 	}
 
-	size_t numbytes = SDL_RWwrite(pf, pdata, 1, size);
-	SDL_RWclose(pf);
+	size_t numbytes = SDL_RWwrite_old(pf, pdata, 1, size);
+	SDL_RWclose_old(pf);
 
 	if(!append)
 		Con_DPrintf("Wrote %d bytes for %s.\n", numbytes, pstrpath);
@@ -192,13 +198,13 @@ const byte* FL_LoadFile( const Char* pstrpath, Uint32* psize )
 		return nullptr;
 	}
 
-	SDL_RWseek(pf, 0, RW_SEEK_END);
-	Int32 size = (Int32)SDL_RWtell(pf);
-	SDL_RWseek(pf, 0, RW_SEEK_SET);
+	SDL_RWseek_old(pf, 0, RW_SEEK_END);
+	Int32 size = (Int32)SDL_RWtell_old(pf);
+	SDL_RWseek_old(pf, 0, RW_SEEK_SET);
 
 	byte* pbuffer = new byte[size+1];
-	size_t numbytes = SDL_RWread(pf, pbuffer, 1, size);
-	SDL_RWclose(pf);
+	size_t numbytes = SDL_RWread_old(pf, pbuffer, 1, size);
+	SDL_RWclose_old(pf);
 
 	if(numbytes != size)
 	{
@@ -260,13 +266,13 @@ const byte* FL_LoadFileFromRoot( const Char* pstrpath, Uint32* psize )
 		return nullptr;
 	}
 
-	SDL_RWseek(pf, 0, RW_SEEK_END);
-	Int32 size = (Int32)SDL_RWtell(pf);
-	SDL_RWseek(pf, 0, RW_SEEK_SET);
+	SDL_RWseek_old(pf, 0, RW_SEEK_END);
+	Int32 size = (Int32)SDL_RWtell_old(pf);
+	SDL_RWseek_old(pf, 0, RW_SEEK_SET);
 
 	byte* pbuffer = new byte[size+1];
-	size_t numbytes = SDL_RWread(pf, pbuffer, 1, size);
-	SDL_RWclose(pf);
+	size_t numbytes = SDL_RWread_old(pf, pbuffer, 1, size);
+	SDL_RWclose_old(pf);
 
 	if(numbytes != size)
 	{
@@ -343,7 +349,7 @@ bool FL_FileExists( const Char* pstrpath )
 	if(!pf)
 		return false;
 
-	SDL_RWclose(pf);
+	SDL_RWclose_old(pf);
 	return true;
 }
 

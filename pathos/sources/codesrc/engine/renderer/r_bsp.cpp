@@ -2993,9 +2993,7 @@ bool CBSPRenderer::DrawLights( bool specular )
 			bsp_texture_t *ptexturehandle = &m_texturesArray[pworldtexture->infoindex];
 			en_material_t* pmaterial = ptexturehandle->pmaterial;
 
-			if (specular &&
-				pmaterial->ptextures[MT_TX_SPECULAR] &&
-				pmaterial->ptextures[MT_TX_NORMALMAP])
+			if (specular && (!pmaterial->ptextures[MT_TX_SPECULAR] || !pmaterial->ptextures[MT_TX_NORMALMAP]))
 				continue;
 
 			msurface_t *pnext = ptexturehandle->psurfchain;
@@ -3020,28 +3018,27 @@ bool CBSPRenderer::DrawLights( bool specular )
 			m_pShader->SetUniform1i(m_attribs.u_normalmap, texunit);
 			m_pShader->SetUniform1i(m_attribs.u_specular, texunit+1);
 
-			if(specular)
+			if (specular)
 			{
-				m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp*g_pCvarPhongExponent->GetValue());
+				m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp * g_pCvarPhongExponent->GetValue());
 				m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 
-				if (pmaterial->ptextures[MT_TX_NORMALMAP] != nullptr) {
-				R_Bind2DTexture(GL_TEXTURE0+texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
-				}
+				R_Bind2DTexture(GL_TEXTURE0 + texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
+				R_Bind2DTexture(GL_TEXTURE0 + texunit + 1, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
 
 				m_pShader->EnableAttribute(m_attribs.a_tangent);
 				m_pShader->EnableAttribute(m_attribs.a_binormal);
 				m_pShader->EnableAttribute(m_attribs.a_texcoord);
 			}
-			else if ((pmaterial->ptextures[MT_TX_NORMALMAP]) && g_pCvarBumpMaps->GetValue() > 0)
+			else if (pmaterial->ptextures[MT_TX_NORMALMAP] && g_pCvarBumpMaps->GetValue() > 0)
 			{
-				R_Bind2DTexture(GL_TEXTURE0+texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
+				R_Bind2DTexture(GL_TEXTURE0 + texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
 
 				m_pShader->EnableAttribute(m_attribs.a_tangent);
 				m_pShader->EnableAttribute(m_attribs.a_binormal);
 				m_pShader->EnableAttribute(m_attribs.a_texcoord);
 
-				if(!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, true, false))
+				if (!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, true, false))
 					return false;
 			}
 			else
@@ -3050,7 +3047,7 @@ bool CBSPRenderer::DrawLights( bool specular )
 				m_pShader->DisableAttribute(m_attribs.a_binormal);
 				m_pShader->DisableAttribute(m_attribs.a_texcoord);
 
-				if(!m_pShader->SetDeterminator(m_attribs.d_specular, false, false)
+				if (!m_pShader->SetDeterminator(m_attribs.d_specular, false, false)
 					|| !m_pShader->SetDeterminator(m_attribs.d_bumpmapping, false, false))
 					return false;
 			}

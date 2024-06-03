@@ -186,6 +186,17 @@ uniform float bokehStrength;
 uniform float bokehRadius;
 $end
 
+// ACES tonemapping function
+vec3 acesFilm(vec3 x)
+{
+    float a = 2.51;
+    float b = 0.03;
+    float c = 2.43;
+    float d = 0.59;
+    float e = 0.14;
+    return (x * (a * x + b)) / (x * (c * x + d) + e);
+}
+
 void main()
 {
 	$branch pp_type == 0
@@ -432,26 +443,20 @@ $begin
     oColor = vec4(mix(rgbB_SSAO, rgbA_SSAO, edgeDarken), 1.0);
 $end
 	$branch pp_type == 15
-    $begin
-    vec4 color = texture(texture0, ps_texcoord);
-    vec3 lumCoeff = vec3(0.2126, 0.7152, 0.0722);
-    float luminance = dot(color.rgb, lumCoeff);
-    
-    float mappedLuminance = luminance / (1.0 + luminance);
-    mappedLuminance = clamp(mappedLuminance, underExposure, overExposure);
-    
-    float gamma = 2.2;
-    vec3 toneMappedColor = pow(color.rgb, vec3(1.0 / gamma)) * mappedLuminance;
-    
-    float contrast = 1.2;
-    toneMappedColor = mix(vec3(0.5), toneMappedColor, contrast);
-    
-    float saturation = 1.5;
-    toneMappedColor = mix(vec3(0.0), toneMappedColor, saturation);
-    
-    toneMappedColor = clamp(toneMappedColor, vec3(underExposure), vec3(overExposure));
-    oColor = vec4(toneMappedColor, color.a);
-    $end
+	$begin
+		vec4 color = texture(texture0, ps_texcoord);
+
+		// Apply under-exposure
+		color.rgb *= underExposure;
+
+		// ACES tonemapping
+		color.rgb = acesFilm(color.rgb);
+
+		// Apply over-exposure
+		color.rgb = min(color.rgb, overExposure);
+
+		oColor = color;
+	$end
 	$branch pp_type == 16
     $begin
     vec4 color = texture(texture0, ps_texcoord);
