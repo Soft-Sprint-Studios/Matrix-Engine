@@ -5,6 +5,8 @@ using System.IO;
 using System.Windows.Forms;
 using LogicAndTrick.Oy;
 using Sledge.Common;
+using DiscordRPC;
+using DiscordRPC.Logging;
 
 namespace Sledge.Shell
 {
@@ -18,10 +20,12 @@ namespace Sledge.Shell
 		/// </summary>
 		public static event EventHandler<AggregateCatalog> BuildCatalog;
 
-		/// <summary>
-		/// Run the shell as an application using a container from the application catalog
-		/// </summary>
-		public static void Run()
+        private static DiscordRpcClient client;
+
+        /// <summary>
+        /// Run the shell as an application using a container from the application catalog
+        /// </summary>
+        public static void Run()
 		{
 			try
 			{
@@ -56,11 +60,39 @@ namespace Sledge.Shell
 			}
 		}
 
-		/// <summary>
-		/// Run the shell with a custom container
-		/// </summary>
-		/// <param name="container">The container</param>
-		public static void Run(CompositionContainer container)
+		public static void DiscordRPCRun()
+		{
+            client = new DiscordRpcClient("1247241451344101396");
+
+            client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
+
+            client.OnReady += (sender, e) =>
+            {
+                Console.WriteLine($"Received Ready from user {e.User.Username}");
+            };
+
+            client.OnPresenceUpdate += (sender, e) =>
+            {
+                Console.WriteLine($"Received Update! {e.Presence}");
+            };
+
+            client.Initialize();
+
+            client.SetPresence(new RichPresence()
+            {
+                Details = "Parallax ED",
+                State = "",
+                Assets = new Assets()
+                {
+                }
+            });
+        }
+
+            /// <summary>
+            /// Run the shell with a custom container
+            /// </summary>
+            /// <param name="container">The container</param>
+            public static void Run(CompositionContainer container)
 		{
 			Common.Container.Initialise(container);
 
@@ -84,7 +116,9 @@ namespace Sledge.Shell
 			};
 
 			si.Run(Environment.GetCommandLineArgs());
-		}
+
+			DiscordRPCRun();
+        }
 
 		private static void UnhandledException(Exception ex)
 		{

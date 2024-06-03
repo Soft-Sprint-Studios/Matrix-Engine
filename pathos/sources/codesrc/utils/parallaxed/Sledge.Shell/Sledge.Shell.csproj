@@ -95,6 +95,7 @@
     <None Include="Resources\arrow_up.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
     <PackageReference Include="LogicAndTrick.Oy" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Composition" Version="8.0.0" />
