@@ -4,7 +4,7 @@ Welcome to the Parallax Engine, developed by Mythic Legend Interactive. This eng
 # Disclaimer
 This version of the Parallax Engine is part of a private release and is not intended for public distribution. Only modified files from the original Pathos Engine are considered closed source in this release. For convenience, all files are contained within a single repository.
 
-As this version of the Parallax Engine is for internal use only, please refer to our internal documentation for instructions on how to integrate and utilize the engine within your projects.
+As this version of the Parallax Engine is for internal use only.
 
 # Support
 For any questions or issues regarding the Parallax Engine, please contact our development team at Mythic-Legend-Interactive-Contact@protonmail.com
