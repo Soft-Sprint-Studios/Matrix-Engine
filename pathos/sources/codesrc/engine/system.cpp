@@ -58,7 +58,7 @@ state variables and functionality.
 #include "dllexports.h"
 #include "filewriterthread.h"
 #include "enginefuncs.h"
-#include "discord/discordrpcsystem.h"
+#include "discord/discordrpc.h"
 #include "shdrchk.h"
 #include "sentrysystem.h"
 

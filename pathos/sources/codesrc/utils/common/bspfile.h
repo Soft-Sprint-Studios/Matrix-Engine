@@ -56,10 +56,7 @@
 
 // texture size limit
 
-#define MAX_TEXTURE_SIZE     348972 //((256 * 256 * sizeof(short) * 3) / 2) //stop compiler from warning 512*512 texture. --vluzacn
-// this is arbitrary, and needs space for the largest realistic texture plus
-// room for its mipmaps.'  This value is primarily used to catch damanged or invalid textures
-// in a wad file
+#define MAX_TEXTURE_SIZE     67108864 // 16384 * 16384 * sizeof(short) * 3 / 2
 
 #define TEXTURE_STEP        16 // this constant was previously defined in lightmap.cpp. --vluzacn
 #define MAX_SURFACE_EXTENT  32 // if lightmap extent exceeds 16, the map will not be able to load in 'Software' renderer and HLDS. //--vluzacn

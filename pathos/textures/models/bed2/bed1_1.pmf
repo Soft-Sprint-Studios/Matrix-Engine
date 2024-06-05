@@ -1,5 +1,9 @@
 $texture
 {
 	$alphatest
-	$texture diffuse models/bed2/bed1_1.tga
+	$texture diffuse models/bed2/redbrick01_diffuse.dds
+	$texture normal models/bed2/redbrick01_normal.dds
+	$texture specular models/bed2/redbrick01_specular.dds
+	$texture ao models/bed2/redbrick01_ao.dds
+	$aoscale 100
 }

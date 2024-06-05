@@ -402,7 +402,7 @@
     <ClCompile Include="safety\enginecode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="discord\discordrpcsystem.cpp">
+    <ClCompile Include="discord\discordrpc.cpp">
       <Filter>Source Files\discord</Filter>
     </ClCompile>
     <ClCompile Include="shdrchk.cpp">
@@ -890,7 +890,7 @@
     <ClInclude Include="safety\enginecode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="discord\discordrpcsystem.h">
+    <ClInclude Include="discord\discordrpc.h">
       <Filter>Header Files\discord</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">

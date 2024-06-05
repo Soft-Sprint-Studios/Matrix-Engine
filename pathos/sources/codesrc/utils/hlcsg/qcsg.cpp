@@ -481,7 +481,7 @@ static void     SaveOutside(const brush_t* const b, const int hull, bface_t* out
 					for (j = 0; j < 2; j++)
 					{
 						val = DotProduct (f->w->m_Points[i], tex->vecs[j]) + tex->vecs[j][3];
-						if (val < -99999 || val > 999999)
+						if (val < -99999999 || val > 99999999)
 						{
 							bad = true;
 						}

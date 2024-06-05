@@ -889,8 +889,8 @@ int CountBlocks ()
 				VectorCopy (v->point, point);
 			}
 		}
-		if (extents[0] < 0 || extents[1] < 0 || extents[0] > qmax (512, MAX_SURFACE_EXTENT * TEXTURE_STEP) || extents[1] > qmax (512, MAX_SURFACE_EXTENT * TEXTURE_STEP))
-			// the default restriction from the engine is 512, but place 'max (512, MAX_SURFACE_EXTENT * TEXTURE_STEP)' here in case someone raise the limit
+		if (extents[0] < 0 || extents[1] < 0 || extents[0] > qmax (4096, MAX_SURFACE_EXTENT * TEXTURE_STEP) || extents[1] > qmax (4096, MAX_SURFACE_EXTENT * TEXTURE_STEP))
+			// the default restriction from the engine is 4096, but place 'max (4096, MAX_SURFACE_EXTENT * TEXTURE_STEP)' here in case someone raise the limit
 		{
 			Warning ("Bad surface extents %d/%d at position (%.0f,%.0f,%.0f)", extents[0], extents[1], point[0], point[1], point[2]);
 			continue;

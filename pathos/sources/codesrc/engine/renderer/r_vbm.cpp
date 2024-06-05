@@ -2733,8 +2733,8 @@ bool CVBMRenderer::DrawMesh( en_material_t *pmaterial, const vbmmesh_t *pmesh, b
 
 	if (pmaterial->ptextures[MT_TX_AO])
 	{
-		m_pShader->SetUniform1i(m_attribs.u_aotexture, 4);
-		R_Bind2DTexture(GL_TEXTURE4, pmaterial->ptextures[MT_TX_AO]->palloc->gl_index);
+		m_pShader->SetUniform1i(m_attribs.u_aotexture, 5);
+		R_Bind2DTexture(GL_TEXTURE5, pmaterial->ptextures[MT_TX_AO]->palloc->gl_index);
 	}
 
 	if(pmaterial->scrollu || pmaterial->scrollv)

@@ -1,0 +1,2 @@
+0(125) : error C1503: undefined variable "spectexture"
+0(125) : error C1503: undefined variable "ps_texcoord"
