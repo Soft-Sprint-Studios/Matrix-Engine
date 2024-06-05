@@ -1,6 +1,6 @@
  pathos_x64
 
- Timestamp is 66602d53 (Wed Jun  5 12:18:11 2024)
+ Timestamp is 66602ebd (Wed Jun  5 12:24:13 2024)
 
  Preferred load address is 0000000140000000
 
@@ -7459,7 +7459,7 @@
  0002:0004adb8       __real@3fd6147ae147ae14    0000000140255db8     libvorbis_static:mapping0.obj
  0002:0004adc0       __real@3fd6666660000000    0000000140255dc0     r_vbm.obj
  0002:0004adc8       __real@3fd999999999999a    0000000140255dc8     r_vbm.obj
- 0002:0004add0       __real@3fe0000000000000    0000000140255dd0     libvorbis_static:floor1.obj
+ 0002:0004add0       __real@3fe0000000000000    0000000140255dd0     libvorbis_static:mdct.obj
  0002:0004add8       __real@3fe3333333333333    0000000140255dd8     r_vbm.obj
  0002:0004ade0       __real@3fe62e42a0000000    0000000140255de0     libvorbis_static:psy.obj
  0002:0004ade8       __real@3fe6666666666666    0000000140255de8     sv_physics.obj
@@ -7469,7 +7469,7 @@
  0002:0004ae08       __real@3fe99999a0000000    0000000140255e08     sv_physics.obj
  0002:0004ae10       __real@3fecccccc0000000    0000000140255e10     sv_physics.obj
  0002:0004ae18       __real@3feccccccccccccd    0000000140255e18     r_lensflare.obj
- 0002:0004ae20       __real@3ff0000000000000    0000000140255e20     libvorbis_static:floor1.obj
+ 0002:0004ae20       __real@3ff0000000000000    0000000140255e20     libvorbis_static:psy.obj
  0002:0004ae28       __real@3ff004189374bc6a    0000000140255e28     vbm_shared.obj
  0002:0004ae30       __real@3ff5555555555555    0000000140255e30     r_menu.obj
  0002:0004ae38       __real@3ff7154760000000    0000000140255e38     libvorbis_static:psy.obj
@@ -7507,7 +7507,7 @@
  0002:0004af38       __real@404e000000000000    0000000140255f38     cl_snd.obj
  0002:0004af40       __real@4050000000000000    0000000140255f40     r_main.obj
  0002:0004af48       __real@4056800000000000    0000000140255f48     frustum.obj
- 0002:0004af50       __real@4059000000000000    0000000140255f50     libvorbis_static:res0.obj
+ 0002:0004af50       __real@4059000000000000    0000000140255f50     libvorbis_static:psy.obj
  0002:0004af58       __real@4060000000000000    0000000140255f58     vbm_shared.obj
  0002:0004af60       __real@4066800000000000    0000000140255f60     r_common.obj
  0002:0004af68       __real@406fe00000000000    0000000140255f68     vbm_shared.obj

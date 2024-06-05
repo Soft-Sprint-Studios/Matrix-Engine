@@ -2798,7 +2798,7 @@ bool CVBMRenderer::DrawLights( bool specularPass )
 		!m_pShader->SetDeterminator(m_attribs.d_numlights, 0, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_specular, specularPass, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false) ||
-		!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false) ||
+		!m_pShader->SetDeterminator(m_attribs.d_ao, TRUE, false) ||
 		!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, FALSE, false))
 		return false;
 
