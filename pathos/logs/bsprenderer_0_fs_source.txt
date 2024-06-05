@@ -91,67 +91,35 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 	return p_max*sgn+(1.0-sgn);
 }
 
-// Schlick approximation for Fresnel term
-float Schlick(vec3 specularTint, float cosAlpha) {
-    float F0 = pow(1.0 - max(max(specularTint.r, specularTint.g), specularTint.b), 5.0); // Approximate F0
-    return F0 + (1.0 - F0) * pow(1.0 - cosAlpha, 5.0);
+float CalcFresnel(vec3 eyeVec, vec3 h, float roughness) {
+    float base = 1.0 - dot(eyeVec, h);
+    return pow(clamp(1.0 + base, 0.0, 1.0), 5.0) * (1.0 - roughness);
 }
 
-// GGX Distribution function
-float GGX_Distribution(float roughness, vec3 normal, vec3 reflectVec) {
-    float alpha = roughness * roughness;
-    float NdotH = max(dot(normal, reflectVec), 0.0);
-    float NdotH2 = NdotH * NdotH;
-
-    float denom = (NdotH2 * (alpha * alpha - 1.0) + 1.0);
-    denom = PI * denom * denom;
-
-    return alpha * alpha / denom;
-}
-
-// Smith's geometry function
-float Smith_Geometry(float roughness, vec3 eyeVec, vec3 lightDir, vec3 normal, vec3 reflectVec) {
-    float k = (roughness * roughness) / 2.0;
-    float NdotL = max(dot(normal, lightDir), 0.0);
-    float NdotV = max(dot(normal, eyeVec), 0.0);
-    float NdotL_times_NdotV = NdotL * NdotV;
-
-    float G_L = NdotL / (NdotL * (1.0 - k) + k);
-    float G_V = NdotV / (NdotV * (1.0 - k) + k);
-
-    return G_L * G_V;
+float G1V_SmithGGX(float NdotV, float alphaG) {
+    return 2.0 * NdotV / (NdotV + sqrt(alphaG * alphaG + (1.0 - alphaG * alphaG) * NdotV * NdotV));
 }
 
 float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
     vec3 eyeVec = normalize(-v_origin);
-    vec3 reflectVec = reflect(lightDir, v_normal);
-    float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
-    
-    vec4 specularColor;
-    float specularReflectance;
-    vec3 specularTint;
-    float specularComponent;
+    vec3 halfway = normalize(eyeVec + lightDir);
+    float NdotH = clamp(dot(v_normal, halfway), 0.0, 1.0);
 
-    // Fetching specular color from texture
-    specularColor = texture(speculartex, ps_texcoord.xy);
-    specularReflectance = specularColor.r;
-    specularTint = specularColor.rgb;
+    vec4 specularColor = texture(speculartex, ps_texcoord.xy);
+    float specularReflectance = specularColor.r;
+    vec3 specularTint = specularColor.rgb;
 
-    // Inverting specular to get roughness
     float roughness = 1.0 - specularReflectance;
+    float alphaG = max(0.0001, roughness * roughness);
 
-    // Cook-Torrance specular calculation
-    float F = Schlick(specularTint, cosAlpha);
-    float D = GGX_Distribution(roughness, v_normal, reflectVec);
-    float G = Smith_Geometry(roughness, eyeVec, lightDir, v_normal, reflectVec);
+    float D = exp((phong_exponent + 2.0) * log(NdotH)) / (2.0 * PI * (1.0 + phong_exponent));
+    float G = G1V_SmithGGX(dot(v_normal, eyeVec), alphaG) * G1V_SmithGGX(dot(v_normal, lightDir), alphaG);
+    float specularComponent = D * G * specularStrength;
 
-    specularComponent = (F * D * G) / (4.0 * max(dot(v_normal, eyeVec), 0.001) * max(dot(v_normal, lightDir), 0.001));
+    float fresnel = CalcFresnel(eyeVec, halfway, roughness);
 
-    // Applying specular strength
-    specularComponent *= specularStrength;
+    vec3 finalSpecular = mix(specularTint, vec3(1.0), fresnel) * specularComponent;
 
-    vec3 finalSpecular = specularComponent * specularTint;
-    
     return dot(finalSpecular, vec3(1.0));
 }
 
