@@ -1138,10 +1138,10 @@ $end
 	$end
 	
 	$branch ao == 1
-	$begin
-        float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
-        finalColor.rgb *= aoFactor;
-	$end
+$begin
+    float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
+    finalColor.rgb = mix(finalColor.rgb, finalColor.rgb * aoFactor, aoFactor);
+$end
 
 	oColor = finalColor;
 }
