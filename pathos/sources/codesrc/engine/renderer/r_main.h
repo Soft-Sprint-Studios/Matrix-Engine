@@ -69,12 +69,16 @@ struct texbind_states_t
 {
 	texbind_states_t()
 	{
+		memset(texturebinds_1d, 0, sizeof(texturebinds_1d));
 		memset(texturebinds_2d, 0, sizeof(texturebinds_2d));
+		memset(texturebinds_3d, 0, sizeof(texturebinds_3d));
 		memset(texturebinds_cube, 0, sizeof(texturebinds_cube));
 		memset(texturebinds_rect, 0, sizeof(texturebinds_rect));
 	}
 
+	Uint32 texturebinds_1d[MAX_BOUND_TEXTURES];
 	Uint32 texturebinds_2d[MAX_BOUND_TEXTURES];
+	Uint32 texturebinds_3d[MAX_BOUND_TEXTURES];
 	Uint32 texturebinds_cube[MAX_BOUND_TEXTURES];
 	Uint32 texturebinds_rect[MAX_BOUND_TEXTURES];
 };
@@ -480,7 +484,9 @@ extern CCVar* g_pCvarOverdarkenTreshold;
 	
 extern void R_InitRenderInterface( r_interface_t &renderFuncs );
 
+extern void R_Bind1DTexture(Int32 texture, Uint32 id, bool force = false);
 extern void R_Bind2DTexture( Int32 texture, Uint32 id, bool force = false );
+extern void R_Bind3DTexture(Int32 texture, Uint32 id, bool force = false);
 extern void R_BindRectangleTexture( Int32 texture, Uint32 id, bool force = false );
 extern void R_BindCubemapTexture( Int32 texture, Uint32 id, bool force = false );
 extern void R_ClearBinds( void );

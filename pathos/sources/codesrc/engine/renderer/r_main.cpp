@@ -909,6 +909,23 @@ bool R_IsExtensionSupported( const Char *pstrextension )
 //====================================
 //
 //====================================
+void R_Bind1DTexture(Int32 texture, Uint32 id, bool force)
+{
+	Int32 idx = texture - GL_TEXTURE0;
+	assert(idx < MAX_BOUND_TEXTURES);
+
+	if (rns.textures.texturebinds_1d[idx] != id || force)
+	{
+		gGLExtF.glActiveTexture(texture);
+		glBindTexture(GL_TEXTURE_1D, id);
+
+		rns.textures.texturebinds_1d[idx] = id;
+	}
+}
+
+//====================================
+//
+//====================================
 void R_Bind2DTexture( Int32 texture, Uint32 id, bool force )
 {
 	Int32 idx = texture - GL_TEXTURE0;
@@ -920,6 +937,23 @@ void R_Bind2DTexture( Int32 texture, Uint32 id, bool force )
 		glBindTexture( GL_TEXTURE_2D, id );
 
 		rns.textures.texturebinds_2d[idx] = id;
+	}
+}
+
+//====================================
+//
+//====================================
+void R_Bind3DTexture(Int32 texture, Uint32 id, bool force)
+{
+	Int32 idx = texture - GL_TEXTURE0;
+	assert(idx < MAX_BOUND_TEXTURES);
+
+	if (rns.textures.texturebinds_3d[idx] != id || force)
+	{
+		gGLExtF.glActiveTexture(texture);
+		glBindTexture(GL_TEXTURE_3D, id);
+
+		rns.textures.texturebinds_3d[idx] = id;
 	}
 }
 
@@ -960,36 +994,58 @@ void R_BindRectangleTexture( Int32 texture, Uint32 id, bool force )
 //====================================
 //
 //====================================
-void R_ClearBinds( void )
+void R_ClearBinds(void)
 {
-	for(Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
+	for (Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
 	{
-		if(rns.textures.texturebinds_2d[i] != 0)
+		if (rns.textures.texturebinds_1d[i] != 0)
 		{
-			gGLExtF.glActiveTexture( GL_TEXTURE0 + i );
-			glBindTexture( GL_TEXTURE_2D, 0 );
+			gGLExtF.glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_1D, 0);
+		}
+
+		rns.textures.texturebinds_1d[i] = 0;
+	}
+
+	for (Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
+	{
+		if (rns.textures.texturebinds_2d[i] != 0)
+		{
+			gGLExtF.glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
 		rns.textures.texturebinds_2d[i] = 0;
 	}
 
-	for(Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
+	for (Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
 	{
-		if(rns.textures.texturebinds_cube[i] != 0)
+		if (rns.textures.texturebinds_3d[i] != 0)
 		{
-			gGLExtF.glActiveTexture( GL_TEXTURE0 + i );
-			glBindTexture( GL_TEXTURE_CUBE_MAP, 0 );
+			gGLExtF.glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_3D, 0);
+		}
+
+		rns.textures.texturebinds_3d[i] = 0;
+	}
+
+	for (Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
+	{
+		if (rns.textures.texturebinds_cube[i] != 0)
+		{
+			gGLExtF.glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 		}
 
 		rns.textures.texturebinds_cube[i] = 0;
 	}
 
-	for(Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
+	for (Uint32 i = 0; i < MAX_BOUND_TEXTURES; i++)
 	{
-		if(rns.textures.texturebinds_rect[i] != 0)
+		if (rns.textures.texturebinds_rect[i] != 0)
 		{
-			gGLExtF.glActiveTexture( GL_TEXTURE0 + i );
-			glBindTexture( GL_TEXTURE_RECTANGLE, 0 );
+			gGLExtF.glActiveTexture(GL_TEXTURE0 + i);
+			glBindTexture(GL_TEXTURE_RECTANGLE, 0);
 		}
 
 		rns.textures.texturebinds_rect[i] = 0;

@@ -4,10 +4,8 @@ $texture
 	$int_height 1024
 	$material concrete
 	$cubemaps
-	$cubemapstrength 1
+	$cubemapstrength 100
 	$texture diffuse world/redbrick01/slatefloor01.dds
 	$texture normal world/redbrick01/slatefloor01_normal.dds
 	$texture specular world/redbrick01/slatefloor01_specular.dds
-	$texture ao world/redbrick01/slatefloor01_ao.dds
-	$texture detail detail/dt_conc.dds
 }

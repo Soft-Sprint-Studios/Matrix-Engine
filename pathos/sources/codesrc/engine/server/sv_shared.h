@@ -10,7 +10,7 @@ All Rights Reserved.
 #ifndef SV_SHARED_H
 #define SV_SHARED_H
 
-#define MAX_CLIENTS				32		// Max connected clients
+#define MAX_CLIENTS				1		// Max connected clients
 #define MAX_VISIBLE_ENTITIES	262144	// Max entities visible for a client
 #define DEFAULT_MAX_EDICTS		262144	// Default max edict number
 

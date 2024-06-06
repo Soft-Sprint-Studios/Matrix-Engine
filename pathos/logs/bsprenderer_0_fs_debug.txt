@@ -1,1 +1,1 @@
-0(115) : error C1503: undefined variable "PI"
+0(334) : error C7011: implicit cast from "vec4" to "vec3"
