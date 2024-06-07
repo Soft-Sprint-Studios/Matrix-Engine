@@ -232,6 +232,7 @@ bool CBSPRenderer::InitGL( void )
 		m_attribs.u_uvoffset = m_pShader->InitUniform("uvoffset", CGLSLShader::UNIFORM_FLOAT2);
 		m_attribs.u_phong_exponent = m_pShader->InitUniform("phong_exponent", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_aoscale = m_pShader->InitUniform("aoscale", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_cubemapnormal = m_pShader->InitUniform("cubemapnormal", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_specularfactor = m_pShader->InitUniform("specfactor", CGLSLShader::UNIFORM_FLOAT1);
 		
 		if(m_isCubemappingSupported)
@@ -287,8 +288,6 @@ bool CBSPRenderer::InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_decalscale, "decalscale", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_baselightmap, "baselightmap", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_maintexture, "maintexture", m_pShader, Sys_ErrorPopup)
-			//|| !R_CheckShaderUniform(m_attribs.u_maintexture2, "maintexture2", m_pShader, Sys_ErrorPopup)
-			|| !R_CheckShaderUniform(m_attribs.u_blendtexture, "blendtexture", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_detailtex, "detailtex", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_chrometex, "chrometex", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_normalmap, "normalmap", m_pShader, Sys_ErrorPopup)
@@ -1844,6 +1843,7 @@ bool CBSPRenderer::DrawFirst( void )
 				m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 			}
 			m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
+			m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
 
 			// Reset cubemap bind
 			if(m_isCubemappingSupported && pcubemapinfo && g_pCvarCubemaps->GetValue() > 0 && !cubematrixSet)
@@ -2140,9 +2140,6 @@ bool CBSPRenderer::DrawFirst( void )
 			}
 			if (pmaterial->ptextures[MT_TX_AO2])
 			{
-				if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-					return false;
-
 				en_texture_t* ao2texture = pmaterial->ptextures[MT_TX_AO2];
 				m_pShader->SetUniform1i(m_attribs.u_aomap2, textureIndex);
 				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, ao2texture->palloc->gl_index);
@@ -2155,8 +2152,6 @@ bool CBSPRenderer::DrawFirst( void )
 
 		if (pmaterial->ptextures[MT_TX_DIFFUSE2])
 		{
-			if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-				return false;
 			en_texture_t* maintexture2 = pmaterial->ptextures[MT_TX_DIFFUSE2];
 			m_pShader->SetUniform1i(m_attribs.u_maintexture2, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, maintexture2->palloc->gl_index);
@@ -2168,8 +2163,6 @@ bool CBSPRenderer::DrawFirst( void )
 
 		if (pmaterial->ptextures[MT_TX_SPECULAR2])
 		{
-			if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-				return false;
 			en_texture_t* speculartexture2 = pmaterial->ptextures[MT_TX_SPECULAR2];
 			m_pShader->SetUniform1i(m_attribs.u_speculartexture2, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, speculartexture2->palloc->gl_index);
@@ -2178,8 +2171,6 @@ bool CBSPRenderer::DrawFirst( void )
 
 		if (pmaterial->ptextures[MT_TX_NORMALMAP2])
 		{
-			if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-				return false;
 			en_texture_t* normaltexture2 = pmaterial->ptextures[MT_TX_NORMALMAP2];
 			m_pShader->SetUniform1i(m_attribs.u_normaltexture2, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, normaltexture2->palloc->gl_index);
@@ -2201,8 +2192,14 @@ bool CBSPRenderer::DrawFirst( void )
 			// We'll need texcoords
 			useTexcoord = true;
 		}
+		else
+		{
+			if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, FALSE))
+				return false;
+		}
 
 		m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
+		m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
 
 		R_ValidateShader(m_pShader);
 
@@ -2512,9 +2509,6 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 		}
 		if (pmaterial->ptextures[MT_TX_AO2])
 		{
-			if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-				return false;
-
 			en_texture_t* ao2texture = pmaterial->ptextures[MT_TX_AO2];
 			m_pShader->SetUniform1i(m_attribs.u_aomap2, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, ao2texture->palloc->gl_index);
@@ -2524,8 +2518,6 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 
 	if (pmaterial->ptextures[MT_TX_DIFFUSE2])
 	{
-		if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-			return false;
 		en_texture_t* maintexture2 = pmaterial->ptextures[MT_TX_DIFFUSE2];
 		m_pShader->SetUniform1i(m_attribs.u_maintexture2, textureIndex);
 		R_Bind2DTexture(GL_TEXTURE0 + textureIndex, maintexture2->palloc->gl_index);
@@ -2534,8 +2526,6 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 
 	if (pmaterial->ptextures[MT_TX_SPECULAR2])
 	{
-		if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-			return false;
 		en_texture_t* speculartexture2 = pmaterial->ptextures[MT_TX_SPECULAR2];
 		m_pShader->SetUniform1i(m_attribs.u_speculartexture2, textureIndex);
 		R_Bind2DTexture(GL_TEXTURE0 + textureIndex, speculartexture2->palloc->gl_index);
@@ -2544,8 +2534,6 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 
 	if (pmaterial->ptextures[MT_TX_NORMALMAP2])
 	{
-		if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-			return false;
 		en_texture_t* normaltexture2 = pmaterial->ptextures[MT_TX_NORMALMAP2];
 		m_pShader->SetUniform1i(m_attribs.u_normaltexture2, textureIndex);
 		R_Bind2DTexture(GL_TEXTURE0 + textureIndex, normaltexture2->palloc->gl_index);
@@ -2560,6 +2548,11 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 		m_pShader->SetUniform1i(m_attribs.u_blendtexture, textureIndex);
 		R_Bind2DTexture(GL_TEXTURE0 + textureIndex, blendtexture->palloc->gl_index);
 		textureIndex++;
+	}
+	else
+	{
+		if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, FALSE))
+			return false;
 	}
 
 	if(enableNormal)
@@ -3567,9 +3560,6 @@ bool CBSPRenderer::DrawFinal( void )
 				}
 				if (pmaterial->ptextures[MT_TX_AO2])
 				{
-					if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-						return false;
-
 					en_texture_t* ao2texture = pmaterial->ptextures[MT_TX_AO2];
 					m_pShader->SetUniform1i(m_attribs.u_aomap2, texbase);
 					R_Bind2DTexture(GL_TEXTURE0 + texbase, ao2texture->palloc->gl_index);
@@ -3578,8 +3568,6 @@ bool CBSPRenderer::DrawFinal( void )
 
 			if (pmaterial->ptextures[MT_TX_DIFFUSE2])
 			{
-				if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-					return false;
 				en_texture_t* maintexture2 = pmaterial->ptextures[MT_TX_DIFFUSE2];
 				m_pShader->SetUniform1i(m_attribs.u_maintexture2, texbase);
 				R_Bind2DTexture(GL_TEXTURE0 + texbase, maintexture2->palloc->gl_index);
@@ -3587,8 +3575,6 @@ bool CBSPRenderer::DrawFinal( void )
 
 			if (pmaterial->ptextures[MT_TX_SPECULAR2])
 			{
-				if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-					return false;
 				en_texture_t* speculartexture2 = pmaterial->ptextures[MT_TX_SPECULAR2];
 				m_pShader->SetUniform1i(m_attribs.u_speculartexture2, texbase);
 				R_Bind2DTexture(GL_TEXTURE0 + texbase, speculartexture2->palloc->gl_index);
@@ -3596,8 +3582,6 @@ bool CBSPRenderer::DrawFinal( void )
 
 			if (pmaterial->ptextures[MT_TX_NORMALMAP2])
 			{
-				if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, TRUE))
-					return false;
 				en_texture_t* normaltexture2 = pmaterial->ptextures[MT_TX_NORMALMAP2];
 				m_pShader->SetUniform1i(m_attribs.u_normaltexture2, texbase);
 				R_Bind2DTexture(GL_TEXTURE0 + texbase, normaltexture2->palloc->gl_index);
@@ -3610,6 +3594,11 @@ bool CBSPRenderer::DrawFinal( void )
 				en_texture_t* blendtexture = pmaterial->ptextures[MT_TX_BLEND];
 				m_pShader->SetUniform1i(m_attribs.u_blendtexture, texbase);
 				R_Bind2DTexture(GL_TEXTURE0 + texbase, blendtexture->palloc->gl_index);
+			}
+			else
+			{
+				if (!m_pShader->SetDeterminator(m_attribs.d_twoblended, FALSE))
+					return false;
 			}
 
 			R_ValidateShader(m_pShader);

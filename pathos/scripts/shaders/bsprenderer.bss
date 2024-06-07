@@ -260,6 +260,7 @@ $end
 uniform sampler2D aomaptex;
 uniform sampler2D aomaptex2;
 uniform float aoscale;
+uniform float cubemapnormal;
 
 $branch numlights >= 1
 $begin
@@ -898,8 +899,6 @@ vec4 GetCubemapPixel ( vec3 reflectvec )
 }
 $end
 
-$branch twoblended == 0
-$begin
 vec4 AddCubemaps( float reflectivity )
 { 
 	$branch cubemaps == 0
@@ -914,9 +913,8 @@ vec4 AddCubemaps( float reflectivity )
 			mat3 tbnMatrix = mat3(ps_cubetangent, ps_cubebinormal, ps_cubenormal);
 			vec3 tex_normal = (2.0 * texture2D (normalmap, ps_texcoord).xyz) - 1.0;
 			vec3 eye_texnormal = normalize(tbnMatrix * tex_normal);
-			
-			float normalstrength = 0.025;
-			v_normal = ps_cubenormal * (1.0 - normalstrength) + eye_texnormal * normalstrength;
+
+			v_normal = ps_cubenormal * (1.0 - cubemapnormal) + eye_texnormal * cubemapnormal;
 		$end
 		$branch bumpmapping == 0
 		$begin
@@ -927,39 +925,6 @@ vec4 AddCubemaps( float reflectivity )
 		return GetCubemapPixel(reflectvector) * pow(reflectivity, 16);
 	$end
 }
-$end
-$branch twoblended == 1
-$begin
-vec4 AddCubemaps(float reflectivity)
-{ 
-    $branch cubemaps == 0
-    $begin
-        return vec4(0, 0, 0, 0);
-    $end
-    $branch cubemaps >= 1
-    $begin
-        vec3 v_normal;
-        $branch bumpmapping == 1
-        $begin
-            mat3 tbnMatrix = mat3(ps_cubetangent, ps_cubebinormal, ps_cubenormal);
-            vec3 tex_normal1 = (2.0 * texture2D(normalmap, ps_texcoord).xyz) - 1.0;
-            vec3 tex_normal2 = (2.0 * texture2D(normalmap2, ps_texcoord).xyz) - 1.0;
-            vec3 tex_normal = mix(tex_normal1, tex_normal2, blendSample.r);
-            vec3 eye_texnormal = normalize(tbnMatrix * tex_normal);
-
-            float normalstrength = 0.025;
-            v_normal = ps_cubenormal * (1.0 - normalstrength) + eye_texnormal * normalstrength;
-        $end
-        $branch bumpmapping == 0
-        $begin
-            v_normal = ps_cubenormal;
-        $end
-
-        vec3 reflectvector = normalize(-reflect(normalize(ps_cubevertexpos), normalize(v_normal)));
-        return GetCubemapPixel(reflectvector) * pow(reflectivity, 16);
-    $end
-}
-$end
 
 void main()
 {

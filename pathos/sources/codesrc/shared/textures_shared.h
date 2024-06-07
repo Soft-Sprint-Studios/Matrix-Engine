@@ -148,6 +148,7 @@ struct en_material_t
 		alpha(0),
 		phong_exp(0),
 		aoscale(0),
+		cubemapnormal(0),
 		spec_factor(0),
 		scale(0),
 		cubemapstrength(0),
@@ -183,6 +184,7 @@ struct en_material_t
 	Float alpha;
 	Float phong_exp;
 	Float aoscale;
+	Float cubemapnormal;
 	Float spec_factor;
 	Float scale;
 	Float cubemapstrength;

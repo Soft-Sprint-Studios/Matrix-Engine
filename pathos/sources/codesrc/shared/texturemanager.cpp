@@ -681,6 +681,7 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		pmaterial->spec_factor = DEFAULT_SPECFACTOR;
 		pmaterial->phong_exp = DEFAULT_PHONG_EXP;
 		pmaterial->aoscale = 1;
+		pmaterial->cubemapnormal = 0.025;
 	}
 
 	static Char line[MAX_LINE_LENGTH];
@@ -779,6 +780,7 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 					|| !qstrcmp(token, "$int_width") || !qstrcmp(token, "$int_height")
 					|| !qstrcmp(token, "$alpha") || !qstrcmp(token, "$phong_exp")
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$aoscale")
+				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$cubemapnormal")
 					|| !qstrcmp(token, "$spec") || !qstrcmp(token, "$scopescale") 
 					|| !qstrcmp(token, "$cubemapstrength") || !qstrcmp(token, "$container")
 					|| !qstrcmp(token, "$scrollu") || !qstrcmp(token, "$scrollv"))
@@ -813,6 +815,8 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 					pmaterial->phong_exp = (Float)SDL_atof(value);
 				else if (!qstrcmp(token, "$aoscale"))
 					pmaterial->aoscale = (Float)SDL_atof(value);
+				else if (!qstrcmp(token, "$cubemapnormal"))
+					pmaterial->cubemapnormal = (Float)SDL_atof(value);
 				else if(!qstrcmp(token, "$spec"))
 					pmaterial->spec_factor = (Float)SDL_atof(value);
 				else if(!qstrcmp(token, "$scopescale"))
@@ -1694,6 +1698,9 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 
 	if (pmaterial->aoscale)
 		data << "\t$aoscale " << pmaterial->aoscale << NEWLINE;
+
+	if (pmaterial->cubemapnormal)
+		data << "\t$cubemapnormal " << pmaterial->cubemapnormal << NEWLINE;
 
 	// Set container
 	if(!pmaterial->containername.empty())
