@@ -97,7 +97,6 @@ struct bsp_shader_attribs
 		d_cubemaps(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_luminance(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_ao(CGLSLShader::PROPERTY_UNAVAILABLE),
-		d_twoblended(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_numlights(CGLSLShader::PROPERTY_UNAVAILABLE),
 		a_position(CGLSLShader::PROPERTY_UNAVAILABLE),
 		a_tangent(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -129,16 +128,11 @@ struct bsp_shader_attribs
 		u_cubemap_prev(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_baselightmap(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_maintexture(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_maintexture2(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_speculartexture2(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_normaltexture2(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_blendtexture(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_detailtex(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_chrometex(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_normalmap(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_luminance(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_aomap(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_aomap2(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_difflightmap(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_lightvecstex(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_specular(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -156,7 +150,6 @@ struct bsp_shader_attribs
 	Int32 d_cubemaps;
 	Int32 d_luminance;
 	Int32 d_ao;
-	Int32 d_twoblended;
 	Int32 d_numlights;
 
 	// vertex attribs
@@ -200,16 +193,11 @@ struct bsp_shader_attribs
 	Int32 u_cubemap_prev;
 	Int32 u_baselightmap;
 	Int32 u_maintexture;
-	Int32 u_maintexture2;
-	Int32 u_speculartexture2;
-	Int32 u_normaltexture2;
-	Int32 u_blendtexture;
 	Int32 u_detailtex;
 	Int32 u_chrometex;
 	Int32 u_normalmap;
 	Int32 u_luminance;
 	Int32 u_aomap;
-	Int32 u_aomap2;
 	Int32 u_difflightmap;
 	Int32 u_lightvecstex;
 	Int32 u_specular;
