@@ -332,8 +332,8 @@ namespace Sledge.BspEditor.Tools.Clip
                     foreach (var boxPlane in bbox.GetBoxPlanes())
                     {
                         var proj = boxPlane.Project(point);
-                        var dist = (point - proj).Length() * 0.1f;
-                        var pln = new Plane(boxPlane.Normal, proj + boxPlane.Normal * Math.Max(dist, 100)).ToPrecisionPlane();
+                        var dist = (point - proj).Length() * 1.0f;
+                        var pln = new Plane(boxPlane.Normal, proj + boxPlane.Normal * Math.Max(dist, 10000)).ToPrecisionPlane();
                         if (poly.Split(pln, out var b, out _)) poly = b;
                     }
 

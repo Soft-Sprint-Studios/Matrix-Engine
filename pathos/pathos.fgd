@@ -595,7 +595,7 @@
 
 @PointClass base(Targetname) = ambient_oggstream: "OGG Audio player"
 [
-     message(string) : "File Name"
+     message(sound) : "Path/filename.ogg of OGG"
      fadeintime(integer) : "Fade In Time" : 0
      fadetime(integer) : "Fade Out Time" : 0
   channel(Choices) : "Channel" : 0 =

@@ -146,6 +146,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>Cdecl</CallingConvention>
       <LanguageStandard>Default</LanguageStandard>
+      <Optimization>Full</Optimization>
     </ClCompile>
     <Lib>
       <OutputFile>$(OutDir)$(ProjectName)_static.lib</OutputFile>

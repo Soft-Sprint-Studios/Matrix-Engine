@@ -85,6 +85,7 @@
     <ClCompile Include="..\..\common\md5.cpp">
       <Filter>src\shared</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\common\bmp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\viewerstate.h">
@@ -216,6 +217,7 @@
     <ClInclude Include="..\..\common\md5.h">
       <Filter>include\common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\common\bmp.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include=".\hlmviewer.rc" />

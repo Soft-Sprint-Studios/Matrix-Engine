@@ -46,6 +46,7 @@ namespace Sledge.BspEditor.Controls.FileSystem
             FileImages.Images.Add(IconGeneric, Resources.File_Generic);
             FileImages.Images.Add("mdl", Resources.File_Mdl);
             FileImages.Images.Add("mp3", Resources.File_Mp3);
+            FileImages.Images.Add("ogg", Resources.File_ogg);
             FileImages.Images.Add("txt", Resources.File_Txt);
             FileImages.Images.Add("wav", Resources.File_Wav);
         }
