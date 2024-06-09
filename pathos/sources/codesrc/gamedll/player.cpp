@@ -208,6 +208,7 @@ const Float CPlayerEntity::PLAYER_WEAPON_FLASH_DECAY_SPEED = 256;
 // TRUE if using cheat commands(for debugging purposes)
 bool CPlayerEntity::m_cheatCommandUsed = false;
 
+
 //=============================================
 // @brief
 //
@@ -296,6 +297,12 @@ bool ClientCommand( edict_t* pclient )
 	else if(!qstrcmp(pstrCmd, "lastinv"))
 	{
 		pClientEntity->SelectPreviousWeapon();
+		return true;
+	}
+	else if (!qstrcmp(pstrCmd, "kill"))
+	{
+		CPlayerEntity* pPlayer = reinterpret_cast<CPlayerEntity*>(CBaseEntity::GetClass(pclient));
+		pPlayer->Killed(nullptr, GIB_NEVER, DEATH_NORMAL);
 		return true;
 	}
 	else if(!qstrcmp(pstrCmd, "setdaystage"))
@@ -6523,11 +6530,5 @@ void CPlayerEntity::DelayedGlobalTriggerThink( void )
 	{
 		UseTargets(this, USE_TOGGLE, 0, m_delayedGlobalTriggerTarget);
 		ClearGlobalDelayedTrigger();
-	}
-}
-
-void CPlayerEntity::SetDead() {
-	if (m_pState) {
-		m_pState->deadstate = DEADSTATE_DEAD;
 	}
 }

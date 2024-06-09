@@ -77,7 +77,7 @@ bool CDynamicLightManager::Init( void )
 	// init cvars
 	m_pCvarShadowmapSize = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_proj_size", "2048", "Controls resolution of projected light shadows.", R_CheckShadowmapSizeCvarCallBack );
 	m_pCvarCubeShadowmapSize = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_cube_size", "2048", "Controls resolution of point light shadows.", R_CheckShadowmapSizeCvarCallBack );
-	m_pCvarShadowmapBlit = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_blitting", "1", "Enable or disable shadowmap blitting." );
+	m_pCvarShadowmapBlit = gConsole.CreateCVar( CVAR_FLOAT, (FL_CV_CLIENT|FL_CV_SAVE), "r_shadowmap_blitting", "0", "Enable or disable shadowmap blitting." );
 
 	return true;
 }
@@ -2053,16 +2053,14 @@ bool CDynamicLightManager::ShouldRedrawShadowMap( cl_dlight_t *dl, dlight_scenei
 		cl_entity_t* pvisentity = rns.objects.pvisents[i];
 
 		// Only static objects
-		if(isstatic)
+		if (isstatic)
 		{
-			if(pvisentity->curstate.movetype != MOVETYPE_NONE
-				&& !(pvisentity->curstate.effects & EF_STATICENTITY))
+			if (!(pvisentity->curstate.movetype == MOVETYPE_NONE || (pvisentity->curstate.effects & EF_STATICENTITY)))
 				continue;
 		}
 		else
 		{
-			if(pvisentity->curstate.movetype == MOVETYPE_NONE
-				|| pvisentity->curstate.effects & EF_STATICENTITY)
+			if (pvisentity->curstate.movetype == MOVETYPE_NONE || (pvisentity->curstate.effects & EF_STATICENTITY))
 				continue;
 		}
 
@@ -2079,8 +2077,7 @@ bool CDynamicLightManager::ShouldRedrawShadowMap( cl_dlight_t *dl, dlight_scenei
 			continue;
 
 		// Only vbm and brush models
-		if(pvisentity->pmodel->type != MOD_VBM 
-			&& pvisentity->pmodel->type != MOD_BRUSH)
+		if ((pvisentity->pmodel->type & (MOD_VBM | MOD_BRUSH)) == 0)
 			continue;
 		
 		// Check bbox

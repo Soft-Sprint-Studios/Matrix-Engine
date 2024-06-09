@@ -74,6 +74,12 @@ template <typename T> class CArray;
 #error 32-bit Builds are not supported. Please attempt a 64-bit build.
 #endif
 
+#define SDL_RWseek_old(ctx, offset, whence) (ctx)->seek(ctx, offset, whence)
+#define SDL_RWtell_old(ctx)         (ctx)->seek(ctx, 0, RW_SEEK_CUR)
+#define SDL_RWread_old(ctx, ptr, size, n)   (ctx)->read(ctx, ptr, size, n)
+#define SDL_RWwrite_old(ctx, ptr, size, n)  (ctx)->write(ctx, ptr, size, n)
+#define SDL_RWclose_old(ctx)        (ctx)->close(ctx)
+
 // NAN mask
 static const Int32 NANMASK = 0x7F800000;
 

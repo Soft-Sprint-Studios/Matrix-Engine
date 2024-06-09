@@ -61,15 +61,6 @@ static const Uint32 MAX_NPC_FRAME_PENETRATIONS = 8;
 // Counter for penetrations by NPCs
 Uint32 g_nbNPCPenetrations = 0;
 
-CPlayerEntity* g_player = nullptr;
-extern CPlayerEntity* g_player;
-
-void KillPlayerCommand() {
-	if (g_player != nullptr) {
-		g_player->SetDead();
-	}
-}
-
 //=============================================
 // @brief
 //
@@ -91,7 +82,6 @@ bool InitGameObjects( void )
 
 	// Create commands
 	gd_engfuncs.pfnCreateCommand("dumpcheats", DumpCheatCodes, "Dumps cheat codes");
-	gd_engfuncs.pfnCreateCommand("kill", KillPlayerCommand, "Kills the player");
 
 	// Create flex manager object
 	if(!g_pFlexManager)

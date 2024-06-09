@@ -506,8 +506,9 @@ float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularSt
     vec3 finalSpecular = mix(specularTint, vec3(1.0), fresnel) * specularComponent;
 
     float diffuseReflectance = OrenNayarReflectance(v_normal, lightDir, eyeVec, roughness);
+	float lambertian = max(dot(v_normal, lightDir), 0.0);
 
-    return dot(finalSpecular, vec3(1.0)) * diffuseReflectance;
+    return (diffuseReflectance + lambertian) * dot(finalSpecular, vec3(1.0));
 }
 
 vec4 AddModelLight( vec3 l_origin, vec3 l_color, float l_radius, vec3 v_origin, vec3 v_normal, float specularStrength )

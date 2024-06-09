@@ -16,7 +16,9 @@ All Rights Reserved.
 #include "tga.h"
 #include "dds.h"
 #include "bmp.h"
+#ifndef BUILDING_MODELVIEWER
 #include "r_main.h"
+#endif
 
 #ifndef GL_MAX_TEXTURE_MAX_ANISOTROPY
 #define GL_MAX_TEXTURE_MAX_ANISOTROPY 0x84FF
@@ -30,6 +32,8 @@ All Rights Reserved.
 const Float CTextureManager::DEFAULT_SPECFACTOR = 2.0f;
 // Default phong exponent value
 const Float CTextureManager::DEFAULT_PHONG_EXP = 16.0f;
+// Default value for cubemap normal scale
+const Float CTextureManager::DEFAULT_CUBEMAPNORMAL = 0.15f;
 // Anisotropy off value
 const Uint32 CTextureManager::ANISOTROPY_OFF_VALUE = 1;
 
@@ -671,7 +675,7 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		pmaterial->spec_factor = DEFAULT_SPECFACTOR;
 		pmaterial->phong_exp = DEFAULT_PHONG_EXP;
 		pmaterial->aoscale = 1;
-		pmaterial->cubemapnormal = 0.025;
+		pmaterial->cubemapnormal = DEFAULT_CUBEMAPNORMAL;
 	}
 
 	static Char line[MAX_LINE_LENGTH];
@@ -729,10 +733,12 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		}
 		else
 		{
+#ifndef BUILDING_MODELVIEWER
 			if (g_pCvarFullBright->GetValue() >= 1)
 			{
 				pmaterial->flags |= TX_FL_FULLBRIGHT;
 			}
+#endif
 			// Identify the field
 			if(!qstrcmp(token, "$cubemaps"))
 				pmaterial->flags |= TX_FL_CUBEMAPS;

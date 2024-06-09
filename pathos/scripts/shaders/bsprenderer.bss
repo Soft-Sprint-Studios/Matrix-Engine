@@ -349,6 +349,7 @@ $end
 
 uniform float phong_exponent;
 uniform float specfactor;
+uniform float cubemapnormal;
 uniform float interpolant;
 uniform float cubemapstrength;
 uniform float decalalpha;
@@ -489,8 +490,9 @@ float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularSt
     vec3 finalSpecular = mix(specularTint, vec3(1.0), fresnel) * specularComponent;
 
     float diffuseReflectance = OrenNayarReflectance(v_normal, lightDir, eyeVec, roughness);
+    float lambertian = max(dot(v_normal, lightDir), 0.0);
 
-    return dot(finalSpecular, vec3(1.0)) * diffuseReflectance;
+    return (diffuseReflectance + lambertian) * dot(finalSpecular, vec3(1.0));
 }
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
@@ -846,8 +848,7 @@ vec4 AddCubemaps( float reflectivity )
 			vec3 tex_normal = (2.0 * texture2D (normalmap, ps_texcoord).xyz) - 1.0;
 			vec3 eye_texnormal = normalize(tbnMatrix * tex_normal);
 			
-			float normalstrength = 0.025;
-			v_normal = ps_cubenormal * (1.0 - normalstrength) + eye_texnormal * normalstrength;
+			v_normal = ps_cubenormal * (1.0 - cubemapnormal) + eye_texnormal * cubemapnormal;
 		$end
 		$branch bumpmapping == 0
 		$begin

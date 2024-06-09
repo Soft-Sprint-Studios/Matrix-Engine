@@ -15,10 +15,10 @@ namespace Sledge.BspEditor.Rendering.Viewport
 		[Setting] public static decimal TimeToTopSpeed { get; set; } = 0.5m;
 		[Setting] public static decimal MouseWheelMoveDistance { get; set; } = 500;
 		[Setting] public static decimal MouseWheelZoomMultiplier { get; set; } = 1.2m;
-		[Setting] public static int FOV { get; set; } = 60;
+		[Setting] public static int FOV { get; set; } = 80;
 		[Setting] public static bool InvertX { get; set; } = false;
 		[Setting] public static bool InvertY { get; set; } = false;
-		[Setting] public static decimal Sensitivity { get; set; } = 5;
+		[Setting] public static decimal Sensitivity { get; set; } = 10;
 
 		public string Name => "Sledge.BspEditor.Rendering.CameraNavigationViewportSettings";
 		public bool ValuesLoaded { get; private set; } = false;

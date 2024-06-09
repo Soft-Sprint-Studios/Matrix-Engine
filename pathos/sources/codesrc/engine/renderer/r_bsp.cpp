@@ -1836,8 +1836,6 @@ bool CBSPRenderer::DrawFirst( void )
 				m_pShader->SetUniform1f(m_attribs.u_phong_exponent, pmaterial->phong_exp*g_pCvarPhongExponent->GetValue());
 				m_pShader->SetUniform1f(m_attribs.u_specularfactor, pmaterial->spec_factor);
 			}
-			m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
-			m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
 
 			// Reset cubemap bind
 			if(m_isCubemappingSupported && pcubemapinfo && g_pCvarCubemaps->GetValue() > 0 && !cubematrixSet)
@@ -1858,6 +1856,8 @@ bool CBSPRenderer::DrawFirst( void )
 				m_pShader->SetUniformMatrix4fv(m_attribs.u_modelmatrix, modelMatrix.GetMatrix());
 				m_pShader->SetUniformMatrix4fv(m_attribs.u_inv_modelmatrix, modelMatrix.GetInverse());
 				m_pShader->SetUniform1f(m_attribs.u_cubemapstrength, pmaterial->cubemapstrength);
+				m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
+				m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 			}
 			else if(cubematrixSet)
 			{
@@ -2133,9 +2133,6 @@ bool CBSPRenderer::DrawFirst( void )
 					return false;
 			}
 		}
-
-		m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
-		m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
 
 		R_ValidateShader(m_pShader);
 
@@ -3408,6 +3405,8 @@ bool CBSPRenderer::DrawFinal( void )
 				continue;			
 			
 			m_pShader->SetUniform1f(m_attribs.u_cubemapstrength, pmaterial->cubemapstrength);
+			m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
+			m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 
 			// Bind specular texture
 			m_pShader->SetUniform1i(m_attribs.u_specular, texbase);

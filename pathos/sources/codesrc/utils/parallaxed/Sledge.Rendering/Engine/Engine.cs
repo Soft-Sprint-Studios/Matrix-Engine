@@ -93,10 +93,10 @@ namespace Sledge.Rendering.Engine
 		{
 			var dev = device.GetType().GetProperty("Device");
 			var dxd = dev?.GetValue(device) as SharpDX.Direct3D11.Device;
-			var fl = dxd?.FeatureLevel ?? FeatureLevel.Level_10_0; // Just assume it's DX10, whatever
-			if (fl < FeatureLevel.Level_10_0)
+			var fl = dxd?.FeatureLevel ?? FeatureLevel.Level_11_1; // Just assume it's DX11, whatever
+			if (fl < FeatureLevel.Level_11_1)
 			{
-				MessageBox.Show($"Sledge requires DirectX 10, but your computer only has version {fl}.", "Unsupported graphics card!");
+				MessageBox.Show($"ParallaxED requires DirectX 11, but your computer only has version {fl}.", "Unsupported graphics card!");
 				Environment.Exit(1);
 			}
 			Features.FeatureLevel = fl;

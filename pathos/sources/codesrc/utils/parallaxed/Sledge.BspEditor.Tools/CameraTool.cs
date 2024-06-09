@@ -28,6 +28,7 @@ namespace Sledge.BspEditor.Tools
     [DefaultHotkey("Shift+C")]
     public class CameraTool : BaseTool
     {
+        private const float SmoothingFactor = 5.2f;
         private enum State
         {
             None,
@@ -240,18 +241,27 @@ namespace Sledge.BspEditor.Tools
                     if (_stateCamera == null) break;
                     var newEye = camera.GetUnusedCoordinate(_stateCamera.EyePosition) + p;
                     if (KeyboardState.Ctrl) _stateCamera.LookPosition += (newEye - _stateCamera.EyePosition);
-                    _stateCamera.EyePosition = newEye;
-                    SetViewportCamera(_stateCamera.EyePosition, _stateCamera.LookPosition);
+                    SmoothlyMoveCamera(_stateCamera, newEye, _stateCamera.LookPosition);
                     break;
                 case State.MovingLook:
                     if (_stateCamera == null) break;
                     var newLook = camera.GetUnusedCoordinate(_stateCamera.LookPosition) + p;
                     if (KeyboardState.Ctrl) _stateCamera.EyePosition += (newLook - _stateCamera.LookPosition);
-                    _stateCamera.LookPosition = newLook;
-                    SetViewportCamera(_stateCamera.EyePosition, _stateCamera.LookPosition);
+                    SmoothlyMoveCamera(_stateCamera, _stateCamera.EyePosition, newLook);
                     break;
             }
             vp.Control.Cursor = cursor;
+        }
+
+        private void SmoothlyMoveCamera(Camera camera, Vector3 newPosition, Vector3 newLookPosition)
+        {
+            Vector3 positionDifference = newPosition - camera.EyePosition;
+            Vector3 lookDifference = newLookPosition - camera.LookPosition;
+            positionDifference *= SmoothingFactor;
+            lookDifference *= SmoothingFactor;
+            camera.EyePosition += positionDifference;
+            camera.LookPosition += lookDifference;
+            SetViewportCamera(camera.EyePosition, camera.LookPosition);
         }
 
         protected override void Render(MapDocument document, IViewport viewport, OrthographicCamera camera, Vector3 worldMin, Vector3 worldMax, I2DRenderer im)

@@ -352,7 +352,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 				var gameMapDir = Path.Combine(BaseDirectory, ModDirectory, "maps");
 
 				// Copy configured files to the map directory
-				CopyFile(MapCopyBsp, "bsp", mapDir);
+				CopyFile(MapCopyBsp, "pbsp", mapDir);
 				CopyFile(MapCopyMap, "map", mapDir);
 				CopyFile(MapCopyRes, "res", mapDir);
 				CopyFile(MapCopyErr, "err", mapDir);
@@ -363,7 +363,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 				CopyFile(true, "pts", mapDir);
 
 				// Copy the BSP/RES to the game dir if configured
-				CopyFile(b.Successful && GameCopyBsp, "bsp", gameMapDir);
+				CopyFile(b.Successful && GameCopyBsp, "pbsp", gameMapDir);
 				CopyFile(b.Successful && GameCopyBsp, "res", gameMapDir);
 
 				void CopyFile(bool test, string extension, string directory)

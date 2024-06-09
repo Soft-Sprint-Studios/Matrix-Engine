@@ -42,6 +42,8 @@ public:
 	static const Float DEFAULT_SPECFACTOR;
 	// Default phong exponent value
 	static const Float DEFAULT_PHONG_EXP;
+	// Default cubemapnormal
+	static const Float DEFAULT_CUBEMAPNORMAL;
 	// Anisotropy off value
 	static const Uint32 ANISOTROPY_OFF_VALUE;
 
