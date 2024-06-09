@@ -107,6 +107,8 @@
     <PackageReference Include="ImGui.NET">
       <Version>1.89.6</Version>
     </PackageReference>
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
     <PackageReference Include="SharpDX" Version="4.2.0" />
     <PackageReference Include="SharpDX.Direct3D11" Version="4.2.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />

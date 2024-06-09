@@ -218,6 +218,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\bmp.cpp" />
     <ClCompile Include="..\common\cbitset.cpp" />
     <ClCompile Include="..\common\cbuffer.cpp" />
     <ClCompile Include="..\common\common.cpp" />
@@ -234,7 +235,6 @@
     <ClCompile Include="..\shared\stepsound.cpp" />
     <ClCompile Include="..\shared\texturemanager.cpp" />
     <ClCompile Include="ald.cpp" />
-    <ClCompile Include="bmp.cpp" />
     <ClCompile Include="brushmodel.cpp" />
     <ClCompile Include="client\cl_cmd.cpp" />
     <ClCompile Include="client\cl_efx.cpp" />
@@ -334,6 +334,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\aldformat.h" />
+    <ClInclude Include="..\common\bmp.h" />
     <ClInclude Include="..\common\cache_model.h" />
     <ClInclude Include="..\common\carray.h" />
     <ClInclude Include="..\common\carray_inline.hpp" />
@@ -381,8 +382,6 @@
     <ClInclude Include="..\shared\flex_shared.h" />
     <ClInclude Include="..\shared\fontset.h" />
     <ClInclude Include="ald.h" />
-    <ClInclude Include="bmp.h" />
-    <ClInclude Include="bmpformat.h" />
     <ClInclude Include="buildcounter.h" />
     <ClInclude Include="client\cl_efx.h" />
     <ClInclude Include="client\cl_main.h" />

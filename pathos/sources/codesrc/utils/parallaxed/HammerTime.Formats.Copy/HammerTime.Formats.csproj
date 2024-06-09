@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <PackageReference Include="DiscordRichPresence" Version="1.2.1.24" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
     <PackageReference Include="Sledge.Formats" Version="1.2.4" />
     <PackageReference Include="Sledge.Formats.Bsp" Version="1.0.15" />
     <PackageReference Include="Sledge.Formats.Map" Version="1.2.1" />

@@ -12,6 +12,8 @@ using Sledge.Common.Translations;
 using Sledge.DataStructures.GameData;
 using Sledge.FileSystem;
 using Sledge.Shell;
+using NAudio.Wave;
+using NAudio.Vorbis;
 
 namespace Sledge.BspEditor.Editing.Components.Properties.SmartEdit
 {
@@ -76,11 +78,11 @@ namespace Sledge.BspEditor.Editing.Components.Properties.SmartEdit
 					fs.Filter = "*.spr";
 					fs.FilterText = "Sprites (*.spr)";
 					break;
-				case VariableType.Sound:
-					fs.Filter = "*.wav,*.mp3";
-					fs.FilterText = "Audio (*.wav, *.mp3)";
-					break;
-			}
+                case VariableType.Sound:
+                    fs.Filter = "*.wav,*.mp3,*.ogg";
+                    fs.FilterText = "Audio (*.wav, *.mp3, *.ogg)";
+                    break;
+            }
 			return fs;
 		}
 
@@ -127,51 +129,71 @@ namespace Sledge.BspEditor.Editing.Components.Properties.SmartEdit
 			var file = rt.TraversePath(path);
 			if (file == null || !file.Exists) return;
 
-			switch (file.Extension?.ToLower())
-			{
-				case "mp3":
-				case "wav":
-					PreviewAudio(file);
-					break;
-			}
-		}
+            switch (file.Extension?.ToLower())
+            {
+                case "mp3":
+                case "wav":
+                case "ogg":
+                    PreviewAudio(file);
+                    break;
+            }
+        }
 
-		private void PreviewAudio(IFile audioFile)
-		{
-			// Copy the stream to memory to avoid any nasty issues
-			MemoryStream ms;
-			try
-			{
-				ms = new MemoryStream();
-				using (var stream = audioFile.Open()) stream.CopyTo(ms);
-				ms.Seek(0, SeekOrigin.Begin);
-			}
-			catch (Exception e)
-			{
-				Log.Error(nameof(SmartEditFileBrowser), "Exception opening audio file", e);
-				return;
-			}
+        private void PreviewAudio(IFile audioFile)
+        {
+            // Copy the stream to memory to avoid any nasty issues
+            MemoryStream ms;
+            try
+            {
+                ms = new MemoryStream();
+                using (var stream = audioFile.Open()) stream.CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
+            }
+            catch (Exception e)
+            {
+                Log.Error(nameof(SmartEditFileBrowser), "Exception opening audio file", e);
+                return;
+            }
 
-			ThreadPool.QueueUserWorkItem(_ =>
-			{
-				using (ms)
-				{
-					try
-					{
-						using (var player = new SoundPlayer(ms))
-						{
-							player.PlaySync();
-						}
-					}
-					catch (Exception e)
-					{
-						Log.Error(nameof(SmartEditFileBrowser), "Exception playing audio file", e);
-					}
-				}
-			});
-		}
+            ThreadPool.QueueUserWorkItem(_ =>
+            {
+                using (ms)
+                {
+                    try
+                    {
+                        string extension = Path.GetExtension(audioFile.Name)?.ToLower();
+                        if (extension == ".ogg")
+                        {
+                            ms.Seek(0, SeekOrigin.Begin);
+                            using (var vorbisStream = new NAudio.Vorbis.VorbisWaveReader(ms))
+                            using (var waveOut = new NAudio.Wave.WaveOutEvent())
+                            {
+                                waveOut.Init(vorbisStream);
+                                waveOut.Play();
+                                while (waveOut.PlaybackState == NAudio.Wave.PlaybackState.Playing)
+                                {
+                                    Thread.Sleep(100);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            ms.Seek(0, SeekOrigin.Begin);
+                            using (var player = new SoundPlayer(ms))
+                            {
+                                player.PlaySync();
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(nameof(SmartEditFileBrowser), "Exception playing audio file", e);
+                    }
+                }
+            });
+        }
 
-		private string GetPath(IFile file)
+        private string GetPath(IFile file)
 		{
 			var path = "";
 			while (file != null && !(file is RootFile))

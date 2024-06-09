@@ -341,7 +341,7 @@ namespace Sledge.BspEditor.Tools.Clip
                     indices.Clear();
 
                     var clipPoly = poly.ToStandardPolygon();
-                    var colour = Color.FromArgb(64, Color.Turquoise).ToVector4();
+                    var colour = Color.FromArgb(64, Color.Red).ToVector4();
 
                     // Add the face in both directions so it renders on both sides
                     var polies = new[] { clipPoly.Vertices.ToList(), clipPoly.Vertices.Reverse().ToList() };

@@ -299,6 +299,7 @@
     <ClInclude Include="..\..\common\constants.h" />
     <ClInclude Include="..\..\common\datatypes.h" />
     <ClInclude Include="..\..\common\dds.h" />
+	<ClInclude Include="..\..\common\bmp.h" />
     <ClInclude Include="..\..\common\file_interface.h" />
     <ClInclude Include="..\..\common\matrix.h" />
     <ClInclude Include="..\..\common\md5.h" />
@@ -335,6 +336,7 @@
     <ClCompile Include="..\..\common\common.cpp" />
     <ClCompile Include="..\..\common\cstring.cpp" />
     <ClCompile Include="..\..\common\dds.cpp" />
+	<ClCompile Include="..\..\common\bmp.cpp" />
     <ClCompile Include="..\..\common\matrix.cpp" />
     <ClCompile Include="..\..\common\md5.cpp" />
     <ClCompile Include="..\..\common\r_common.cpp" />
