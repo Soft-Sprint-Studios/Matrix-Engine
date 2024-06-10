@@ -94,7 +94,6 @@
     <Content Include="Resources\File_Folder.png" />
     <Content Include="Resources\File_Generic.png" />
     <Content Include="Resources\File_Mdl.png" />
-    <Content Include="Resources\File_Mp3.png" />
 	<Content Include="Resources\File_ogg.png" />
     <Content Include="Resources\File_Txt.png" />
     <Content Include="Resources\File_Wav.png" />

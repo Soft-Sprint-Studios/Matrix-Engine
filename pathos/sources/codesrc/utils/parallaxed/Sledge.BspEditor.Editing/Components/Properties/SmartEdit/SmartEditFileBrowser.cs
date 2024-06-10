@@ -79,8 +79,8 @@ namespace Sledge.BspEditor.Editing.Components.Properties.SmartEdit
 					fs.FilterText = "Sprites (*.spr)";
 					break;
                 case VariableType.Sound:
-                    fs.Filter = "*.wav,*.mp3,*.ogg";
-                    fs.FilterText = "Audio (*.wav, *.mp3, *.ogg)";
+                    fs.Filter = "*.wav, *.ogg";
+                    fs.FilterText = "Audio (*.wav, *.ogg)";
                     break;
             }
 			return fs;
@@ -131,7 +131,6 @@ namespace Sledge.BspEditor.Editing.Components.Properties.SmartEdit
 
             switch (file.Extension?.ToLower())
             {
-                case "mp3":
                 case "wav":
                 case "ogg":
                     PreviewAudio(file);

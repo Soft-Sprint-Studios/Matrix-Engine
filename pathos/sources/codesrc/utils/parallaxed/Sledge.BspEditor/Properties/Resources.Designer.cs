@@ -115,16 +115,6 @@ namespace Sledge.BspEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap File_Mp3 {
-            get {
-                object obj = ResourceManager.GetObject("File_Mp3", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap File_Txt {
             get {
                 object obj = ResourceManager.GetObject("File_Txt", resourceCulture);
