@@ -172,7 +172,7 @@
       <AdditionalIncludeDirectories>..\libs\sdl2.0\include;..\libs\stb_image;..\common;..\libs\sdl2.0\include\;..\client;..\shared;..\shared\renderer;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4244;4305</DisableSpecificWarnings>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
-      <LanguageStandard>Default</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
