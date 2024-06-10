@@ -332,7 +332,7 @@ namespace Sledge.BspEditor.Tools.Clip
                     foreach (var boxPlane in bbox.GetBoxPlanes())
                     {
                         var proj = boxPlane.Project(point);
-                        var dist = (point - proj).Length() * 1.0f;
+                        var dist = (point - proj).Length() * 0.1f;
                         var pln = new Plane(boxPlane.Normal, proj + boxPlane.Normal * Math.Max(dist, 10000)).ToPrecisionPlane();
                         if (poly.Split(pln, out var b, out _)) poly = b;
                     }
@@ -341,7 +341,7 @@ namespace Sledge.BspEditor.Tools.Clip
                     indices.Clear();
 
                     var clipPoly = poly.ToStandardPolygon();
-                    var colour = Color.FromArgb(64, Color.Red).ToVector4();
+                    var colour = Color.FromArgb(64, Color.Turquoise).ToVector4();
 
                     // Add the face in both directions so it renders on both sides
                     var polies = new[] { clipPoly.Vertices.ToList(), clipPoly.Vertices.Reverse().ToList() };
