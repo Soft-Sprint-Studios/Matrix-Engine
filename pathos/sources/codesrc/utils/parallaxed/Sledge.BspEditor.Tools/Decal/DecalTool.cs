@@ -65,7 +65,7 @@ namespace Sledge.BspEditor.Tools.Decal
         {
             var gameData = await document.Environment.GetGameData();
 
-            var gd = gameData?.Classes.FirstOrDefault(x => x.Name == "infodecal");
+            var gd = gameData?.Classes.FirstOrDefault(x => x.Name == "env_decal");
             if (gd == null) return;
 
             var texture = document.Map.Data.GetOne<ActiveTexture>()?.Name;
@@ -83,7 +83,7 @@ namespace Sledge.BspEditor.Tools.Decal
                     new EntityData
                     {
                         Name = gd.Name,
-                        Properties = {{"texture", texture}}
+                        Properties = {{"message", texture}}
                     },
                     new ObjectColor(Colour.GetRandomBrushColour()),
                     new Origin(origin)

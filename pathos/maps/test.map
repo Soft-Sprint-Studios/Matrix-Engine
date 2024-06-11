@@ -168,3 +168,8 @@
 "radius" "0"
 "origin" "3902.177 -794.656 2144.000"
 }
+{
+"classname" "env_decal"
+"message" "aaatrigger"
+"origin" "3488.000 -818.567 2348.387"
+}

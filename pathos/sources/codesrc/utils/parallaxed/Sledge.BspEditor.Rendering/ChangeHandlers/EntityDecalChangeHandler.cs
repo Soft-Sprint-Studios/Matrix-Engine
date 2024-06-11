@@ -67,8 +67,8 @@ namespace Sledge.BspEditor.Rendering.ChangeHandlers
 
         private static string GetDecalName(Entity entity)
         {
-            if (entity.EntityData.Name != "infodecal") return null;
-            var decal = entity.EntityData.Properties.Where(x => x.Key == "texture").Select(x => x.Value).FirstOrDefault();
+            if (entity.EntityData.Name != "env_decal") return null;
+            var decal = entity.EntityData.Properties.Where(x => x.Key == "message").Select(x => x.Value).FirstOrDefault();
             return string.IsNullOrWhiteSpace(decal) ? null : decal;
         }
 

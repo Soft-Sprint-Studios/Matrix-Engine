@@ -50,9 +50,9 @@ namespace Sledge.BspEditor.Primitives.MapObjectData
                 sub = behav.GetVector3(0) ?? Vector3.Zero;
                 add = behav.GetVector3(1) ?? Vector3.Zero;
             }
-            else if (cls.Name == "infodecal")
+            else if (cls.Name == "env_decal")
             {
-                // Special handling for infodecal if it's not specified
+                // Special handling for env_decal if it's not specified
                 sub = Vector3.One * -4;
                 add = Vector3.One * 4;
             }
