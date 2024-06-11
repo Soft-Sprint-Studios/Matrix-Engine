@@ -122,8 +122,8 @@ namespace Sledge.BspEditor.Tools.Texture
 				ApplyButton.Text = strings.GetString(prefix, "Apply");
 
 				RotationLabel.Text = strings.GetString(prefix, "Rotation");
-				LightmapLabel.Text = strings.GetString(prefix, "Lightmap");
-				SmoothingGroupsButton.Text = strings.GetString(prefix, "SmoothingGroups");
+				LightmapLabel.Text = strings.GetString(prefix, "");
+				SmoothingGroupsButton.Text = strings.GetString(prefix, "");
 
 				AlignGroup.Text = strings.GetString(prefix, "Align");
 				AlignToWorldCheckbox.Text = strings.GetString(prefix, "World");

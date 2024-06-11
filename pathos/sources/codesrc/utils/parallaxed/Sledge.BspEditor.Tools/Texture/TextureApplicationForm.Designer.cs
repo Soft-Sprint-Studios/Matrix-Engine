@@ -113,17 +113,6 @@
 			this.FilterRecentLabel.Text = "Filter Recent:";
 			this.FilterRecentLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 			// 
-			// SmoothingGroupsButton
-			// 
-			this.SmoothingGroupsButton.Enabled = false;
-			this.SmoothingGroupsButton.Location = new System.Drawing.Point(180, 69);
-			this.SmoothingGroupsButton.Name = "SmoothingGroupsButton";
-			this.SmoothingGroupsButton.Size = new System.Drawing.Size(117, 23);
-			this.SmoothingGroupsButton.TabIndex = 31;
-			this.SmoothingGroupsButton.Text = "Smoothing Groups";
-			this.SmoothingGroupsButton.UseVisualStyleBackColor = true;
-			this.SmoothingGroupsButton.Click += new System.EventHandler(this.SmoothingGroupsButtonClicked);
-			// 
 			// AlignGroup
 			// 
 			this.AlignGroup.Controls.Add(this.AlignToFaceCheckbox);
@@ -645,7 +634,6 @@
 			this.Controls.Add(this.HideMaskCheckbox);
 			this.Controls.Add(this.RecentFilterTextbox);
 			this.Controls.Add(this.FilterRecentLabel);
-			this.Controls.Add(this.SmoothingGroupsButton);
 			this.Controls.Add(this.AlignGroup);
 			this.Controls.Add(this.JustifyGroup);
 			this.Controls.Add(this.ApplyButton);
@@ -655,8 +643,8 @@
 			this.Controls.Add(this.RotationLabel);
 			this.Controls.Add(this.TextureDetailsLabel);
 			this.Controls.Add(this.tableLayoutPanel1);
-			this.Controls.Add(this.LightmapLabel);
-			this.Controls.Add(this.LightmapValue);
+			//this.Controls.Add(this.LightmapLabel);
+			//this.Controls.Add(this.LightmapValue);
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
 			this.Name = "TextureApplicationForm";
 			this.ShowIcon = false;

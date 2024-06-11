@@ -13,6 +13,7 @@ uniform float aoscale;
 
 uniform float phong_exponent;
 uniform float specfactor;
+uniform float cubemapnormal;
 uniform float interpolant;
 uniform float cubemapstrength;
 uniform float decalalpha;
@@ -121,49 +122,6 @@ float CalcFresnel(vec3 eyeVec, vec3 reflectVec) {
     return baseReflectance + (1.0 - baseReflectance) * factor;
 }
 
-#define PI 3.14159265359
-
-vec3 CalcWardSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, vec3 viewDir, float specularStrength, vec3 specularColor, float roughnessX, float roughnessY) {
-    // Calculate halfway vector
-    vec3 halfway = normalize(lightDir + viewDir);
-    
-    // Calculate tangent and bitangent vectors
-    vec3 tangent = normalize(cross(vec3(0.0, 1.0, 0.0), v_normal));
-    vec3 bitangent = normalize(cross(v_normal, tangent));
-    
-    // Transform halfway vector into tangent space
-    vec3 halfwayTangentSpace = vec3(dot(halfway, tangent), dot(halfway, bitangent), dot(halfway, v_normal));
-    
-    // Transform light and view directions into tangent space
-    vec3 lightDirTangentSpace = vec3(dot(lightDir, tangent), dot(lightDir, bitangent), dot(lightDir, v_normal));
-    vec3 viewDirTangentSpace = vec3(dot(viewDir, tangent), dot(viewDir, bitangent), dot(viewDir, v_normal));
-    
-    // Calculate roughness parameters in tangent space
-    float roughnessXTS = roughnessX * roughnessX;
-    float roughnessYTS = roughnessY * roughnessY;
-    
-    // Calculate Gaussian distribution function
-    float D = exp(-(halfwayTangentSpace.x * halfwayTangentSpace.x / roughnessXTS +
-                    halfwayTangentSpace.y * halfwayTangentSpace.y / roughnessYTS)) /
-              (PI * roughnessXTS * roughnessYTS * sqrt(PI));
-    
-    // Calculate Fresnel term
-    float cosThetaH = halfwayTangentSpace.z;
-    float F = CalcFresnel(dot(viewDir, halfway), specularColor);
-    
-    // Calculate geometric attenuation factor
-    float G = min(1.0, 2.0 * cosThetaH * min(dot(viewDir, halfway), dot(lightDir, halfway)) /
-                       dot(viewDir, halfway));
-    
-    // Calculate specular component
-    vec3 specularComponent = D * F * G / (4.0 * max(dot(v_normal, lightDir), 0.0) * max(dot(v_normal, viewDir), 0.0));
-    
-    // Apply specular color and strength
-    vec3 finalSpecular = specularColor * vec3(specularComponent) * specularStrength;
-    
-    return finalSpecular;
-}
-
 float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
     vec3 eyeVec = normalize(-v_origin);
     vec3 reflectVec = reflect(lightDir, v_normal);
@@ -175,12 +133,14 @@ float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularSt
 
     float roughness = 1.0 - specularColor.a;
 
-    vec3 finalSpecularWard = CalcWardSpecular(v_origin, v_normal, lightDir, eyeVec, specularStrength, specularTint, roughness, roughness);
+    float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    float fresnel = CalcFresnel(eyeVec, reflectVec);
+    vec3 finalSpecular = mix(specularTint, vec3(1.0), fresnel) * specularComponent;
 
     float diffuseReflectance = OrenNayarReflectance(v_normal, lightDir, eyeVec, roughness);
     float lambertian = max(dot(v_normal, lightDir), 0.0);
 
-    return (diffuseReflectance + lambertian) * dot(finalSpecularWard, vec3(1.0));
+    return (diffuseReflectance + lambertian) * dot(finalSpecular, vec3(1.0));
 }
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
@@ -374,6 +334,24 @@ vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength
 
     vec4 finalColor = specularValue * lightDiffuse * shineFactor;
     return finalColor;
+}
+
+vec4 CubemapBlur(vec3 reflectvector, float blur) {
+    vec4 color = vec4(0.0);
+    float totalWeight = 0.0;
+    const int samples = 16; // Adjust the number of samples for more/less blur
+
+    for (int i = 0; i < samples; ++i) {
+        float theta = mix(0.0, 2.0 * 3.14159265, float(i) / float(samples));
+        float phi = mix(0.0, 3.14159265, float(i) / float(samples));
+        vec3 sampleVector = reflectvector +
+                            blur * vec3(sin(phi) * cos(theta), sin(phi) * sin(theta), cos(phi));
+        sampleVector = normalize(sampleVector);
+        color += textureCube(cubemap, sampleVector);
+        totalWeight += 1.0;
+    }
+
+    return color / totalWeight;
 }
 
 vec4 AddCubemaps( float reflectivity )

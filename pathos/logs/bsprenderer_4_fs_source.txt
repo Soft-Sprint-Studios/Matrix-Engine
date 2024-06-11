@@ -1,25 +1,21 @@
 #version 460
 
+uniform samplerCube cubemap;
+uniform samplerCube cubemap_prev;
 uniform sampler2D baselightmap;
 uniform sampler2D maintexture;
-uniform sampler2D maintexture2;
-uniform sampler2D blendmap;
 uniform sampler2D detailtex;
 uniform sampler2D chrometex;
 uniform sampler2D normalmap;
-uniform sampler2D normalmap2;
 uniform sampler2D difflightmap;
 uniform sampler2D lightvecstex;
 uniform sampler2D speculartex;
-uniform sampler2D speculartex2;
-uniform sampler2D heightmap;
-uniform float parallaxscale;
 uniform sampler2D aomaptex;
-uniform sampler2D aomaptex2;
 uniform float aoscale;
 
 uniform float phong_exponent;
 uniform float specfactor;
+uniform float cubemapnormal;
 uniform float interpolant;
 uniform float cubemapstrength;
 uniform float decalalpha;
@@ -48,31 +44,12 @@ in vec3 ps_vertexpos; // for radial fog
 
 
 
+in vec3 ps_cubenormal;
+in vec3 ps_cubetangent;
+in vec3 ps_cubebinormal;
+in vec3 ps_cubevertexpos;
 out vec4 oColor;
 
-vec2 parallaxOcclusionMapping(vec2 texCoords, sampler2D texture, vec3 viewDir, vec3 normal, float heightScale) {
-    int iterations = 64;
-    float minLayers = 64.0;
-    float maxLayers = 64.0;
-    float numLayers = mix(maxLayers, minLayers, length(viewDir));
-
-    vec3 viewDirProj = normalize(viewDir - dot(viewDir, normal) * normal);
-    float height = texture2D(texture, texCoords).r * heightScale;
-    vec2 deltaTexCoord = viewDirProj.xy * height / numLayers;
-    vec2 currentTexCoords = texCoords;
-
-    for (int i = 0; i < iterations; ++i) {
-        float currentHeight = texture2D(texture, currentTexCoords).r * heightScale;
-        if (currentHeight > currentTexCoords.y) {
-            currentTexCoords -= deltaTexCoord;
-        } else {
-            currentTexCoords += deltaTexCoord;
-        }
-        deltaTexCoord /= 2.0;
-    }
-
-    return currentTexCoords;
-}
 float CalcShininess( vec3 v_origin, vec3 v_normal, vec3 l_origin )
 {
 return 1.0;
@@ -121,25 +98,56 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 	return p_max*sgn+(1.0-sgn);
 }
 
+float OrenNayarReflectance(vec3 v_normal, vec3 lightDir, vec3 viewDir, float roughness) {
+    float sigma2 = roughness * roughness;
+    float A = 1.0 - 0.5 * sigma2 / (sigma2 + 0.33);
+    float B = 0.45 * sigma2 / (sigma2 + 0.09);
+    
+    float cosThetaI = dot(lightDir, v_normal);
+    float cosThetaR = dot(viewDir, v_normal);
+    
+    float thetaI = acos(cosThetaI);
+    float thetaR = acos(cosThetaR);
+    
+    float alpha = max(thetaI, thetaR);
+    float beta = min(thetaI, thetaR);
+    
+    vec3 lightPerpendicular = normalize(lightDir - v_normal * cosThetaI);
+    vec3 viewPerpendicular = normalize(viewDir - v_normal * cosThetaR);
+    
+    float cosPhiDiff = max(0.0, dot(lightPerpendicular, viewPerpendicular));
+    
+    float diffuse = A + B * cosPhiDiff * sin(alpha) * tan(beta);
+    
+    return diffuse;
+}
+
+float CalcFresnel(vec3 eyeVec, vec3 reflectVec) {
+    float baseReflectance = 0.04;
+    float factor = pow(1.0 - dot(eyeVec, reflectVec), 5.0);
+    return baseReflectance + (1.0 - baseReflectance) * factor;
+}
+
 float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
     vec3 eyeVec = normalize(-v_origin);
     vec3 reflectVec = reflect(lightDir, v_normal);
     float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
     
-    vec4 specularColor;
-    float specularReflectance;
-    vec3 specularTint;
-    float specularComponent;
+    vec4 specularColor = texture(speculartex, ps_texcoord.xy);
+    float specularReflectance = specularColor.r;
+    vec3 specularTint = specularColor.rgb;
 
-    specularColor = texture(speculartex, v_origin.xy);
-        specularReflectance = specularColor.r;
-        specularTint = specularColor.rgb;
-        specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
-    vec3 finalSpecular = specularComponent * specularTint;
-    
-    return dot(finalSpecular, vec3(1.0));
+    float roughness = 1.0 - specularColor.a;
+
+    float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
+    float fresnel = CalcFresnel(eyeVec, reflectVec);
+    vec3 finalSpecular = mix(specularTint, vec3(1.0), fresnel) * specularComponent;
+
+    float diffuseReflectance = OrenNayarReflectance(v_normal, lightDir, eyeVec, roughness);
+    float lambertian = max(dot(v_normal, lightDir), 0.0);
+
+    return (diffuseReflectance + lambertian) * dot(finalSpecular, vec3(1.0));
 }
-
 
 vec4 AddPointLight( float l_radius, vec3 l_origin, vec3 l_color, vec3 v_origin, vec3 v_normal, float specularStrength )
 {
@@ -259,16 +267,13 @@ vec3 GetEyeSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal, mat3 
 {
 return v_normal;
 }
-	vec3 lightDir = GetLightDir(lightvecstex);
-    vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
-    mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-    vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
-    vec2 ParallaxTexCoords = parallaxOcclusionMapping(ps_texcoord, heightmap, eyeSpaceDir, parallaxscale);
-    vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
+
+vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
 {
 vec4 lightmapColor = texture2D(ambLightmap, ps_lmapcoord);
 	return clamp(lightmapColor, 0, 1); // To prevent multipass inconsistencies
 }
+
 float SplineFraction( float value, float scale )
 {
 	float valueSquared;
@@ -306,13 +311,14 @@ vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength 
 	vec4 lightDiffuse = GetDiffuseLight( difflightmap );
 	vec4 finalColor = AddBaseLight(baselightmap, lightDiffuse, lightDir, v_normal);
 
-	vec4 texColor = texture2D(maintexture, ParallaxTexCoords);
+	vec4 texColor = texture2D(maintexture, ps_texcoord);
 		vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
 		
 		finalColor = finalColor*texColor*detailTexColor;
 		finalColor.xyz = finalColor.xyz*4;
 	return finalColor;
 }
+
 vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength)
 {
     vec3 lightDir = GetLightDir(lightvecstex);
@@ -326,23 +332,63 @@ vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength
     float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
     float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
 
-    // Calculate view direction in eye space
     vec3 viewDir = normalize(v_origin);
-    
-    // Calculate the Fresnel effect
+
     float fresnel = pow(1.0 - dot(eyeSpaceNormal, viewDir), 5.0);
 
-    // Modulate the specular value by the Fresnel effect
     specularValue *= fresnel;
 
     vec4 finalColor = specularValue * lightDiffuse * shineFactor;
     return finalColor;
 }
 
-vec4 AddCubemaps( float reflectivity )
-{ 
-	return vec4(0, 0, 0, 0);
-	}
+vec4 GetCubemapPixel ( vec3 reflectvec )
+{
+	vec4 outColor;
+	outColor = texture(cubemap, reflectvec);
+	return outColor * cubemapstrength;
+}
+vec4 CubemapBlur(vec3 reflectvector, float blur) {
+    vec4 color = vec4(0.0);
+    float totalWeight = 0.0;
+
+    // Generate offsets for blurring
+    vec3 offsets[6] = vec3[](
+        vec3(blur, 0.0, 0.0),
+        vec3(-blur, 0.0, 0.0),
+        vec3(0.0, blur, 0.0),
+        vec3(0.0, -blur, 0.0),
+        vec3(0.0, 0.0, blur),
+        vec3(0.0, 0.0, -blur)
+    );
+
+    // Sample the original reflection vector
+    vec4 originalSample = GetCubemapPixel(reflectvector);
+    color += originalSample;
+    totalWeight += 1.0;
+
+    // Sample the surrounding reflection vectors
+    for (int i = 0; i < 6; i++) {
+        vec3 offsetVector = reflectvector + offsets[i];
+        vec4 sample = GetCubemapPixel(normalize(offsetVector));
+        float weight = 1.0 / length(offsets[i]); // Weight based on distance from center
+        color += sample * weight;
+        totalWeight += weight;
+    }
+
+    // Normalize the color by the total weight
+    color /= totalWeight;
+
+    return color;
+}
+vec4 AddCubemaps(float reflectivity) { 
+    vec3 v_normal;
+        v_normal = ps_cubenormal;
+        vec3 reflectvector = normalize(-reflect(normalize(ps_cubevertexpos), normalize(v_normal)));
+        vec4 blurredColor = CubemapBlur(reflectvector, 10.0);
+        return blurredColor * pow(reflectivity, 16);
+    }
+
 void main()
 {
 	float specularFactor = 0.0;
@@ -350,10 +396,13 @@ void main()
 	vec4 finalColor = vec4(0, 0, 0, 0);
 
 
-	vec3 v_normal = GetTangentSpaceNormal(ParallaxTexCoords, normalmap, ps_normal);
+	vec4 specTexture = texture2D(speculartex, ps_texcoord);
+		    specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
+vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
 
             finalColor = CombineTextureLayers(ps_vertexpos, v_normal, specularFactor);
             finalColor *= color;
             
+            finalColor += AddCubemaps(specularFactor);
             oColor = finalColor;
 }

@@ -1,2 +1,1 @@
-0(152) : error C7011: implicit cast from "float" to "vec3"
-0(159) : error C7011: implicit cast from "float" to "vec3"
+0(350) : error C1503: undefined variable "cubemap"

@@ -5,7 +5,7 @@ $texture
 	$material concrete
 	$cubemaps
 	$cubemapstrength 10
-	$cubemapnormal 0.5
+	$cubemapnormal 0.0
 	$texture diffuse world/slatefloor01/slatefloor01.dds
 	$texture normal world/slatefloor01/slatefloor01_normal.dds
 	$texture specular world/slatefloor01/slatefloor01_specular.dds

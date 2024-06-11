@@ -24,7 +24,7 @@ namespace Sledge.BspEditor.Rendering
 		[Setting] public static Color FractionalGridLineColour { get; set; } = Color.FromArgb(32, 32, 32);
 		[Setting] public static Color StandardGridLineColour { get; set; } = Color.FromArgb(75, 75, 75);
 		[Setting] public static Color PrimaryGridLineColour { get; set; } = Color.FromArgb(115, 115, 115);
-		[Setting] public static Color SecondaryGridLineColour { get; set; } = Color.FromArgb(100, 46, 0);
+		[Setting] public static Color SecondaryGridLineColour { get; set; } = Color.FromArgb(222, 46, 0);
 		[Setting] public static Color AxisGridLineColour { get; set; } = Color.FromArgb(0, 100, 100);
 		[Setting] public static Color BoundaryGridLineColour { get; set; } = Color.Red;
 		[Setting("UnfocusedViewportTargetFps")] private int _targetFps { get; set; } = 10;
