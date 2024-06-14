@@ -460,36 +460,6 @@ float DepthTestProj( float depthcoord, sampler2D shadowmap, vec4 coord )
 	return p_max*sgn+(1.0-sgn);
 }
 
-float CalcFresnel(vec3 eyeVec, vec3 reflectVec) {
-    float baseReflectance = 0.04;
-    float factor = pow(1.0 - dot(eyeVec, reflectVec), 5.0);
-    return baseReflectance + (1.0 - baseReflectance) * factor;
-}
-
-float OrenNayarReflectance(vec3 v_normal, vec3 lightDir, vec3 viewDir, float roughness) {
-    float sigma2 = roughness * roughness;
-    float A = 1.0 - 0.5 * sigma2 / (sigma2 + 0.33);
-    float B = 0.45 * sigma2 / (sigma2 + 0.09);
-    
-    float cosThetaI = dot(lightDir, v_normal);
-    float cosThetaR = dot(viewDir, v_normal);
-    
-    float thetaI = acos(cosThetaI);
-    float thetaR = acos(cosThetaR);
-    
-    float alpha = max(thetaI, thetaR);
-    float beta = min(thetaI, thetaR);
-    
-    vec3 lightPerpendicular = normalize(lightDir - v_normal * cosThetaI);
-    vec3 viewPerpendicular = normalize(viewDir - v_normal * cosThetaR);
-    
-    float cosPhiDiff = max(0.0, dot(lightPerpendicular, viewPerpendicular));
-    
-    float diffuse = A + B * cosPhiDiff * sin(alpha) * tan(beta);
-    
-    return diffuse;
-}
-
 float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularStrength) {
     vec3 eyeVec = normalize(-v_origin);
     vec3 reflectVec = reflect(lightDir, v_normal);
@@ -498,17 +468,11 @@ float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularSt
     vec4 specularColor = texture(spectexture, ps_texcoord1.xy);
     float specularReflectance = specularColor.r;
     vec3 specularTint = specularColor.rgb;
-
-    float roughness = 1.0 - specularColor.a;
-
     float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
-    float fresnel = CalcFresnel(eyeVec, reflectVec);
-    vec3 finalSpecular = mix(specularTint, vec3(1.0), fresnel) * specularComponent;
 
-    float diffuseReflectance = OrenNayarReflectance(v_normal, lightDir, eyeVec, roughness);
-	float lambertian = max(dot(v_normal, lightDir), 0.0);
-
-    return (diffuseReflectance + lambertian) * dot(finalSpecular, vec3(1.0));
+    vec3 finalSpecular = mix(specularTint, vec3(1.0), 1.0) * specularComponent;
+    
+    return dot(finalSpecular, vec3(1.0));
 }
 
 vec4 AddModelLight( vec3 l_origin, vec3 l_color, float l_radius, vec3 v_origin, vec3 v_normal, float specularStrength )

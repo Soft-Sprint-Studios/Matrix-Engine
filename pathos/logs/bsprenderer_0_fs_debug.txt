@@ -1,1 +1,1 @@
-0(350) : error C1503: undefined variable "cubemap"
+0(105) : error C1115: unable to find compatible overloaded function "mix(vec3, vec3)"
