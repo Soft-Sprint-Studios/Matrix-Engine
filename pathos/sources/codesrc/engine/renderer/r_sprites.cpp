@@ -30,7 +30,7 @@ All Rights Reserved.
 #include "r_glqueries.h"
 
 // Max rendered sprites
-const Uint32 CSpriteRenderer::MAX_RENDERED_SPRITES = 4096;
+const Uint32 CSpriteRenderer::MAX_RENDERED_SPRITES = 65536;
 
 // Glow interpolation speed
 const Float CSpriteRenderer::GLOW_INTERP_SPEED = 2;

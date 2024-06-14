@@ -1857,7 +1857,6 @@ bool CBSPRenderer::DrawFirst( void )
 				m_pShader->SetUniformMatrix4fv(m_attribs.u_inv_modelmatrix, modelMatrix.GetInverse());
 				m_pShader->SetUniform1f(m_attribs.u_cubemapstrength, pmaterial->cubemapstrength);
 				m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
-				m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 			}
 			else if(cubematrixSet)
 			{
@@ -2119,9 +2118,10 @@ bool CBSPRenderer::DrawFirst( void )
 				if (!m_pShader->SetDeterminator(m_attribs.d_ao, TRUE))
 					return false;
 
-				en_texture_t* aotexture = pmaterial->ptextures[MT_TX_AO];
+				en_texture_t* paotexture = pmaterial->ptextures[MT_TX_AO];
+				m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 				m_pShader->SetUniform1i(m_attribs.u_aomap, textureIndex);
-				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, aotexture->palloc->gl_index);
+				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, paotexture->palloc->gl_index);
 				textureIndex++;
 
 				// We'll need texcoords
@@ -2423,21 +2423,23 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 		if(!m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false))
 			return false;
 	}
+
 	if (g_pCvarAoMaps->GetValue() > 0)
 	{
 		if (pmaterial->ptextures[MT_TX_AO])
 		{
-			if (!m_pShader->SetDeterminator(m_attribs.d_ao, TRUE))
+			if (!m_pShader->SetDeterminator(m_attribs.d_ao, TRUE, false))
 				return false;
 
-			en_texture_t* aotexture = pmaterial->ptextures[MT_TX_AO];
+			en_texture_t* paotexture = pmaterial->ptextures[MT_TX_AO];
+			m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 			m_pShader->SetUniform1i(m_attribs.u_aomap, textureIndex);
-			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, aotexture->palloc->gl_index);
+			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, paotexture->palloc->gl_index);
 			textureIndex++;
 		}
 		else
 		{
-			if (!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE))
+			if (!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false))
 				return false;
 		}
 	}
@@ -3406,7 +3408,6 @@ bool CBSPRenderer::DrawFinal( void )
 			
 			m_pShader->SetUniform1f(m_attribs.u_cubemapstrength, pmaterial->cubemapstrength);
 			m_pShader->SetUniform1f(m_attribs.u_cubemapnormal, pmaterial->cubemapnormal);
-			m_pShader->SetUniform1f(m_attribs.u_aoscale, pmaterial->aoscale);
 
 			// Bind specular texture
 			m_pShader->SetUniform1i(m_attribs.u_specular, texbase);
@@ -3430,23 +3431,6 @@ bool CBSPRenderer::DrawFinal( void )
 
 				if(!m_pShader->SetDeterminator(m_attribs.d_bumpmapping, false))
 					return false;
-			}
-			if (g_pCvarAoMaps->GetValue() > 0)
-			{
-				if (pmaterial->ptextures[MT_TX_AO])
-				{
-					if (!m_pShader->SetDeterminator(m_attribs.d_ao, TRUE))
-						return false;
-
-					en_texture_t* aotexture = pmaterial->ptextures[MT_TX_AO];
-					m_pShader->SetUniform1i(m_attribs.u_aomap, texbase);
-					R_Bind2DTexture(GL_TEXTURE0 + texbase, aotexture->palloc->gl_index);
-				}
-				else
-				{
-					if (!m_pShader->SetDeterminator(m_attribs.d_ao, FALSE))
-						return false;
-				}
 			}
 
 			R_ValidateShader(m_pShader);
