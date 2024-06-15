@@ -20,36 +20,6 @@ namespace Sledge.Shell
 		/// </summary>
 		public static event EventHandler<AggregateCatalog> BuildCatalog;
 
-        private static DiscordRpcClient client;
-
-        public static void DiscordRPCRun()
-        {
-            client = new DiscordRpcClient("1247241451344101396");
-
-            client.Logger = new ConsoleLogger() { Level = LogLevel.Warning };
-
-            client.OnReady += (sender, e) =>
-            {
-                Console.WriteLine($"Received Ready from user {e.User.Username}");
-            };
-
-            client.OnPresenceUpdate += (sender, e) =>
-            {
-                Console.WriteLine($"Received Update! {e.Presence}");
-            };
-
-            client.Initialize();
-
-            client.SetPresence(new RichPresence()
-            {
-                Details = "Parallax ED",
-                State = "Developing Parallax ED",
-                Assets = new Assets()
-                {
-                }
-            });
-        }
-
         /// <summary>
         /// Run the shell as an application using a container from the application catalog
         /// </summary>
@@ -65,7 +35,6 @@ namespace Sledge.Shell
 				var container = new CompositionContainer(catalog, CompositionOptions.DisableSilentRejection);
 
 				Run(container);
-                DiscordRPCRun();
             }
 			catch (Exception e)
 			{
@@ -117,8 +86,6 @@ namespace Sledge.Shell
 			};
 
 			si.Run(Environment.GetCommandLineArgs());
-
-			DiscordRPCRun();
         }
 
 		private static void UnhandledException(Exception ex)

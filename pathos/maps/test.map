@@ -106,7 +106,7 @@
 "disableshadows" "0"
 "framerate" "1"
 "sequence" "0"
-"origin" "3987.000 -593.000 2173.000"
+"origin" "3987.000 -592.000 2173.000"
 }
 {
 "classname" "ambient_generic"
