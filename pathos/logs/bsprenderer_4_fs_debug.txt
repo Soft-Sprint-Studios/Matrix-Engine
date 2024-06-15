@@ -1,3 +1,0 @@
-0(373) : error C7537: OpenGL does not allow 'sample' after a type specifier
-0(373) : error C0000: syntax error, unexpected '=', expecting ';' or '(' at token "="
-0(375) : error C0000: syntax error, unexpected '*', expecting "::" at token "*"

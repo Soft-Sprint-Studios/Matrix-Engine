@@ -1,1 +1,0 @@
-0(320) : error C1038: declaration of "finalColor" conflicts with previous declaration at 0(317)

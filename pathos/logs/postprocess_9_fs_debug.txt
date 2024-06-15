@@ -1,5 +1,0 @@
-0(54) : error C1503: undefined variable "SSAORadius"
-0(55) : error C1503: undefined variable "SSAORadius"
-0(56) : error C1503: undefined variable "SSAORadius"
-0(57) : error C1503: undefined variable "SSAORadius"
-0(71) : error C1503: undefined variable "SSAOStrength"

@@ -1,1 +1,0 @@
-0(331) : error C1503: undefined variable "caustics2"

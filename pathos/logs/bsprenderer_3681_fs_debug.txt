@@ -1,2 +1,0 @@
-0(328) : error C1038: declaration of "tex0" conflicts with previous declaration at 0(323)
-0(329) : error C1038: declaration of "tex1" conflicts with previous declaration at 0(324)

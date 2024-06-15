@@ -1,1 +1,0 @@
-0(356) : error C1038: declaration of "blendValue" conflicts with previous declaration at 0(353)

@@ -1,1 +1,0 @@
-0(19) : error C5052: gl_Position is not accessible in this profile

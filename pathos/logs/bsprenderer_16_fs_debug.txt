@@ -1,1 +1,0 @@
-0(331) : error C1103: too few parameters in function call

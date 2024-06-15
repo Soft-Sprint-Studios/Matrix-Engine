@@ -1,8 +1,0 @@
-Fragment info
--------------
-0(18) : warning C7050: "kernel[7]" might be used before being initialized
-0(18) : warning C7050: "kernel[8]" might be used before being initialized
-0(18) : warning C7050: "kernel[9]" might be used before being initialized
-0(18) : warning C7050: "kernel[10]" might be used before being initialized
-0(18) : warning C7050: "kernel[11]" might be used before being initialized
-0(18) : warning C7050: "kernel[12]" might be used before being initialized

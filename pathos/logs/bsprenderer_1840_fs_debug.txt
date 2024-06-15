@@ -1,1 +1,0 @@
-0(320) : error C1503: undefined variable "maintexture2"

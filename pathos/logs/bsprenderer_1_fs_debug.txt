@@ -1,2 +1,0 @@
-0(328) : error C1503: undefined variable "aotex"
-0(328) : error C1503: undefined variable "ps_texcoord1"
