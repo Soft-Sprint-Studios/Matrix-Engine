@@ -270,17 +270,31 @@ namespace Sledge.BspEditor.Tools
 
             foreach (var cam in GetCameraList(document))
             {
-                var p1 = camera.WorldToScreen(cam.EyePosition);
-                var p2 = camera.WorldToScreen(cam.LookPosition);
-                
+                var p1 = camera.WorldToScreen(cam.EyePosition).ToVector2();
+                var p2 = camera.WorldToScreen(cam.LookPosition).ToVector2();
+
                 var lineColor = cam.IsActive ? Color.Red : Color.Cyan;
                 var handleColor = cam.IsActive ? Color.DarkOrange : Color.LawnGreen;
 
-                im.AddLine(p1.ToVector2(), p2.ToVector2(), lineColor);
-                im.AddCircleFilled(p1.ToVector2(), 4, handleColor);
-                im.AddCircle(p1.ToVector2(), 4, Color.Black);
-                
-                // todo post-beta: triangle arrow for cameras in 2D?
+                im.AddLine(p1, p2, lineColor);
+                im.AddCircleFilled(p1, 4, handleColor);
+                im.AddCircle(p1, 4, Color.Black);
+
+                var arrowDirection = (cam.LookPosition - cam.EyePosition).Normalise();
+                var arrowLength = 20;
+                var arrowWidth = 6;
+
+                var arrowEnd = cam.LookPosition.ToVector2();
+                var arrowStart = arrowEnd - arrowDirection.ToVector2() * arrowLength;
+
+                var perpDirection = new Vector2(-arrowDirection.Y, arrowDirection.X);
+
+                var arrowBase1 = arrowStart + perpDirection * arrowWidth / 2;
+                var arrowBase2 = arrowStart - perpDirection * arrowWidth / 2;
+
+                im.AddLine(arrowStart, arrowEnd, Color.Yellow);
+                im.AddLine(arrowEnd, arrowBase1, Color.Yellow);
+                im.AddLine(arrowEnd, arrowBase2, Color.Yellow);
             }
         }
     }

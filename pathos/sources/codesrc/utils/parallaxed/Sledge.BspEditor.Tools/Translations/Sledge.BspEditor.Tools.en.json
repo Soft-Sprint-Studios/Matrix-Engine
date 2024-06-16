@@ -329,12 +329,4 @@
       "NewLibPlaceholder": "New Library name"
     }
   },
-
-  "PropExporter": {
-    "PropExporterCommand": {
-      "Name": "Create mdl prop",
-      "Description": "Create prop from selection"
-    }
-  }
-
 }

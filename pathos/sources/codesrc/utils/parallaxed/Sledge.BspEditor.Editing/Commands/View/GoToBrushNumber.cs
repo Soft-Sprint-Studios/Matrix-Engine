@@ -26,8 +26,8 @@ namespace Sledge.BspEditor.Editing.Commands.View
 	[MenuImage(typeof(Resources), nameof(Resources.Menu_GoToBrushEntityID))]
 	public class GoToBrushNumber : BaseCommand
 	{
-		const int ENTITY_LIMIT = 16384;
-		const int SOLID_BRUSH_LIMIT = 16384;
+		const int ENTITY_LIMIT = 262144;
+		const int SOLID_BRUSH_LIMIT = 1048576;
 		public override string Name { get; set; } = "Go to brush ID";
 		public override string Details { get; set; } = "Select and center views on a specific object ID.";
 

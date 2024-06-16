@@ -52,7 +52,7 @@ namespace Sledge.BspEditor.Primitives.MapData
             info.AddValue("ID", ID);
             info.AddValue("Name", Name);
             info.AddValue("Visible", Visible);
-            // Colour??
+            info.AddValue("Colour", Colour);
         }
 
         public virtual IMapElement Clone()

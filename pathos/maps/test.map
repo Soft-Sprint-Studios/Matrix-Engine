@@ -112,7 +112,7 @@
 "classname" "ambient_generic"
 "spawnflags" "1"
 "targetname" ""
-"message" "ambience/wind1.ogg"
+"message" "music/testmusic2.mp3"
 "health" "10"
 "volstart" "0"
 "fadein" "0"
