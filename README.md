@@ -9,4 +9,4 @@ Intuitive Tools: Streamline your development process with Parallax Engine's intu
 
 Flexible Architecture: With a modular and flexible architecture inherited from Pathos Engine, Parallax Engine offers developers the freedom to customize and extend the engine to suit their specific needs.
 
-Copyright © 2024 Mythic Legend Interactive. All rights reserved.
+Copyright © 2024 Soft Sprint Studios. All rights reserved.
