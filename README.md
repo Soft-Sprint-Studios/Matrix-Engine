@@ -1,17 +1,12 @@
-# Parallax Engine - Private Release
-Welcome to the Parallax Engine, developed by Mythic Legend Interactive. This engine is a fork from the Pathos Engine, which is licensed under the MIT License. The Parallax Engine has been customized and adapted for our specific needs, and this version is currently for internal use only.
+# Parallax Engine - Public Release
+Welcome to the Parallax Engine, developed by Soft Sprint Studios. This engine is a fork from the Pathos Engine, which is licensed under the MIT License. The Parallax Engine has been customized and adapted for our specific needs and improved graphics.
 
-# Disclaimer
-This version of the Parallax Engine is part of a private release and is not intended for public distribution. Only modified files from the original Pathos Engine are considered closed source in this release. For convenience, all files are contained within a single repository.
+# Key Features
 
-As this version of the Parallax Engine is for internal use only.
+Powerful Rendering: Immerse yourself in captivating worlds with Parallax Engine's rendering capabilities designed to create immersive environments, The graphical improvments are already promissing seeing features like Two Blended Textures Bloom,Vignetting,Chromatic Abberation,Tonemapping and soon more to create engaging gameplay experiences.
 
-# Support
-For any questions or issues regarding the Parallax Engine, please contact our development team at Mythic-Legend-Interactive-Contact@protonmail.com
+Intuitive Tools: Streamline your development process with Parallax Engine's intuitive tools and editor, enabling rapid prototyping and seamless iteration.
 
-# License
-Please read the original Pathos Engine License beforehand at https://github.com/Mythic-Legend-Interactive/Parallax-Engine/blob/main/Original-Readme
-
-The Parallax Engine is currently closed-source and proprietary to Mythic Legend Interactive. Unauthorized distribution or modification of the engine or its associated files is strictly prohibited.
+Flexible Architecture: With a modular and flexible architecture inherited from Pathos Engine, Parallax Engine offers developers the freedom to customize and extend the engine to suit their specific needs.
 
 Copyright © 2024 Mythic Legend Interactive. All rights reserved.
