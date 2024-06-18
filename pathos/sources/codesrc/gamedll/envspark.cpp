@@ -75,7 +75,7 @@ bool CEnvSpark::KeyValue(const keyvalue_t& kv)
 // @brief
 //
 //=============================================
-void CEnvSpark::Precache()
+void CEnvSpark::Precache(void)
 {
 	if (!m_soundName.empty())
 		gd_engfuncs.pfnPrecacheSound(m_soundName.c_str());
