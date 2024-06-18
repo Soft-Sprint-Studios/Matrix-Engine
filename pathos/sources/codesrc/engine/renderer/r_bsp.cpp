@@ -1438,6 +1438,9 @@ bool CBSPRenderer::Prepare( void )
 		m_texturesArray[i].psurfchain = nullptr;
 	}
 
+	// Disable this for VSM
+	m_addMulti = false;
+
 	// Reset everything
 	for(Uint32 i = 0; i < MAX_BATCH_LIGHTS; i++)
 	{
