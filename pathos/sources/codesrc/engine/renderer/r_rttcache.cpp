@@ -161,7 +161,7 @@ rtt_texture_t* CRenderToTextureCache :: Alloc( Uint32 width, Uint32 height, bool
 // CRenderToTextureCache :: CreateTexture
 // Purpose:
 //=======================================
-void CRenderToTextureCache :: CreateTexture( rtt_texture_t* ptexture, rs_level_t level )
+void CRenderToTextureCache::CreateTexture(rtt_texture_t* ptexture, rs_level_t level)
 {
 	// Create the OGL texture
 	GLenum target = ptexture->rectangle ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
@@ -173,7 +173,17 @@ void CRenderToTextureCache :: CreateTexture( rtt_texture_t* ptexture, rs_level_t
 	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, ptexture->rectangle ? GL_NEAREST : GL_LINEAR);
 	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, ptexture->rectangle ? GL_NEAREST : GL_LINEAR);
 	glTexImage2D(target, 0, ptexture->internalformat, ptexture->width, ptexture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+	GLuint depthBuffer;
+	glGenTextures(1, &depthBuffer);
+	glBindTexture(target, depthBuffer);
+	glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexImage2D(target, 0, GL_DEPTH_COMPONENT24, ptexture->width, ptexture->height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
 }
+
 
 //=======================================
 // CRenderToTextureCache :: Free

@@ -65,26 +65,11 @@
 "origin" "3984.000 -832.000 2176.000"
 }
 {
-"classname" "env_dlight"
-"spawnflags" "1"
-"sequence" "0"
-"skin" "0"
-"oscillationh" "0"
-"oscillationv" "0"
-"rendercolor" "255 255 255 0"
-"renderamt" "300"
-"interp" "0"
-"lightstyle" "0"
-"renderfx" "0"
-"targetname" "dlight01"
-"origin" "4104.000 -576.000 2240.000"
-}
-{
 "classname" "light"
 "_falloff" "0"
 "_fade" "1.0"
 "style" "0"
-"_light" "127 127 255 1000"
+"_light" "255 255 255 191"
 "angles" "10 31 0"
 "origin" "4048.000 -800.000 2528.000"
 }
@@ -121,28 +106,13 @@
 "disableshadows" "0"
 "framerate" "1"
 "sequence" "0"
-"origin" "3987.000 -593.000 2173.000"
-}
-{
-"classname" "env_dlight"
-"spawnflags" "1"
-"sequence" "0"
-"skin" "0"
-"oscillationh" "0"
-"oscillationv" "0"
-"rendercolor" "255 255 255"
-"renderamt" "300"
-"interp" "0"
-"lightstyle" "0"
-"renderfx" "0"
-"targetname" "dlight01"
-"origin" "4080.000 -912.000 2240.000"
+"origin" "3987.000 -592.000 2173.000"
 }
 {
 "classname" "ambient_generic"
 "spawnflags" "1"
 "targetname" ""
-"message" "ambience/wind1.ogg"
+"message" "music/testmusic2.mp3"
 "health" "10"
 "volstart" "0"
 "fadein" "0"
@@ -167,4 +137,9 @@
 "spindown" "0"
 "radius" "0"
 "origin" "3902.177 -794.656 2144.000"
+}
+{
+"classname" "env_decal"
+"message" "aaatrigger"
+"origin" "3488.000 -818.567 2348.387"
 }
