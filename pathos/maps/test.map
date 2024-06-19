@@ -138,3 +138,9 @@
 "sound" "debris/concrete_break1.wav"
 "origin" "4176.000 -669.852 2385.391"
 }
+{
+"classname" "env_explosion"
+"targetname" ""
+"imagnitude" "100"
+"origin" "4176.000 -806.182 2394.615"
+}

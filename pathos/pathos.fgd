@@ -903,6 +903,8 @@
 @PointClass base(Targetname) size(-16 -16 -16, 16 16 16) = env_explosion : "Explosion" 
 [
   iMagnitude(Integer) : "Magnitude" : 100
+  radius(Integer) : "Radius" : 1
+  dmg(Integer) : "Damage" : 1
   spawnflags(flags) =
   [
     1: "No Damage" : 0
@@ -1263,7 +1265,7 @@
 @PointClass base(Targetname, Angles) size(-16 -16 -16, 16 16 16) = env_spark : "Spark" 
 [
   MaxDelay(string) : "Max Delay" : "0"
-  sound(sound) : "Sound of the spark" : "0"
+  sound(sound) : "path/filename.wav of WAV" : ""
   spawnflags(flags) =
   [
     32: "Toggle" : 0

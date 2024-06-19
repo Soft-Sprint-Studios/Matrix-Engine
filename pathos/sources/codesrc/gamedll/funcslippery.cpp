@@ -54,9 +54,7 @@ bool CFuncSlippery::KeyValue( const keyvalue_t& kv )
 	if(!qstrcmp(kv.keyname, "factor"))
 	{
 		Float factor = SDL_atof(kv.value);
-		if(factor > 10)
-			factor = 10;
-		else if(factor < 0)
+		if(factor < 0)
 			factor = 0;
 
 		Float factorAdd = ((1.0 - DEFAULT_ONGROUND_LOWER_CAP) - 0.1) * (factor / 10.0f);

@@ -112,7 +112,7 @@
 "classname" "ambient_generic"
 "spawnflags" "1"
 "targetname" ""
-"message" "ambience/wind1.ogg"
+"message" "player/pl_die1.flac"
 "health" "10"
 "volstart" "0"
 "fadein" "0"
@@ -126,20 +126,21 @@
 "origin" "3776.000 -720.000 2208.000"
 }
 {
-"classname" "ambient_generic"
-"fadein" "0"
-"volstart" "0"
-"fadeout" "0"
-"health" "10"
-"pitch" "100"
-"pitchstart" "100"
-"spinup" "0"
-"spindown" "0"
-"radius" "0"
-"origin" "3902.177 -794.656 2144.000"
-}
-{
 "classname" "env_decal"
 "message" "aaatrigger"
 "origin" "3488.000 -818.567 2348.387"
+}
+{
+"classname" "env_spark"
+"spawnflags" "64"
+"angles" "0 0 0"
+"maxdelay" "0"
+"sound" "debris/concrete_break1.wav"
+"origin" "4176.000 -669.852 2385.391"
+}
+{
+"classname" "env_explosion"
+"targetname" ""
+"imagnitude" "100"
+"origin" "4176.000 -806.182 2394.615"
 }
