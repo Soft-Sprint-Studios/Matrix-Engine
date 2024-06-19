@@ -9,4 +9,6 @@ Intuitive Tools: Streamline your development process with Parallax Engine's intu
 
 Flexible Architecture: With a modular and flexible architecture inherited from Pathos Engine, Parallax Engine offers developers the freedom to customize and extend the engine to suit their specific needs.
 
+To visit offical pathos repo that engine is forked from please visit https://github.com/TheOverfloater/pathos-public
+
 Copyright © 2024 Soft Sprint Studios. All rights reserved.
