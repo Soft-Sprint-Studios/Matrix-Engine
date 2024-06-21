@@ -11,7 +11,7 @@ All Rights Reserved.
 #define MONITOR_SHARED_H
 
 // Max monitor entities in a level
-static const Uint32 MAX_MONITOR_ENTITIES = 16;
+static const Uint32 MAX_MONITOR_ENTITIES = 65535;
 // Max resolutions for monitors
 static const Uint32 NB_MONITOR_RESOLUTIONS = 9;
 
