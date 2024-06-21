@@ -1,5 +1,0 @@
-$texture
-{
-	$nomipmaps
-	$texture diffuse models/frame/picture3.dds
-}

@@ -1,5 +1,0 @@
-$texture
-{
-	$nomipmaps
-	$texture diffuse models/v_knife/main.dds
-}

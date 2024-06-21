@@ -1,4 +1,0 @@
-$texture
-{
-	$texture diffuse models/player/player_mask_face.tga
-}

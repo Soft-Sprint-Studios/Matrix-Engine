@@ -1,5 +1,0 @@
-$texture
-{
-	$alphatest
-	$texture diffuse models/worklight/grill2.tga
-}

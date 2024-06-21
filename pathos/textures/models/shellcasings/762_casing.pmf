@@ -1,5 +1,0 @@
-$texture
-{
-	$alphatest
-	$texture diffuse models/shellcasings/762_casing.tga
-}

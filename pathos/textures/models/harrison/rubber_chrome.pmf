@@ -1,5 +1,0 @@
-$texture
-{
-	$chrome
-	$texture diffuse models/harrison/rubber_chrome.dds
-}

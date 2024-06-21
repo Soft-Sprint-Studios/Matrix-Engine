@@ -1,5 +1,0 @@
-$texture
-{
-	$nodecal
-	$texture diffuse models/shared/glockw.dds
-}

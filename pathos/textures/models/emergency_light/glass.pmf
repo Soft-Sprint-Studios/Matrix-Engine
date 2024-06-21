@@ -1,5 +1,0 @@
-$texture
-{
-	$additive
-	$texture diffuse models/emergency_light/glass.tga
-}

@@ -1,5 +1,0 @@
-$texture
-{
-	$fullbright
-	$texture diffuse models/sodamachine/cube1_auv_unlit.tga
-}

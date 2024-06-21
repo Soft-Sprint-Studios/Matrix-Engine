@@ -1,5 +1,0 @@
-$texture
-{
-	$alphatest
-	$texture diffuse models/shelf1/schrank1.tga
-}

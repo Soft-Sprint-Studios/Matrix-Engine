@@ -1,6 +1,0 @@
-$texture
-{
-	$nodecal
-	$alphatest
-	$texture diffuse models/tree7/leaves.tga
-}

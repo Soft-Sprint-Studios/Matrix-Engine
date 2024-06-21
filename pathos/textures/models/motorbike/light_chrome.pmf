@@ -1,5 +1,0 @@
-$texture
-{
-	$chrome
-	$texture diffuse models/motorbike/light_chrome.dds
-}

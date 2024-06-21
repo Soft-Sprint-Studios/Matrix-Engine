@@ -1,5 +1,0 @@
-$texture
-{
-	$alphatest
-	$texture diffuse models/curtain/curtain.tga
-}

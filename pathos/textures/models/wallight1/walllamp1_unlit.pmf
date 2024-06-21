@@ -1,5 +1,0 @@
-$texture
-{
-	$fullbright
-	$texture diffuse models/wallight1/walllamp1_unlit.tga
-}

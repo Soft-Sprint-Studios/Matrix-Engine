@@ -1,5 +1,0 @@
-$texture
-{
-	$alphatest
-	$texture diffuse models/fern1/leaf2.tga
-}

@@ -1,6 +1,0 @@
-$texture
-{
-	$nodecal
-	$nomipmaps
-	$texture diffuse models/harrison/harrison_face.dds
-}

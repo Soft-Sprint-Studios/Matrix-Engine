@@ -1,5 +1,0 @@
-$texture
-{
-	$fullbright
-	$texture diffuse models/wallight2_decoration/unlit.tga
-}
