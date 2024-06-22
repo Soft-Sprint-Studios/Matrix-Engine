@@ -885,6 +885,9 @@
     <ClCompile Include="funcclipeconomy.cpp">
       <Filter>Source Files\entities\func</Filter>
     </ClCompile>
+    <ClCompile Include="triggertemp.cpp">
+      <Filter>Source Files\entities\trigger</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gamedll.h">
@@ -1666,6 +1669,9 @@
     </ClInclude>
     <ClInclude Include="funcclipeconomy.h">
       <Filter>Header Files\entities\func</Filter>
+    </ClInclude>
+    <ClInclude Include="triggertemp.h">
+      <Filter>Header Files\entities\trigger</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

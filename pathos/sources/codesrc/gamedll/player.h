@@ -247,6 +247,8 @@ public:
 	virtual bool TakeHealth( Float amount, Int32 damageFlags ) override;
 	// Makes the entity take on damage
 	virtual bool TakeDamage( CBaseEntity* pInflictor, CBaseEntity* pAttacker, Float amount, Int32 damageFlags ) override;
+	// Makes the entity set temp
+	virtual bool SetTemp(Float amount);
 	// Handles damage calculation for a hitscan
 	virtual void TraceAttack( CBaseEntity* pAttacker, Float damage, const Vector& direction, trace_t& tr, Int32 damageFlags ) override;
 	// Manages dying

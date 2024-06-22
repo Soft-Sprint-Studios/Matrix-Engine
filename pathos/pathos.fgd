@@ -2789,6 +2789,10 @@
 ]
 
 @SolidClass base(Trigger) = trigger_once : "Trigger: Activate once" []
+@SolidClass base(Trigger) = trigger_temp : "Trigger: Temp Trigger"
+[
+    temp(integer) : "Temperature Value" : 0 : "Temperature value to set when triggered."
+]
 @PointClass base(Targetname) size(-8 -8 -8, 8 8 8) = trigger_paralyzeplayer : "Disable player movement input" []
 @SolidClass base(Trigger, Angles) = trigger_push : "Trigger player push"
 [

@@ -301,6 +301,8 @@ struct entity_state_t
 	Float gravity;
 	Float friction;
 
+	Float ambienttemp;
+
 	Int32 sequence;
 	
 	Float frame;

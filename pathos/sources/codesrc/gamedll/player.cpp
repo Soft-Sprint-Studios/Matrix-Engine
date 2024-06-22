@@ -38,6 +38,7 @@ All Rights Reserved.
 #include "ai_sounds.h"
 #include "triggercameramodel.h"
 #include "itemdiary.h"
+#include <chrono>
 
 // Player punch treshold for falling
 const Float CPlayerEntity::PLAYER_FALL_VELOCITY_PUNCH_MIN = 350.0f;
@@ -712,6 +713,7 @@ bool CPlayerEntity::Spawn( void )
 	m_pState->flags |= FL_CLIENT;
 	m_pState->deadstate = DEADSTATE_NONE;
 	m_pState->friction = 1.0;
+	m_pState->ambienttemp = 25.0;
 
 	if(!SetModel("models/player.mdl", false))
 		return false;
@@ -1144,6 +1146,27 @@ bool CPlayerEntity::TakeDamage( CBaseEntity* pInflictor, CBaseEntity* pAttacker,
 // @brief
 //
 //=============================================
+bool CPlayerEntity::SetTemp(Float amount)
+{
+	Float tempamount = amount;
+
+	if (!tempamount)
+		return false;
+
+	// don't do anything else if dead
+	if (!IsAlive())
+		return false;
+
+	m_pState->ambienttemp = tempamount;
+
+	return true;
+}
+
+
+//=============================================
+// @brief
+//
+//=============================================
 void CPlayerEntity::TraceAttack( CBaseEntity* pAttacker, Float damage, const Vector& direction, trace_t& tr, Int32 damageFlags )
 {
 	if(m_pState->takedamage == TAKEDAMAGE_NO)
@@ -1504,7 +1527,7 @@ void CPlayerEntity::DeadThink( void )
 // @brief
 //
 //=============================================
-bool CPlayerEntity::IsAlive( void ) const
+bool CPlayerEntity::IsAlive(void) const
 {
 	return (m_pState->deadstate == DEADSTATE_NONE && m_pState->health > 0) ? true : false;
 }
@@ -2209,6 +2232,92 @@ void CPlayerEntity::PostCmdThink( void )
 {
 	if(!IsAlive())
 		return;
+
+
+	using Clock = std::chrono::steady_clock;
+
+	const Float MILD_HEAT_THRESHOLD = 35.0f;
+	const Float SEVERE_HEAT_THRESHOLD = 40.0f;
+	const Float HYPOTHERMIA_THRESHOLD = 10.0f;
+	const Float SEVERE_HYPOTHERMIA_THRESHOLD = 5.0f;
+
+	const Float DMG_PER_DEGREE_MILD = 0.01f;
+	const Float DMG_PER_DEGREE_SEVERE = 0.03f;
+	const Float DMG_PER_DEGREE_HYPOTHERMIA = 0.01f;
+	const Float DMG_PER_DEGREE_SEVERE_HYPOTHERMIA = 0.02f;
+
+	static bool bCooldownActive_Damage = false;
+	static Clock::time_point tLastDamageTime;
+	static const std::chrono::milliseconds DAMAGE_COOLDOWN(1000);
+
+	static bool bCooldownActive_SoundPunch = false;
+	static Clock::time_point tLastSoundPunchTime;
+	static const std::chrono::milliseconds SOUNDPUNCH_COOLDOWN(20);
+
+	Float ambientTemp = m_pState->ambienttemp;
+
+	auto getCurrentTime = []() -> Clock::time_point {
+		return Clock::now();
+		};
+
+	if (!bCooldownActive_Damage || (getCurrentTime() - tLastDamageTime >= DAMAGE_COOLDOWN)) {
+		if (ambientTemp > SEVERE_HEAT_THRESHOLD && ambientTemp <= MILD_HEAT_THRESHOLD) {
+			Float damage = DMG_PER_DEGREE_SEVERE * (ambientTemp - SEVERE_HEAT_THRESHOLD);
+			TakeDamage(nullptr, nullptr, damage, DMG_BURN);
+			bCooldownActive_Damage = true;
+			tLastDamageTime = getCurrentTime();
+		}
+	}
+
+	if (!bCooldownActive_Damage || (getCurrentTime() - tLastDamageTime >= DAMAGE_COOLDOWN)) {
+		if (ambientTemp > SEVERE_HEAT_THRESHOLD) {
+			Float damage = DMG_PER_DEGREE_SEVERE * (ambientTemp - SEVERE_HEAT_THRESHOLD);
+			TakeDamage(nullptr, nullptr, damage, DMG_BURN);
+			bCooldownActive_Damage = true;
+			tLastDamageTime = getCurrentTime();
+		}
+	}
+
+	if (!bCooldownActive_Damage || (getCurrentTime() - tLastDamageTime >= DAMAGE_COOLDOWN)) {
+		if (ambientTemp < SEVERE_HYPOTHERMIA_THRESHOLD && ambientTemp >= HYPOTHERMIA_THRESHOLD) {
+			Float damage = DMG_PER_DEGREE_HYPOTHERMIA * (HYPOTHERMIA_THRESHOLD - ambientTemp);
+			TakeDamage(nullptr, nullptr, damage, DMG_FREEZE);
+			bCooldownActive_Damage = true;
+			tLastDamageTime = getCurrentTime();
+		}
+	}
+
+	if (!bCooldownActive_Damage || (getCurrentTime() - tLastDamageTime >= DAMAGE_COOLDOWN)) {
+		if (ambientTemp < SEVERE_HYPOTHERMIA_THRESHOLD) {
+			Float damage = DMG_PER_DEGREE_SEVERE_HYPOTHERMIA * (SEVERE_HYPOTHERMIA_THRESHOLD - ambientTemp);
+			TakeDamage(nullptr, nullptr, damage, DMG_FREEZE);
+			bCooldownActive_Damage = true;
+			tLastDamageTime = getCurrentTime();
+		}
+	}
+
+	if (!bCooldownActive_SoundPunch || (getCurrentTime() - tLastSoundPunchTime >= SOUNDPUNCH_COOLDOWN)) {
+		if (ambientTemp > SEVERE_HEAT_THRESHOLD) {
+			Util::EmitEntitySound(this, "player/pl_heat_severe.wav", SND_CHAN_VOICE);
+			ApplyAxisPunch(0, -10);
+		}
+		else if (ambientTemp > MILD_HEAT_THRESHOLD) {
+			Util::EmitEntitySound(this, "player/pl_heat_mild.wav", SND_CHAN_VOICE);
+			ApplyAxisPunch(0, -5);
+		}
+		else if (ambientTemp < SEVERE_HYPOTHERMIA_THRESHOLD) {
+			Util::EmitEntitySound(this, "player/pl_cold_severe.wav", SND_CHAN_VOICE);
+			ApplyAxisPunch(0, 5);
+		}
+		else if (ambientTemp < HYPOTHERMIA_THRESHOLD) {
+			Util::EmitEntitySound(this, "player/pl_cold_mild.wav", SND_CHAN_VOICE);
+			ApplyAxisPunch(0, 2.5);
+		}
+		bCooldownActive_SoundPunch = true;
+		tLastSoundPunchTime = getCurrentTime();
+	}
+
+
 
 	if(m_pState->flags & FL_DUCKING || m_pState->health <= 0)
 		gd_engfuncs.pfnSetMinsMaxs(m_pEdict, VEC_DUCK_HULL_MIN, VEC_DUCK_HULL_MAX);

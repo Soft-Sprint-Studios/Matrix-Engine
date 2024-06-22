@@ -422,6 +422,7 @@
     <ClCompile Include="triggersubwaycontroller.cpp" />
     <ClCompile Include="triggersubwayflagger.cpp" />
     <ClCompile Include="triggerteleport.cpp" />
+    <ClCompile Include="triggertemp.cpp" />
     <ClCompile Include="triggertextwindow.cpp" />
     <ClCompile Include="triggertoggletarget.cpp" />
     <ClCompile Include="triggertransition.cpp" />
@@ -684,6 +685,7 @@
     <ClInclude Include="triggersubwaycontroller.h" />
     <ClInclude Include="triggersubwayflagger.h" />
     <ClInclude Include="triggerteleport.h" />
+    <ClInclude Include="triggertemp.h" />
     <ClInclude Include="triggertextwindow.h" />
     <ClInclude Include="triggertoggletarget.h" />
     <ClInclude Include="triggertransition.h" />
