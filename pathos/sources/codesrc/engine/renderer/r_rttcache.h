@@ -21,6 +21,7 @@ struct rtt_texture_t
 		height(0),
 		rectangle(false),
 		internalformat(0),
+		depthBuffer(0),
 		freetime(0),
 		level(RS_LEVEL_UNDEFINED)
 		{}
@@ -32,6 +33,7 @@ struct rtt_texture_t
 	Uint32 height;
 	bool rectangle;
 	GLenum internalformat;
+	GLuint depthBuffer;
 
 	Double freetime;
 

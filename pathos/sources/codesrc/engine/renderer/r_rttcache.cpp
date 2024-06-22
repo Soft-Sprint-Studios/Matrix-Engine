@@ -14,6 +14,7 @@ All Rights Reserved.
 #include "textures_shared.h"
 #include "texturemanager.h"
 #include "r_main.h"
+#include "r_glsl.h"
 
 // Class declaration
 CRenderToTextureCache gRTTCache;
@@ -125,14 +126,14 @@ void CRenderToTextureCache :: Shutdown ( void )
 // CRenderToTextureCache :: Alloc
 // Purpose:
 //=======================================
-rtt_texture_t* CRenderToTextureCache :: Alloc( Uint32 width, Uint32 height, bool rectangle, GLenum internalformat, rs_level_t level )
+rtt_texture_t* CRenderToTextureCache::Alloc(Uint32 width, Uint32 height, bool rectangle, GLenum internalformat, rs_level_t level)
 {
 	// Seek an available texture
 	m_pCacheHeader.begin();
-	while(!m_pCacheHeader.end())
+	while (!m_pCacheHeader.end())
 	{
 		rtt_texture_t* ptexture = m_pCacheHeader.get();
-		if(ptexture->width == width && ptexture->height == height && ptexture->level == level
+		if (ptexture->width == width && ptexture->height == height && ptexture->level == level
 			&& ptexture->rectangle == rectangle && ptexture->internalformat == internalformat)
 		{
 			m_pCacheHeader.remove(m_pCacheHeader.get_link());
@@ -151,11 +152,13 @@ rtt_texture_t* CRenderToTextureCache :: Alloc( Uint32 width, Uint32 height, bool
 	pnew->rectangle = rectangle;
 	pnew->internalformat = internalformat;
 	pnew->level = level;
+	pnew->depthBuffer = 0;
 
 	CreateTexture(pnew, level);
 
 	return pnew;
 }
+
 
 //=======================================
 // CRenderToTextureCache :: CreateTexture
@@ -163,7 +166,6 @@ rtt_texture_t* CRenderToTextureCache :: Alloc( Uint32 width, Uint32 height, bool
 //=======================================
 void CRenderToTextureCache::CreateTexture(rtt_texture_t* ptexture, rs_level_t level)
 {
-	// Create the OGL texture
 	GLenum target = ptexture->rectangle ? GL_TEXTURE_RECTANGLE : GL_TEXTURE_2D;
 	ptexture->palloc = CTextureManager::GetInstance()->GenTextureIndex(level);
 
@@ -172,42 +174,58 @@ void CRenderToTextureCache::CreateTexture(rtt_texture_t* ptexture, rs_level_t le
 	glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, ptexture->rectangle ? GL_NEAREST : GL_LINEAR);
 	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, ptexture->rectangle ? GL_NEAREST : GL_LINEAR);
-	glTexImage2D(target, 0, ptexture->internalformat, ptexture->width, ptexture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-	GLuint depthBuffer;
-	glGenTextures(1, &depthBuffer);
-	glBindTexture(target, depthBuffer);
-	glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(target, 0, GL_DEPTH_COMPONENT24, ptexture->width, ptexture->height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+	if (ptexture->internalformat == GL_DEPTH_COMPONENT)
+	{
+		glTexImage2D(target, 0, GL_DEPTH_COMPONENT, ptexture->width, ptexture->height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr);
+	}
+	else
+	{
+		glTexImage2D(target, 0, ptexture->internalformat, ptexture->width, ptexture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+	}
+
+	// Generate and bind the depth buffer
+	gGLExtF.glGenRenderbuffers(1, &ptexture->depthBuffer);
+	gGLExtF.glBindRenderbuffer(GL_RENDERBUFFER, ptexture->depthBuffer);
+	gGLExtF.glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, ptexture->width, ptexture->height);
+
+	// Attach the depth buffer to the framebuffer
+	gGLExtF.glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, ptexture->depthBuffer);
 }
-
 
 //=======================================
 // CRenderToTextureCache :: Free
 // Purpose:
 //=======================================
-void CRenderToTextureCache :: Free ( rtt_texture_t* ptexture )
+void CRenderToTextureCache::Free(rtt_texture_t* ptexture)
 {
 	// Add it back to the stack
 	m_pCacheHeader.add(ptexture);
 	// Set time we were freed
 	ptexture->freetime = rns.time;
+
+	if (ptexture->depthBuffer != 0)
+	{
+		gGLExtF.glDeleteRenderbuffers(1, &ptexture->depthBuffer);
+		ptexture->depthBuffer = 0;
+	}
 }
 
 //=======================================
 // CRenderToTextureCache :: Delete
 // Purpose:
 //=======================================
-void CRenderToTextureCache :: Delete ( rtt_texture_t* ptexture )
+void CRenderToTextureCache::Delete(rtt_texture_t* ptexture)
 {
 	// Make sure it's removed from the stack
 	m_pCacheHeader.remove(ptexture);
-	
+
 	// Delete it from GL memory
 	CTextureManager::GetInstance()->DeleteAllocation(ptexture->palloc);
+	if (ptexture->depthBuffer != 0)
+	{
+		gGLExtF.glDeleteRenderbuffers(1, &ptexture->depthBuffer);
+	}
 	m_iNumAllocated--;
 
 	// Delete object
