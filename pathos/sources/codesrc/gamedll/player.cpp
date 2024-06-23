@@ -1240,9 +1240,9 @@ void CPlayerEntity::TraceAttack( CBaseEntity* pAttacker, Float damage, const Vec
 Int32 CPlayerEntity::GetRelationship( CBaseEntity* pOther )
 {
 	Int32 myClassification = GetClassification();
-	assert(myClassification >= 0 && myClassification < NUM_ENEMY_RELATIONS);
+	assert(myClassification >= 0 && myClassification < NB_CLASSIFICATIONS);
 	Int32 enemyClassification = pOther->GetClassification();
-	assert(enemyClassification >= 0 && enemyClassification < NUM_ENEMY_RELATIONS);
+	assert(enemyClassification >= 0 && enemyClassification < NB_CLASSIFICATIONS);
 
 	return NPC_RELATIONS_TABLE[myClassification][enemyClassification];
 }
@@ -2233,7 +2233,6 @@ void CPlayerEntity::PostCmdThink( void )
 	if(!IsAlive())
 		return;
 
-
 	using Clock = std::chrono::steady_clock;
 
 	const Float MILD_HEAT_THRESHOLD = 35.0f;
@@ -2316,8 +2315,6 @@ void CPlayerEntity::PostCmdThink( void )
 		bCooldownActive_SoundPunch = true;
 		tLastSoundPunchTime = getCurrentTime();
 	}
-
-
 
 	if(m_pState->flags & FL_DUCKING || m_pState->health <= 0)
 		gd_engfuncs.pfnSetMinsMaxs(m_pEdict, VEC_DUCK_HULL_MIN, VEC_DUCK_HULL_MAX);
