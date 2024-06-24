@@ -3,7 +3,7 @@
 //===========================
 
  - Description:
-The Pathos particle engine is a heavily advanced version of what
+The Parallax particle engine is a heavily advanced version of what
 was once in Trinity. The particle script format has been totally
 updated to provide a far more descriptive and user-friendly way of
 defining particle behavior.

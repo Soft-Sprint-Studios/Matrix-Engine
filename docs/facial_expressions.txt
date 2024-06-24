@@ -2,8 +2,8 @@
 // - Facial Animation System -
 //=============================
 
-The Pathos Engine sports a facial animation system heavily inspired by
-how Source did facial animations, but the system in Pathos is far simpler
+The Parallax Engine sports a facial animation system heavily inspired by
+how Source did facial animations, but the system in Parallax is far simpler
 in design and is more basic. Facial animations are created with the model
 viewer. See "model_viewer.txt" for more information.
 

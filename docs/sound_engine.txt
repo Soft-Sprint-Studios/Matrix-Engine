@@ -1,8 +1,8 @@
 //===========================
-// - Pathos sound engine -
+// - Parallax sound engine -
 //===========================
 
-Pathos uses an OpenAL implementation for playing sound, with OGG used
+Parallax uses an OpenAL implementation for playing sound, with OGG used
 for music playback. Currently the engine supports OGG only for music
 playback, and 16 and 8-bit WAV for game sounds.
 

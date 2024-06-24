@@ -2,7 +2,7 @@
 // - Assigning material types -
 //===============================
 
-Pathos allows you to more comfortably assign material types for each
+Parallax allows you to more comfortably assign material types for each
 of the textures in your level. Instead of manually editing your material
 files, you can use console commands to help make it easier.
 
