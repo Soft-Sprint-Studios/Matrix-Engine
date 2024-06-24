@@ -2,7 +2,7 @@
 // - Debugging the AI node graph -
 //==================================
 
-Pathos uses a node graph system very similar to Half-Life 1's, only
+Parallax uses a node graph system very similar to Half-Life 1's, only
 with major improvements. One of these improvements is that the code
 allows you to view and debug the node graph visually. To do this, you
 can enable node graph debugging with the "r_nodes_debug" in the console.

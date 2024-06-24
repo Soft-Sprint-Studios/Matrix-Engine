@@ -1,0 +1,2 @@
+D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\utils\hlcsg\Release_x64\hlcsg.exe
+D:\sourcesdk\pathos-publicMythicLegendInteractive\parallax\sources\codesrc\utils\hlcsg\Release_x64\hlcsg.exe

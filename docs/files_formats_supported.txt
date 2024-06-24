@@ -1,27 +1,27 @@
 //===========================
-// - Basic files used by Pathos -
+// - Basic files used by Parallax -
 //===========================
 
  - Models:
  Models are expected to be under the pathos/models folder, but subfolders here are
  also supported. You need both a .mdl and .vbm file here, only HL1MDL will not work
  and the engine will not load your model. See "tools_readme.txt" mentioned above on
- how you can convert your HL1MDL files to Pathos's formats.
+ how you can convert your HL1MDL files to Parallax's formats.
  
  - Textures:
- Pathos supports TGA, DDS and WAD textures. The current level editor still requires
+ Parallax supports TGA, DDS, BMP and WAD textures. The current level editor still requires
  WAD3 to be used, so textures used by levels need to be in .WAD files. However, this
- does not mean you can't use your own external, hi-res file and have Pathos not load
+ does not mean you can't use your own external, hi-res file and have Parallax not load
  the texture from the WAD file.
  
  World textures will be searched under the following path:
- "pathos/textures/world/*wad filename*
+ "parallax/textures/world/*wad filename*
  
  Model textures will always be searched under this path:
- "pathos/textures/models/*model filename*
+ "parallax/textures/models/*model filename*
  
  - Sprites:
- Sprites will be located under "pathos/sprites", and are expected to be the same
+ Sprites will be located under "parallax/sprites", and are expected to be the same
  format as Half-Life 1 sprites.
  
  - PMF files:
@@ -31,13 +31,12 @@
  specify the path to the individual images that need to be loaded.
  
  - Level formats:
- Pathos supports the Half-Life 1 BSP format(Version 30), as well as the Pathos
- BSP V1 format. The vluzacn compilers shipped with Pathos will compile the levels
- with the Pathos format.
+ Parallax Engine uses the Parallax engine V2 BSP format. The vluzacn compilers shipped with Parallax will compile the levels
+ with the Parallax format.
  
  - Shaders:
- Pathos's shader code takes BSS(Branching Shader Script) scripts, which are located
- under "pathos/scripts/shaders". These are the shaders on which the engine components
+ Parallax's shader code takes BSS(Branching Shader Script) scripts, which are located
+ under "parallax/scripts/shaders". These are the shaders on which the engine components
  rely for rendering.
  
  - Decals:
@@ -64,6 +63,6 @@
  into this list to use as it's projective texture.
  
  - UI:
- The Pathos menu UI is defined in scripts located under "pathos/scripts/ui". You can
+ The Parallax menu UI is defined in scripts located under "parallax/scripts/ui". You can
  use these scripts to modify the appearence of the menu UI, but overall if you want
  any modifications that go beyond stylistic changes, you'll need to edit the code.

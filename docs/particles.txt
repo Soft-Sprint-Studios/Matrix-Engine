@@ -9,10 +9,10 @@ updated to provide a far more descriptive and user-friendly way of
 defining particle behavior.
 
 Particle scripts are located under the path:
-"pathos/scripts/particles"
+"parallax/scripts/particles"
 
 The textures will be loaded from the following path:
-"pathos/textures/particles"
+"parallax/textures/particles"
 
  - Scripts and their tokens:
 The particle scripts contain all the information that defines how

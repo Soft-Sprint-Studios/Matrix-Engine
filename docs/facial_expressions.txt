@@ -9,7 +9,7 @@ viewer. See "model_viewer.txt" for more information.
 
 Facial flex scripts exist in two forms: Generic ones used by NPCs for
 normal AI states like being scared, idle, in combat, or dead. These are
-defined in the "expressions_human.txt" file under pathos/scripts/expressions.
+defined in the "expressions_human.txt" file under parallax/scripts/expressions.
 
 Here is an example of a generic AI-state definition:
 IDLE_EXPRESSIONS npc_human_idle1 npc_human_idle2 npc_human_idle3 

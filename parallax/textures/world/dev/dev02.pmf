@@ -1,0 +1,6 @@
+$texture
+{
+	$int_width 256
+	$int_height 256
+	$texture diffuse world/dev/dev02.dds
+}

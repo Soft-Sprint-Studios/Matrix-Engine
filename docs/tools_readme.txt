@@ -1,7 +1,4 @@
-All the tools described here have more detailed descriptions under Pathos Engine/docs, so
-please consult those files for more information.
-
- - mdlexport
+- mdlexport
 This tool will take either a single HL1 MDL file, or an entire folder, and output the
 result into another folder specified via the launch params. It will generate both the VBM
 files and the PMF files, as well as the TGA files from the models.
@@ -26,14 +23,11 @@ functions that will make life much easier for you. See "studiomdl_usage.txt" for
 This is Krastito's mdl decompiler from 2003. It will not decompile the VBM components, as
 there's currently no tool available for that purpose. 
 
- - worlcraft
-Due to the dubious legal nature of distributing a custom Hammer based on the 2003 leak, I
-have as of yet decided not to include this in the release until later on. I still have to
-decide what I will do in terms of a level editor, but the most likely bet is that I'll fork
-TrenchBroom and add Pathos support.
+ - ParallaxED
+The ParallaxED is used by Parallax Engine, based on HammerTime and has some compatibility fixes and new features for Parallax Engine, Designed to be similar to Valve's Hammer Editor
 
  - pmdlviewer
-Pathos's Model Viewer is based on the original Half-Life Model Viewer by Mike Ciragan, and
+Parallax's Model Viewer is based on the original Half-Life Model Viewer by Mike Ciragan, and
 offers numerous useful features like a Compile Model tab, with the ability to copy the
 resulting VBM and MDL files to a set of destination folders. See "model_viewer.txt" for
 more information.
