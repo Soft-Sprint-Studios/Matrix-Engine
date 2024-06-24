@@ -182,13 +182,13 @@ bool Sys_Init( CArray<CString>* argsArray )
 		return false;
 
 
-#ifdef ENGINE_PROTECTION_CODE
-	EngineCode engineCode;
-	engineCode.ShowCodeEntryWindow();
-#endif
+//#ifdef ENGINE_PROTECTION_CODE
+//	EngineCode engineCode;
+//	engineCode.ShowCodeEntryWindow();
+//#endif
 
-	std::string exePath = "pathos_x64.exe";
-	obf::RunIntegrityCheck(exePath);
+	//std::string exePath = "pathos_x64.exe";
+	//obf::RunIntegrityCheck(exePath);
 
 	// Initialize UI
 	gUIManager.Init();
@@ -598,7 +598,7 @@ bool Sys_ParseLaunchParams( const CArray<CString>* argsArray )
 
 		// Print the current date and build info
 		CString strLog;
-		strLog << "Pathos Engine";
+		strLog << "Parallax Engine";
 #ifdef _DEBUG
 		strLog << "(DEBUG)";
 #endif

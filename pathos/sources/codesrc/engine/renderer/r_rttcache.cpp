@@ -19,7 +19,7 @@ All Rights Reserved.
 // Class declaration
 CRenderToTextureCache gRTTCache;
 
-// Time until an unused texture is freed
+// Time until an unused texture is freed.
 const Float CRenderToTextureCache::TEXTURE_RELEASE_DELAY = 15;
 
 //=======================================
