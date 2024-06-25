@@ -18,7 +18,7 @@ class CWADTextureResource;
 // Default is MAX_MAP_LEAFS/8
 static const Uint32 DEFAULT_VISBUFFER_SIZE = 262144;
 // Default game directory
-static const Char DEFAULT_GAMEDIR[] = "parallax";
+static const Char DEFAULT_GAMEDIR[] = "matrix";
 // Common game directory
 static const Char COMMON_GAMEDIR[] = "common";
 

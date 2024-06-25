@@ -255,7 +255,7 @@ bool Sys_Init( CArray<CString>* argsArray )
 
 	// For logging
 	CString strPrint;
-	strPrint << "Parallax Engine initialized";
+	strPrint << "Matrix Engine initialized";
 
 #ifdef _DEBUG
 	strPrint << " - [color r255]DEBUG[/color] build";
@@ -323,7 +323,7 @@ void Sys_Shutdown( void )
 	if(ens.plogfile)
 	{
 		// Mark exit
-		ens.plogfile->Write("Parallax Engine exiting.\n");
+		ens.plogfile->Write("Matrix Engine exiting.\n");
 		if(!ens.plogfile->Close())
 			Con_EPrintf("Error closing engine log file.\n");
 
@@ -594,7 +594,7 @@ bool Sys_ParseLaunchParams( const CArray<CString>* argsArray )
 
 		// Print the current date and build info
 		CString strLog;
-		strLog << "Parallax Engine";
+		strLog << "Matrix Engine";
 #ifdef _DEBUG
 		strLog << "(DEBUG)";
 #endif
@@ -653,7 +653,7 @@ bool Sys_ParseLaunchParams( const CArray<CString>* argsArray )
 
 		// Print the current date and build info
 		CString strLog;
-		strLog << "Parallax Engine - Build date: " << __TIME__ << " " << __DATE__ << NEWLINE;
+		strLog << "Matrix Engine - Build date: " << __TIME__ << " " << __DATE__ << NEWLINE;
 		ens.pgllogfile->Write(strLog.c_str());
 	}
 

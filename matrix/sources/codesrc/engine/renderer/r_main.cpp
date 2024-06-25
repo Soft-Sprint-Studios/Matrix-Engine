@@ -2972,7 +2972,7 @@ bool R_DrawWatermark(void)
 	glDisable(GL_DEPTH_TEST);
 
 	// Draw the watermark text
-	if (!R_DrawString(color32_t(255, 255, 255, 255), 1500, 15, "Parallax Engine Development Build Not For Retail", nullptr))
+	if (!R_DrawString(color32_t(255, 255, 255, 255), 1500, 15, "Matrix Engine Development Build Not For Retail", nullptr))
 	{
 		Sys_ErrorPopup("Shader error: %s.", gText.GetShaderError());
 		return false;

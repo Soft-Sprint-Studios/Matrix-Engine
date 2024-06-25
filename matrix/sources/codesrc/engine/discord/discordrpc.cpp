@@ -42,7 +42,7 @@ void updateRichPresence(const char * mapName) {
         stateText = "In Main Menu";
     }
     discordPresence.state = stateText.c_str();
-    discordPresence.details = "Developing Parallax Engine";
+    discordPresence.details = "Developing Matrix Engine";
     discordPresence.startTimestamp = eptime;
     discordPresence.largeImageKey = "";
     discordPresence.largeImageText = "";
