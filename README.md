@@ -1,4 +1,4 @@
-# Parallax Engine - Public Release
+# Matrix Engine - Public Release
 Welcome to the Parallax Engine, developed by Soft Sprint Studios. This engine is a fork from the Pathos Engine, which is licensed under the MIT License. The Parallax Engine has been customized and adapted for our specific needs and improved graphics.
 
 # Key Features
@@ -7,7 +7,7 @@ Powerful Rendering: Immerse yourself in captivating worlds with Parallax Engine'
 
 Intuitive Tools: Streamline your development process with Parallax Engine's intuitive tools and editor, enabling rapid prototyping and seamless iteration.
 
-Flexible Architecture: With a modular and flexible architecture inherited from Pathos Engine, Parallax Engine offers developers the freedom to customize and extend the engine to suit their specific needs.
+Flexible Architecture: With a modular and flexible architecture inherited from Pathos Engine, Matrix Engine offers developers the freedom to customize and extend the engine to suit their specific needs.
 
 To visit offical pathos repo that engine is forked from please visit https://github.com/TheOverfloater/pathos-public
 
