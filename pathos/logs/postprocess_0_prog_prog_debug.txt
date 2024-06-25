@@ -1,3 +1,0 @@
-Fragment info
--------------
-0(19) : error C1020: invalid operands to "*"
