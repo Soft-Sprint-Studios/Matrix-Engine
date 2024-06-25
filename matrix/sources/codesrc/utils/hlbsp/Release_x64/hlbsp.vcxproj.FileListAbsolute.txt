@@ -1,2 +1,3 @@
 D:\sourcesdk\pathos-publicMythicLegendInteractive\pathos\sources\codesrc\utils\hlbsp\Release_x64\hlbsp.exe
 D:\sourcesdk\pathos-publicMythicLegendInteractive\parallax\sources\codesrc\utils\hlbsp\Release_x64\hlbsp.exe
+D:\sourcesdk\pathos-publicMythicLegendInteractive\matrix\sources\codesrc\utils\hlbsp\Release_x64\hlbsp.exe

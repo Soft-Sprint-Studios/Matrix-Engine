@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>D:\sourcesdk\pathos-publicMythicLegendInteractive\parallax\sources\codesrc\x64\Release\game_x64.dll</FullPath>
+      <FullPath>D:\sourcesdk\pathos-publicMythicLegendInteractive\matrix\sources\codesrc\x64\Release\game_x64.dll</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />
