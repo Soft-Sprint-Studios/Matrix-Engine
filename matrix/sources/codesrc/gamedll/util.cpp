@@ -1854,6 +1854,15 @@ namespace Util
 	// @brief
 	//
 	//=============================================
+	void CreateDustPuff(const Vector& origin)
+	{
+		Util::CreateParticles("dustpuff.txt", origin, ZERO_VECTOR, PART_SCRIPT_CLUSTER);
+	}
+
+	//=============================================
+	// @brief
+	//
+	//=============================================
 	void CreateDynamicLight( const Vector& origin, Float radius, Int32 r, Int32 g, Int32 b, Float life, Int32 decay, Float decaydelay, byte flags, Int32 entindex, Int32 attachment, Int32 lightstyle )
 	{
 		gd_engfuncs.pfnUserMessageBegin(MSG_ALL, g_usermsgs.dynamiclight, nullptr, nullptr);

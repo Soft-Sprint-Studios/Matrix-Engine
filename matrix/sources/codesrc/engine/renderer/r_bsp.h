@@ -466,7 +466,6 @@ private:
 	void LoadTextures( void );
 	// Loads a map texture
 	en_material_t* LoadMapTexture( CWADTextureResource& wadTextures, const CArray<CString>& wadFilesList, const Char* pstrtexturename );
-
 	// Draws the world and brush entities
 	bool DrawWorld( void );
 	// Renders any decals

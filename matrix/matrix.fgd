@@ -1272,6 +1272,15 @@
     64: "Start ON" : 0
   ]
 ]
+@PointClass base(Targetname, Angles) size(-16 -16 -16, 16 16 16) = env_dustpuff : "Dust Puff" 
+[
+  MaxDelay(string) : "Max Delay" : "0"
+  spawnflags(flags) =
+  [
+    32: "Toggle" : 0
+    64: "Start ON" : 0
+  ]
+]
 @PointClass base(Targetname, Target) size(-8 -8 -8, 8 8 8) = env_specialfog : "Set special fog"
 [
   mode(Choices) : "Trigger Mode" : 0 =

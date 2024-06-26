@@ -228,6 +228,7 @@
     <ClCompile Include="envbeamfollow.cpp" />
     <ClCompile Include="envblackhole.cpp" />
     <ClCompile Include="envdlighttrain.cpp" />
+    <ClCompile Include="envdustpuff.cpp" />
     <ClCompile Include="envearthquake.cpp" />
     <ClCompile Include="envelighttrain.cpp" />
     <ClCompile Include="envlaser.cpp" />
@@ -492,6 +493,7 @@
     <ClInclude Include="envbeamfx.h" />
     <ClInclude Include="envblackhole.h" />
     <ClInclude Include="envdlighttrain.h" />
+    <ClInclude Include="envdustpuff.h" />
     <ClInclude Include="envearthquake.h" />
     <ClInclude Include="envelighttrain.h" />
     <ClInclude Include="envlaser.h" />

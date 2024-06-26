@@ -109,6 +109,7 @@ namespace Util
 	extern void ScreenShake( const Vector& origin, Float amplitude, Float frequency, Float duration, Float radius, bool inair = false, bool disruptcontrols = false );
 	extern void ScreenShakeAll( const Vector& origin, Float amplitude, Float frequency, Float duration );
 	extern void CreateSparks( const Vector& origin );
+	extern void CreateDustPuff(const Vector& origin);
 	extern void CreateDynamicLight( const Vector& origin, Float radius, Int32 r, Int32 g, Int32 b, Float life, Int32 decay, Float decaydelay, byte flags, Int32 entindex = NO_ENTITY_INDEX, Int32 attachment = NO_POSITION, Int32 lightstyle = LS_NORMAL );
 	extern void CreateDynamicLightWithSubkey( const Vector& origin, Float radius, Int32 r, Int32 g, Int32 b, Float life, Int32 decay, Float decaydelay, byte flags, Int32 entindex, Int32 subkey, Int32 attachment = NO_POSITION, Int32 lightstyle = LS_NORMAL );
 	extern void ExplosionSound( const Vector& origin );
