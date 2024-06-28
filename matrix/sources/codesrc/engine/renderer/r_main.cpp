@@ -154,7 +154,7 @@ static cl_entity_t* g_pBeamEndEntity = nullptr;
 
 // Default material list set by r_list_default_materials
 CArray<CString> g_defaultMaterialPMFList;
-// Material currently being shown on scren
+// Material currently being shown on screen
 en_material_t* g_pMaterialShown = nullptr;
 
 // List of pending shaders to load

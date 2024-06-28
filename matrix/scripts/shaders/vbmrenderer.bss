@@ -1,6 +1,7 @@
 $global_determinator shadertype 0 17
 $global_determinator ao 0 1
 $global_determinator bumpmapping 0 1
+$global_determinator normals 0 1
 $global_determinator numdlights 0 4
 $global_determinator dlight0_shadow 0 1
 $global_determinator dlight1_shadow 0 1
@@ -1056,6 +1057,13 @@ $begin
     finalColor.rgb *= aoFactor;
 $end
 	
+	$branch normals == 1
+	$begin
+	oColor = vec4(normalize(ps_normal), 1.0);
+	$end
+	$branch normals == 0
+	$begin
 	oColor = finalColor;
+	$end
 }
 $end

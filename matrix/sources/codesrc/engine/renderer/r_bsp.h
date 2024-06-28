@@ -10,6 +10,8 @@ All Rights Reserved.
 #ifndef R_BSP_H
 #define R_BSP_H
 
+extern GLuint BrushnormalsFBO, BrushnormalsTexture;
+
 class CCVar;
 class CGLSLShader;
 class CVBO;
@@ -150,6 +152,8 @@ struct bsp_shader_attribs
 	Int32 d_cubemaps;
 	Int32 d_luminance;
 	Int32 d_ao;
+	Int32 d_normals;
+	Int32 d_specularfbo;
 	Int32 d_numlights;
 
 	// vertex attribs
@@ -468,6 +472,8 @@ private:
 	en_material_t* LoadMapTexture( CWADTextureResource& wadTextures, const CArray<CString>& wadFilesList, const Char* pstrtexturename );
 	// Draws the world and brush entities
 	bool DrawWorld( void );
+	// Draws the world normals into an FBO
+	bool DrawScreenSpaceNormals(void);
 	// Renders any decals
 	bool DrawDecals( bool transparents );
 	

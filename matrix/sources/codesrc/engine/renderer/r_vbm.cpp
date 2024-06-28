@@ -405,6 +405,7 @@ bool CVBMRenderer::InitGL( void )
 		m_attribs.d_luminance = m_pShader->GetDeterminatorIndex("luminance");
 		m_attribs.d_ao = m_pShader->GetDeterminatorIndex("ao");
 		m_attribs.d_bumpmapping = m_pShader->GetDeterminatorIndex("bumpmapping");
+		m_attribs.d_normals = m_pShader->GetDeterminatorIndex("normals");
 		m_attribs.d_numdlights = m_pShader->GetDeterminatorIndex("numdlights");
 
 		if(!R_CheckShaderDeterminator(m_attribs.d_numlights, "num_lights", m_pShader, Sys_ErrorPopup)
@@ -1133,6 +1134,8 @@ bool CVBMRenderer::DrawModel( Int32 flags, cl_entity_t* pentity )
 	glDepthMask(GL_TRUE);
 	glDisable(GL_BLEND);
 	glDepthFunc(GL_LEQUAL);
+
+	//RenderScreenSpaceNormals();
 
 	return result;
 }
@@ -2208,6 +2211,62 @@ bool CVBMRenderer::CheckBBox( void )
 		return false;
 
 	return rns.view.frustum.CullBBox(m_mins, m_maxs);
+}
+
+bool CVBMRenderer::RenderScreenSpaceNormals(void)
+{
+	static GLuint fbo = 0;
+	static GLuint vbmnormalstex = 0;
+
+	if (fbo == 0)
+	{
+		gGLExtF.glGenFramebuffers(1, &fbo);
+	}
+	gGLExtF.glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	if (vbmnormalstex == 0)
+	{
+		glGenTextures(1, &vbmnormalstex);
+		glBindTexture(GL_TEXTURE_2D, vbmnormalstex);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rns.screenwidth, rns.screenheight, 0, GL_RGBA, GL_FLOAT, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+		gGLExtF.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, vbmnormalstex, 0);
+
+		if (gGLExtF.glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+		{
+			return false;
+		}
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, vbmnormalstex);
+	}
+
+	if (!m_pShader->SetDeterminator(m_attribs.d_normals, TRUE, false))
+	{
+		return false;
+	}
+
+	if (!DrawNormalSubmodels())
+	{
+		return false;
+	}
+
+	if (!m_pShader->SetDeterminator(m_attribs.d_normals, FALSE, false))
+	{
+		return false;
+	}
+
+	gGLExtF.glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glDeleteTextures(1, &vbmnormalstex);
+	gGLExtF.glDeleteFramebuffers(1, &fbo);
+
+	return true;
 }
 
 //=============================================

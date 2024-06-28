@@ -87,13 +87,14 @@ enum texture_compression_t {
 
 struct en_texalloc_t
 {
-	en_texalloc_t():
+	en_texalloc_t() :
 		gl_index(0),
 		level(RS_LEVEL_UNDEFINED)
 	{}
 
 	GLuint gl_index;
 	rs_level_t level;
+	GLuint pfbo;
 };
 
 struct en_texture_t

@@ -234,6 +234,7 @@ struct vbm_attribs
 		d_luminance(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_ao(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_bumpmapping(CGLSLShader::PROPERTY_UNAVAILABLE),
+		d_normals(CGLSLShader::PROPERTY_UNAVAILABLE),
 		d_numdlights(CGLSLShader::PROPERTY_UNAVAILABLE)
 		{
 			for(Uint32 i = 0; i < MAX_SHADER_BONES; i++)
@@ -307,6 +308,7 @@ struct vbm_attribs
 	Int32 d_luminance;
 	Int32 d_ao;
 	Int32 d_bumpmapping;
+	Int32 d_normals;
 	Int32 d_numdlights;
 	
 	vbm_dlight_attribs_t dlights[MAX_BATCH_LIGHTS];
@@ -348,6 +350,9 @@ public:
 	bool Init( void );
 	// Shuts down the class
 	void Shutdown( void );
+
+	void InitializeFBO();
+	void CleanupFBO();
 
 public:
 	// Initializes OpenGL objects
@@ -453,6 +458,7 @@ private:
 private:
 	// Calls main render routines
 	bool Render( void );
+	bool RenderScreenSpaceNormals();
 	// Sets up rendering routines
 	bool SetupRenderer( void );
 	// Restores rendering states
@@ -500,6 +506,7 @@ private:
 
 	// Draws collected submodels
 	bool DrawNormalSubmodels( void );
+	bool DrawNormalSubmodelsFBO(void);
 	// Draws submodels with flexes on them
 	bool DrawFlexedSubmodels( void );
 
@@ -561,6 +568,8 @@ private:
 
 	// Flex texture allocation
 	struct en_texalloc_t* m_pFlexTexture;
+	// screen space normal texture allocation
+	struct en_texalloc_t* m_pScreenNormalsTexture;
 	// Screen texture pointer
 	struct rtt_texture_t* m_pScreenTexture;
 

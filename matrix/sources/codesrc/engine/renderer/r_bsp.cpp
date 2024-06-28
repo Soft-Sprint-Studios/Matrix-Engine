@@ -177,6 +177,7 @@ bool CBSPRenderer::InitGL( void )
 			m_attribs.d_cubemaps = m_pShader->GetDeterminatorIndex("cubemaps");
 		m_attribs.d_luminance = m_pShader->GetDeterminatorIndex("luminance");
 		m_attribs.d_ao = m_pShader->GetDeterminatorIndex("ao");
+		m_attribs.d_normals = m_pShader->GetDeterminatorIndex("normals");
 		m_attribs.d_numlights = m_pShader->GetDeterminatorIndex("numlights");
 
 		if(!R_CheckShaderDeterminator(m_attribs.d_shadertype, "shadertype", m_pShader, Sys_ErrorPopup)
@@ -1296,6 +1297,91 @@ bool CBSPRenderer::DrawSkyBox( bool inZElements )
 // @brief
 //
 //=============================================
+bool CBSPRenderer::DrawScreenSpaceNormals(void)
+{
+	R_SetFrustum(rns.view.frustum, rns.view.v_origin, rns.view.v_angles, rns.view.fov, rns.view.viewsize_x, rns.view.viewsize_y, true);
+
+	if (m_pCvarDrawWorld->GetValue() < 1)
+		return true;
+
+	m_pCurrentEntity = CL_GetEntityByIndex(WORLDSPAWN_ENTITY_INDEX);
+
+	if (!Prepare())
+		return false;
+
+	GLuint BrushnormalsFBO, BrushnormalsTexture;
+	gGLExtF.glGenFramebuffers(1, &BrushnormalsFBO);
+	gGLExtF.glBindFramebuffer(GL_FRAMEBUFFER, BrushnormalsFBO);
+	glGenTextures(1, &BrushnormalsTexture);
+	glBindTexture(GL_TEXTURE_2D, BrushnormalsTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, rns.view.viewsize_x, rns.view.viewsize_y, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	gGLExtF.glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, BrushnormalsTexture, 0);
+
+	if (gGLExtF.glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+	{
+		Con_EPrintf("Error: Incomplete brush normals FBO\n");
+		return false;
+	}
+
+	if (!m_pShader->SetDeterminator(m_attribs.d_normals, TRUE, false))
+		return false;
+
+	RecursiveWorldNode(ens.pworld->pnodes);
+
+	if (g_pCvarDrawEntities->GetValue() > 0)
+	{
+		for (Uint32 i = 0; i < rns.objects.numvisents; i++)
+		{
+			cl_entity_t& entity = *rns.objects.pvisents[i];
+
+			if (!entity.pmodel || entity.pmodel->type != MOD_BRUSH)
+				continue;
+
+			if (entity.curstate.renderfx == RenderFx_SkyEnt && !rns.water_skydraw
+				|| entity.curstate.renderfx != RenderFx_SkyEnt && rns.water_skydraw
+				|| entity.curstate.renderfx == RenderFx_SkyEntNC
+				|| entity.curstate.renderfx == RenderFx_InPortalEntity && !rns.portalpass
+				|| entity.curstate.renderfx != RenderFx_InPortalEntity && rns.portalpass)
+				continue;
+
+			if (R_IsEntityMoved(entity)
+				|| R_IsEntityTransparent(entity)
+				|| R_IsSpecialRenderEntity(entity))
+				continue;
+
+			if (!DrawBrushModel(entity, true))
+				return false;
+		}
+	}
+
+	m_pCurrentEntity = CL_GetEntityByIndex(WORLDSPAWN_ENTITY_INDEX);
+
+	if (!DrawFirst())
+		return false;
+
+	gGLExtF.glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	if (!m_pShader->SetDeterminator(m_attribs.d_normals, FALSE, false))
+		return false;
+
+	gGLExtF.glDeleteFramebuffers(1, &BrushnormalsFBO);
+	glDeleteTextures(1, &BrushnormalsTexture);
+
+	m_pShader->DisableShader();
+	m_pVBO->UnBind();
+
+	return true;
+}
+
+//=============================================
+// @brief
+//
+//=============================================
 bool CBSPRenderer::DrawWorld( void ) 
 {
 	// Set view frustum again after sky
@@ -1364,7 +1450,7 @@ bool CBSPRenderer::DrawWorld( void )
 				|| entity.curstate.renderfx != RenderFx_InPortalEntity && rns.portalpass)
 				continue;
 
-			if(!R_IsEntityMoved(entity) 
+			if(!R_IsEntityMoved(entity)		
 				|| R_IsEntityTransparent(entity)
 				|| R_IsSpecialRenderEntity(entity))
 				continue;
@@ -1373,6 +1459,8 @@ bool CBSPRenderer::DrawWorld( void )
 				return false;
 		}
 	}
+
+	DrawScreenSpaceNormals();
 
 	return true;
 }
