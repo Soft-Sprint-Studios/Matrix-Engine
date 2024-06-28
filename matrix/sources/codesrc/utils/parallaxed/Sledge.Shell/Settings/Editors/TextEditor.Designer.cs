@@ -60,7 +60,7 @@
             this.BrowseButton.Size = new System.Drawing.Size(28, 20);
             this.BrowseButton.TabIndex = 4;
             this.BrowseButton.Text = "...";
-            this.BrowseButton.UseVisualStyleBackColor = true;
+            this.BrowseButton.UseVisualStyleBackColor = false;
             this.BrowseButton.Visible = false;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButtonClicked);
             // 

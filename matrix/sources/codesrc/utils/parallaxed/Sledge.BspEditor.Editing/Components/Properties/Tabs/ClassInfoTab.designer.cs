@@ -39,7 +39,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
 			this.btnDelete.Size = new System.Drawing.Size(62, 23);
 			this.btnDelete.TabIndex = 24;
 			this.btnDelete.Text = "Delete";
-			this.btnDelete.UseVisualStyleBackColor = true;
+			this.btnDelete.UseVisualStyleBackColor = false;
 			this.btnDelete.Click += new System.EventHandler(this.DeleteKeyClicked);
 			// 
 			// btnAdd
@@ -50,7 +50,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
 			this.btnAdd.Size = new System.Drawing.Size(62, 23);
 			this.btnAdd.TabIndex = 25;
 			this.btnAdd.Text = "Add";
-			this.btnAdd.UseVisualStyleBackColor = true;
+			this.btnAdd.UseVisualStyleBackColor = false;
 			this.btnAdd.Click += new System.EventHandler(this.AddKeyClicked);
 			// 
 			// pnlSmartEdit
@@ -74,7 +74,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
 			this.btnSmartEdit.Size = new System.Drawing.Size(65, 23);
 			this.btnSmartEdit.TabIndex = 22;
 			this.btnSmartEdit.Text = "Smart Edit";
-			this.btnSmartEdit.UseVisualStyleBackColor = true;
+			this.btnSmartEdit.UseVisualStyleBackColor = false;
 			this.btnSmartEdit.CheckedChanged += new System.EventHandler(this.SmartEditToggled);
 			// 
 			// btnPaste
@@ -84,7 +84,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
 			this.btnPaste.Size = new System.Drawing.Size(44, 23);
 			this.btnPaste.TabIndex = 20;
 			this.btnPaste.Text = "Paste";
-			this.btnPaste.UseVisualStyleBackColor = true;
+			this.btnPaste.UseVisualStyleBackColor = false;
 			this.btnPaste.Click += BtnPaste_Click;
 			// 
 			// btnCopy
@@ -94,7 +94,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
 			this.btnCopy.Size = new System.Drawing.Size(44, 23);
 			this.btnCopy.TabIndex = 21;
 			this.btnCopy.Text = "Copy";
-			this.btnCopy.UseVisualStyleBackColor = true;
+			this.btnCopy.UseVisualStyleBackColor = false;
 			this.btnCopy.Click += BtnCopy_Click;
             // 
             // btnPurge
@@ -104,7 +104,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
             this.btnPurge.Size = new System.Drawing.Size(60, 23);
             this.btnPurge.TabIndex = 22;
             this.btnPurge.Text = "Purge";
-            this.btnPurge.UseVisualStyleBackColor = true;
+            this.btnPurge.UseVisualStyleBackColor = false;
             this.btnPurge.Click += BtnPurge_Click;
             // 
             // txtComments
@@ -135,7 +135,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
 			this.btnHelp.Size = new System.Drawing.Size(65, 23);
 			this.btnHelp.TabIndex = 17;
 			this.btnHelp.Text = "Help";
-			this.btnHelp.UseVisualStyleBackColor = true;
+			this.btnHelp.UseVisualStyleBackColor = false;
 			// 
 			// lstKeyValues
 			// 

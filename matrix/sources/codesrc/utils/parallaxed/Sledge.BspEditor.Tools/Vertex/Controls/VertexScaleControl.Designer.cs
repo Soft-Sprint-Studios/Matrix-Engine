@@ -44,7 +44,7 @@
             this.button6.Size = new System.Drawing.Size(48, 23);
             this.button6.TabIndex = 12;
             this.button6.Text = "Reset";
-            this.button6.UseVisualStyleBackColor = true;
+            this.button6.UseVisualStyleBackColor = false;
             // 
             // DistanceValue
             // 
@@ -90,7 +90,7 @@
             this.ResetDistanceButton.Size = new System.Drawing.Size(50, 23);
             this.ResetDistanceButton.TabIndex = 14;
             this.ResetDistanceButton.Text = "Reset";
-            this.ResetDistanceButton.UseVisualStyleBackColor = true;
+            this.ResetDistanceButton.UseVisualStyleBackColor = false;
             this.ResetDistanceButton.Click += new System.EventHandler(this.ResetDistanceClicked);
             // 
             // ResetOriginButton
@@ -100,7 +100,7 @@
             this.ResetOriginButton.Size = new System.Drawing.Size(75, 23);
             this.ResetOriginButton.TabIndex = 15;
             this.ResetOriginButton.Text = "Reset Origin";
-            this.ResetOriginButton.UseVisualStyleBackColor = true;
+            this.ResetOriginButton.UseVisualStyleBackColor = false;
             this.ResetOriginButton.Click += new System.EventHandler(this.ResetOriginClicked);
             // 
             // VertexScaleControl

@@ -53,7 +53,7 @@
             this.HotkeyResetButton.Size = new System.Drawing.Size(118, 23);
             this.HotkeyResetButton.TabIndex = 10;
             this.HotkeyResetButton.Text = "Reset to Defaults";
-            this.HotkeyResetButton.UseVisualStyleBackColor = true;
+            this.HotkeyResetButton.UseVisualStyleBackColor = false;
             this.HotkeyResetButton.Click += new System.EventHandler(this.HotkeyResetButtonClicked);
             // 
             // groupBox22
@@ -88,7 +88,7 @@
             this.HotkeyAddButton.Size = new System.Drawing.Size(69, 23);
             this.HotkeyAddButton.TabIndex = 3;
             this.HotkeyAddButton.Text = "Set";
-            this.HotkeyAddButton.UseVisualStyleBackColor = true;
+            this.HotkeyAddButton.UseVisualStyleBackColor = false;
             this.HotkeyAddButton.Click += new System.EventHandler(this.HotkeySetButtonClicked);
             // 
             // label25
@@ -116,7 +116,7 @@
             this.HotkeyRemoveButton.Size = new System.Drawing.Size(69, 23);
             this.HotkeyRemoveButton.TabIndex = 8;
             this.HotkeyRemoveButton.Text = "Unset";
-            this.HotkeyRemoveButton.UseVisualStyleBackColor = true;
+            this.HotkeyRemoveButton.UseVisualStyleBackColor = false;
             this.HotkeyRemoveButton.Click += new System.EventHandler(this.HotkeyUnsetButtonClicked);
             // 
             // HotkeyCombination

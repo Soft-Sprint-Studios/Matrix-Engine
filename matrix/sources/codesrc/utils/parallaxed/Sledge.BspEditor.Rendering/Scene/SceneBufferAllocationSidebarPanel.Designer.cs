@@ -59,7 +59,7 @@
             this.chkAutoRefresh.Size = new System.Drawing.Size(83, 17);
             this.chkAutoRefresh.TabIndex = 1;
             this.chkAutoRefresh.Text = "Auto-refresh";
-            this.chkAutoRefresh.UseVisualStyleBackColor = true;
+            this.chkAutoRefresh.UseVisualStyleBackColor = false;
             this.chkAutoRefresh.CheckedChanged += new System.EventHandler(this.ChangeAutoRefresh);
             // 
             // RefreshButton
@@ -70,7 +70,7 @@
             this.RefreshButton.Size = new System.Drawing.Size(73, 22);
             this.RefreshButton.TabIndex = 2;
             this.RefreshButton.Text = "Refresh";
-            this.RefreshButton.UseVisualStyleBackColor = true;
+            this.RefreshButton.UseVisualStyleBackColor = false;
             this.RefreshButton.Click += new System.EventHandler(this.UpdateList);
             // 
             // SceneBufferAllocationSidebarPanel

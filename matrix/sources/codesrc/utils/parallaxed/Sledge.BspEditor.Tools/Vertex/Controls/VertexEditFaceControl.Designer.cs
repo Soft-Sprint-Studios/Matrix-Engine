@@ -48,7 +48,7 @@
             this.BevelButton.Size = new System.Drawing.Size(50, 23);
             this.BevelButton.TabIndex = 9;
             this.BevelButton.Text = "Bevel";
-            this.BevelButton.UseVisualStyleBackColor = true;
+            this.BevelButton.UseVisualStyleBackColor = false;
             this.BevelButton.Click += new System.EventHandler(this.BevelButtonClicked);
             // 
             // WithSelectedFacesLabel
@@ -107,7 +107,7 @@
             this.PokeFaceButton.Size = new System.Drawing.Size(50, 23);
             this.PokeFaceButton.TabIndex = 9;
             this.PokeFaceButton.Text = "Poke";
-            this.PokeFaceButton.UseVisualStyleBackColor = true;
+            this.PokeFaceButton.UseVisualStyleBackColor = false;
             this.PokeFaceButton.Click += new System.EventHandler(this.PokeFaceButtonClicked);
             // 
             // PokeByLabel

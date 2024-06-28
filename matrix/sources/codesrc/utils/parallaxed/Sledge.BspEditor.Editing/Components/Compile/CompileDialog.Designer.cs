@@ -89,7 +89,7 @@
             this.tabSteps.Size = new System.Drawing.Size(610, 257);
             this.tabSteps.TabIndex = 6;
             this.tabSteps.Text = "Steps to run";
-            this.tabSteps.UseVisualStyleBackColor = true;
+            this.tabSteps.UseVisualStyleBackColor = false;
             // 
             // pnlSteps
             // 
@@ -109,7 +109,7 @@
             this.btnGo.Size = new System.Drawing.Size(99, 23);
             this.btnGo.TabIndex = 25;
             this.btnGo.Text = "Compile";
-            this.btnGo.UseVisualStyleBackColor = true;
+            this.btnGo.UseVisualStyleBackColor = false;
             // 
             // btnCancel
             // 
@@ -120,7 +120,7 @@
             this.btnCancel.Size = new System.Drawing.Size(99, 23);
             this.btnCancel.TabIndex = 25;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.UseVisualStyleBackColor = false;
             // 
             // btnRename
             // 
@@ -129,7 +129,7 @@
             this.btnRename.Size = new System.Drawing.Size(78, 21);
             this.btnRename.TabIndex = 27;
             this.btnRename.Text = "Rename";
-            this.btnRename.UseVisualStyleBackColor = true;
+            this.btnRename.UseVisualStyleBackColor = false;
             this.btnRename.Click += new System.EventHandler(this.RenameProfileButtonClicked);
             // 
             // btnDelete
@@ -139,7 +139,7 @@
             this.btnDelete.Size = new System.Drawing.Size(78, 21);
             this.btnDelete.TabIndex = 28;
             this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.DeleteProfileButtonClicked);
             // 
             // btnSaveProfile
@@ -150,7 +150,7 @@
             this.btnSaveProfile.Size = new System.Drawing.Size(99, 23);
             this.btnSaveProfile.TabIndex = 25;
             this.btnSaveProfile.Text = "Save Profile";
-            this.btnSaveProfile.UseVisualStyleBackColor = true;
+            this.btnSaveProfile.UseVisualStyleBackColor = false;
             this.btnSaveProfile.Click += new System.EventHandler(this.SaveProfileButtonClicked);
             // 
             // btnSaveProfileAs
@@ -161,7 +161,7 @@
             this.btnSaveProfileAs.Size = new System.Drawing.Size(99, 23);
             this.btnSaveProfileAs.TabIndex = 25;
             this.btnSaveProfileAs.Text = "Save Profile As...";
-            this.btnSaveProfileAs.UseVisualStyleBackColor = true;
+            this.btnSaveProfileAs.UseVisualStyleBackColor = false;
             this.btnSaveProfileAs.Click += new System.EventHandler(this.SaveProfileAsButtonClicked);
             // 
             // AdvancedPanel
@@ -189,7 +189,7 @@
             this.btnSimpleMode.Size = new System.Drawing.Size(107, 23);
             this.btnSimpleMode.TabIndex = 29;
             this.btnSimpleMode.Text = "Simple Mode";
-            this.btnSimpleMode.UseVisualStyleBackColor = true;
+            this.btnSimpleMode.UseVisualStyleBackColor = false;
             this.btnSimpleMode.Click += new System.EventHandler(this.SwitchToSimple);
             // 
             // SimplePanel
@@ -209,7 +209,7 @@
             this.btnAdvancedMode.Size = new System.Drawing.Size(107, 23);
             this.btnAdvancedMode.TabIndex = 25;
             this.btnAdvancedMode.Text = "Advanced Mode";
-            this.btnAdvancedMode.UseVisualStyleBackColor = true;
+            this.btnAdvancedMode.UseVisualStyleBackColor = false;
             this.btnAdvancedMode.Click += new System.EventHandler(this.SwitchToAdvanced);
             // 
             // PresetTable

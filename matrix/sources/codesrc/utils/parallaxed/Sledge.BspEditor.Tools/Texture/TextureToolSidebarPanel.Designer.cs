@@ -114,7 +114,7 @@
             this.RandomShiftXButton.Size = new System.Drawing.Size(86, 23);
             this.RandomShiftXButton.TabIndex = 3;
             this.RandomShiftXButton.Text = "Randomise X";
-            this.RandomShiftXButton.UseVisualStyleBackColor = true;
+            this.RandomShiftXButton.UseVisualStyleBackColor = false;
             this.RandomShiftXButton.Click += new System.EventHandler(this.RandomShiftXButtonClicked);
             // 
             // RandomShiftYButton
@@ -124,7 +124,7 @@
             this.RandomShiftYButton.Size = new System.Drawing.Size(86, 23);
             this.RandomShiftYButton.TabIndex = 3;
             this.RandomShiftYButton.Text = "Randomise Y";
-            this.RandomShiftYButton.UseVisualStyleBackColor = true;
+            this.RandomShiftYButton.UseVisualStyleBackColor = false;
             this.RandomShiftYButton.Click += new System.EventHandler(this.RandomShiftYButtonClicked);
             // 
             // RandomiseShiftValuesGroup
@@ -195,7 +195,7 @@
             this.TileFitButton.Size = new System.Drawing.Size(71, 23);
             this.TileFitButton.TabIndex = 3;
             this.TileFitButton.Text = "Fit";
-            this.TileFitButton.UseVisualStyleBackColor = true;
+            this.TileFitButton.UseVisualStyleBackColor = false;
             this.TileFitButton.Click += new System.EventHandler(this.TileFitButtonClicked);
             // 
             // TileFitY

@@ -39,7 +39,7 @@
             this.Checkbox.Size = new System.Drawing.Size(73, 17);
             this.Checkbox.TabIndex = 0;
             this.Checkbox.Text = "LabelText";
-            this.Checkbox.UseVisualStyleBackColor = true;
+            this.Checkbox.UseVisualStyleBackColor = false;
             this.Checkbox.CheckedChanged += new System.EventHandler(this.ValueChanged);
             // 
             // NumericControl

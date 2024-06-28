@@ -44,7 +44,7 @@
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 0;
             this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.UseVisualStyleBackColor = false;
             this.CancelButton.Click += new System.EventHandler(this.CancelClicked);
             // 
             // DiscardButton
@@ -55,7 +55,7 @@
             this.DiscardButton.Size = new System.Drawing.Size(75, 23);
             this.DiscardButton.TabIndex = 0;
             this.DiscardButton.Text = "Discard all";
-            this.DiscardButton.UseVisualStyleBackColor = true;
+            this.DiscardButton.UseVisualStyleBackColor = false;
             this.DiscardButton.Click += new System.EventHandler(this.DiscardAllClicked);
             // 
             // SaveAllButton
@@ -66,7 +66,7 @@
             this.SaveAllButton.Size = new System.Drawing.Size(75, 23);
             this.SaveAllButton.TabIndex = 0;
             this.SaveAllButton.Text = "Save all";
-            this.SaveAllButton.UseVisualStyleBackColor = true;
+            this.SaveAllButton.UseVisualStyleBackColor = false;
             this.SaveAllButton.Click += new System.EventHandler(this.SaveAllClicked);
             // 
             // DocumentList

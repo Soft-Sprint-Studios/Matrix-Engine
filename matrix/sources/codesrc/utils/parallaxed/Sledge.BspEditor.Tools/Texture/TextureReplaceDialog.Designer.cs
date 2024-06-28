@@ -102,7 +102,7 @@
             this.FindBrowse.Size = new System.Drawing.Size(75, 23);
             this.FindBrowse.TabIndex = 1;
             this.FindBrowse.Text = "Browse...";
-            this.FindBrowse.UseVisualStyleBackColor = true;
+            this.FindBrowse.UseVisualStyleBackColor = false;
             // 
             // ReplaceGroup
             // 
@@ -148,7 +148,7 @@
             this.ReplaceBrowse.Size = new System.Drawing.Size(75, 23);
             this.ReplaceBrowse.TabIndex = 3;
             this.ReplaceBrowse.Text = "Browse...";
-            this.ReplaceBrowse.UseVisualStyleBackColor = true;
+            this.ReplaceBrowse.UseVisualStyleBackColor = false;
             // 
             // ReplaceInGroup
             // 
@@ -171,7 +171,7 @@
             this.ReplaceEverything.TabIndex = 7;
             this.ReplaceEverything.TabStop = true;
             this.ReplaceEverything.Text = "Everything";
-            this.ReplaceEverything.UseVisualStyleBackColor = true;
+            this.ReplaceEverything.UseVisualStyleBackColor = false;
             // 
             // ReplaceVisible
             // 
@@ -182,7 +182,7 @@
             this.ReplaceVisible.TabIndex = 6;
             this.ReplaceVisible.TabStop = true;
             this.ReplaceVisible.Text = "All visible objects";
-            this.ReplaceVisible.UseVisualStyleBackColor = true;
+            this.ReplaceVisible.UseVisualStyleBackColor = false;
             // 
             // ReplaceSelection
             // 
@@ -193,7 +193,7 @@
             this.ReplaceSelection.TabIndex = 5;
             this.ReplaceSelection.TabStop = true;
             this.ReplaceSelection.Text = "Selection";
-            this.ReplaceSelection.UseVisualStyleBackColor = true;
+            this.ReplaceSelection.UseVisualStyleBackColor = false;
             // 
             // ActionGroup
             // 
@@ -217,7 +217,7 @@
             this.ActionSelect.TabIndex = 12;
             this.ActionSelect.TabStop = true;
             this.ActionSelect.Text = "Select matches (don\'t replace)";
-            this.ActionSelect.UseVisualStyleBackColor = true;
+            this.ActionSelect.UseVisualStyleBackColor = false;
             // 
             // ActionSubstitute
             // 
@@ -228,7 +228,7 @@
             this.ActionSubstitute.TabIndex = 11;
             this.ActionSubstitute.TabStop = true;
             this.ActionSubstitute.Text = "Substitute partial matches";
-            this.ActionSubstitute.UseVisualStyleBackColor = true;
+            this.ActionSubstitute.UseVisualStyleBackColor = false;
             // 
             // ActionPartial
             // 
@@ -239,7 +239,7 @@
             this.ActionPartial.TabIndex = 10;
             this.ActionPartial.TabStop = true;
             this.ActionPartial.Text = "Replace partial matches";
-            this.ActionPartial.UseVisualStyleBackColor = true;
+            this.ActionPartial.UseVisualStyleBackColor = false;
             // 
             // ActionExact
             // 
@@ -250,7 +250,7 @@
             this.ActionExact.TabIndex = 9;
             this.ActionExact.TabStop = true;
             this.ActionExact.Text = "Replace exact matches";
-            this.ActionExact.UseVisualStyleBackColor = true;
+            this.ActionExact.UseVisualStyleBackColor = false;
             // 
             // RescaleTextures
             // 
@@ -260,7 +260,7 @@
             this.RescaleTextures.Size = new System.Drawing.Size(158, 17);
             this.RescaleTextures.TabIndex = 8;
             this.RescaleTextures.Text = "Rescale texture coordinates";
-            this.RescaleTextures.UseVisualStyleBackColor = true;
+            this.RescaleTextures.UseVisualStyleBackColor = false;
             // 
             // CancelButton
             // 
@@ -270,7 +270,7 @@
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 14;
             this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.UseVisualStyleBackColor = false;
             this.CancelButton.Click += new System.EventHandler(this.CancelClicked);
             // 
             // OKButton
@@ -281,7 +281,7 @@
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 13;
             this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.UseVisualStyleBackColor = false;
             this.OKButton.Click += new System.EventHandler(this.OkClicked);
             // 
             // TextureReplaceDialog

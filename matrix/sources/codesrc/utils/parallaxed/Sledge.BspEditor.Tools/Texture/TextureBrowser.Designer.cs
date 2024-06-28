@@ -90,7 +90,7 @@
             this.SortDescendingCheckbox.Size = new System.Drawing.Size(103, 17);
             this.SortDescendingCheckbox.TabIndex = 10;
             this.SortDescendingCheckbox.Text = "Sort descending";
-            this.SortDescendingCheckbox.UseVisualStyleBackColor = true;
+            this.SortDescendingCheckbox.UseVisualStyleBackColor = false;
             this.SortDescendingCheckbox.CheckedChanged += new System.EventHandler(this.SortDescendingCheckboxChanged);
             // 
             // SortOrderCombo
@@ -154,7 +154,7 @@
             this.SelectButton.Size = new System.Drawing.Size(92, 20);
             this.SelectButton.TabIndex = 5;
             this.SelectButton.Text = "Select";
-            this.SelectButton.UseVisualStyleBackColor = true;
+            this.SelectButton.UseVisualStyleBackColor = false;
             this.SelectButton.Click += new System.EventHandler(this.SelectButtonClicked);
             // 
             // UsedTexturesOnlyBox
@@ -165,7 +165,7 @@
             this.UsedTexturesOnlyBox.Size = new System.Drawing.Size(113, 17);
             this.UsedTexturesOnlyBox.TabIndex = 4;
             this.UsedTexturesOnlyBox.Text = "Used textures only";
-            this.UsedTexturesOnlyBox.UseVisualStyleBackColor = true;
+            this.UsedTexturesOnlyBox.UseVisualStyleBackColor = false;
             this.UsedTexturesOnlyBox.CheckedChanged += new System.EventHandler(this.UsedTexturesOnlyChanged);
             // 
             // SizeLabel
@@ -235,7 +235,7 @@
             this.DeleteFavouriteFolderButton.Size = new System.Drawing.Size(110, 23);
             this.DeleteFavouriteFolderButton.TabIndex = 3;
             this.DeleteFavouriteFolderButton.Text = "Delete Folder";
-            this.DeleteFavouriteFolderButton.UseVisualStyleBackColor = true;
+            this.DeleteFavouriteFolderButton.UseVisualStyleBackColor = false;
             this.DeleteFavouriteFolderButton.Click += new System.EventHandler(this.DeleteFavouriteFolderButtonClicked);
             // 
             // RemoveFavouriteItemButton
@@ -247,7 +247,7 @@
             this.RemoveFavouriteItemButton.Size = new System.Drawing.Size(220, 23);
             this.RemoveFavouriteItemButton.TabIndex = 3;
             this.RemoveFavouriteItemButton.Text = "Remove Selection From Folder";
-            this.RemoveFavouriteItemButton.UseVisualStyleBackColor = true;
+            this.RemoveFavouriteItemButton.UseVisualStyleBackColor = false;
             this.RemoveFavouriteItemButton.Click += new System.EventHandler(this.RemoveFavouriteItemButtonClicked);
             // 
             // AddFavouriteFolderButton
@@ -259,7 +259,7 @@
             this.AddFavouriteFolderButton.Size = new System.Drawing.Size(110, 23);
             this.AddFavouriteFolderButton.TabIndex = 3;
             this.AddFavouriteFolderButton.Text = "Add Folder";
-            this.AddFavouriteFolderButton.UseVisualStyleBackColor = true;
+            this.AddFavouriteFolderButton.UseVisualStyleBackColor = false;
             this.AddFavouriteFolderButton.Click += new System.EventHandler(this.AddFavouriteFolderButtonClicked);
             // 
             // FavouriteTexturesLabel

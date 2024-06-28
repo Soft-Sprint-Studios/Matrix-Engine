@@ -91,7 +91,7 @@
             this.AdditionalParametersCheckbox.Size = new System.Drawing.Size(128, 17);
             this.AdditionalParametersCheckbox.TabIndex = 3;
             this.AdditionalParametersCheckbox.Text = "Additional Parameters";
-            this.AdditionalParametersCheckbox.UseVisualStyleBackColor = true;
+            this.AdditionalParametersCheckbox.UseVisualStyleBackColor = false;
             this.AdditionalParametersCheckbox.CheckedChanged += new System.EventHandler(this.AdditionalParametersChanged);
             // 
             // DescriptionLabel

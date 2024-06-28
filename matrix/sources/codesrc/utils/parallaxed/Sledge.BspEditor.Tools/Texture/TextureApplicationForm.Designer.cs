@@ -91,7 +91,7 @@
 			this.HideMaskCheckbox.TabIndex = 34;
 			this.HideMaskCheckbox.Text = "Hide Mask";
 			this.HideMaskCheckbox.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-			this.HideMaskCheckbox.UseVisualStyleBackColor = true;
+			this.HideMaskCheckbox.UseVisualStyleBackColor = false;
 			this.HideMaskCheckbox.CheckedChanged += new System.EventHandler(this.HideMaskCheckboxToggled);
 			// 
 			// RecentFilterTextbox
@@ -132,7 +132,7 @@
 			this.AlignToFaceCheckbox.Size = new System.Drawing.Size(50, 17);
 			this.AlignToFaceCheckbox.TabIndex = 0;
 			this.AlignToFaceCheckbox.Text = "Face";
-			this.AlignToFaceCheckbox.UseVisualStyleBackColor = true;
+			this.AlignToFaceCheckbox.UseVisualStyleBackColor = false;
 			this.AlignToFaceCheckbox.Click += new System.EventHandler(this.AlignToFaceClicked);
 			// 
 			// AlignToWorldCheckbox
@@ -143,7 +143,7 @@
 			this.AlignToWorldCheckbox.Size = new System.Drawing.Size(54, 17);
 			this.AlignToWorldCheckbox.TabIndex = 0;
 			this.AlignToWorldCheckbox.Text = "World";
-			this.AlignToWorldCheckbox.UseVisualStyleBackColor = true;
+			this.AlignToWorldCheckbox.UseVisualStyleBackColor = false;
 			this.AlignToWorldCheckbox.Click += new System.EventHandler(this.AlignToWorldClicked);
 			// 
 			// JustifyGroup
@@ -171,7 +171,7 @@
 			this.RLeftButton.Size = new System.Drawing.Size(20, 20);
 			this.RLeftButton.TabIndex = 7;
 			this.RLeftButton.Text = "↰";
-			this.RLeftButton.UseVisualStyleBackColor = true;
+			this.RLeftButton.UseVisualStyleBackColor = false;
 			this.RLeftButton.Click += new System.EventHandler(this.RLeftButton_Click);
 			// 
 			// RRightButton
@@ -181,7 +181,7 @@
 			this.RRightButton.Size = new System.Drawing.Size(20, 20);
 			this.RRightButton.TabIndex = 6;
 			this.RRightButton.Text = "↱";
-			this.RRightButton.UseVisualStyleBackColor = true;
+			this.RRightButton.UseVisualStyleBackColor = false;
 			this.RRightButton.Click += new System.EventHandler(this.RRightButton_Click);
 			// 
 			// JustifyTopButton
@@ -191,7 +191,7 @@
 			this.JustifyTopButton.Size = new System.Drawing.Size(20, 20);
 			this.JustifyTopButton.TabIndex = 3;
 			this.JustifyTopButton.Text = "T";
-			this.JustifyTopButton.UseVisualStyleBackColor = true;
+			this.JustifyTopButton.UseVisualStyleBackColor = false;
 			this.JustifyTopButton.Click += new System.EventHandler(this.JustifyTopClicked);
 			// 
 			// JustifyFitButton
@@ -201,7 +201,7 @@
 			this.JustifyFitButton.Size = new System.Drawing.Size(68, 20);
 			this.JustifyFitButton.TabIndex = 4;
 			this.JustifyFitButton.Text = "Fit";
-			this.JustifyFitButton.UseVisualStyleBackColor = true;
+			this.JustifyFitButton.UseVisualStyleBackColor = false;
 			this.JustifyFitButton.Click += new System.EventHandler(this.JustifyFitClicked);
 			// 
 			// TreatAsOneCheckbox
@@ -211,7 +211,7 @@
 			this.TreatAsOneCheckbox.Size = new System.Drawing.Size(90, 21);
 			this.TreatAsOneCheckbox.TabIndex = 5;
 			this.TreatAsOneCheckbox.Text = "Treat as One";
-			this.TreatAsOneCheckbox.UseVisualStyleBackColor = true;
+			this.TreatAsOneCheckbox.UseVisualStyleBackColor = false;
 			this.TreatAsOneCheckbox.CheckedChanged += new System.EventHandler(this.TreatAsOneCheckboxToggled);
 			// 
 			// JustifyRightButton
@@ -221,7 +221,7 @@
 			this.JustifyRightButton.Size = new System.Drawing.Size(20, 20);
 			this.JustifyRightButton.TabIndex = 3;
 			this.JustifyRightButton.Text = "R";
-			this.JustifyRightButton.UseVisualStyleBackColor = true;
+			this.JustifyRightButton.UseVisualStyleBackColor = false;
 			this.JustifyRightButton.Click += new System.EventHandler(this.JustifyRightClicked);
 			// 
 			// JustifyBottomButton
@@ -231,7 +231,7 @@
 			this.JustifyBottomButton.Size = new System.Drawing.Size(20, 20);
 			this.JustifyBottomButton.TabIndex = 3;
 			this.JustifyBottomButton.Text = "B";
-			this.JustifyBottomButton.UseVisualStyleBackColor = true;
+			this.JustifyBottomButton.UseVisualStyleBackColor = false;
 			this.JustifyBottomButton.Click += new System.EventHandler(this.JustifyBottomClicked);
 			// 
 			// JustifyCenterButton
@@ -241,7 +241,7 @@
 			this.JustifyCenterButton.Size = new System.Drawing.Size(20, 20);
 			this.JustifyCenterButton.TabIndex = 3;
 			this.JustifyCenterButton.Text = "C";
-			this.JustifyCenterButton.UseVisualStyleBackColor = true;
+			this.JustifyCenterButton.UseVisualStyleBackColor = false;
 			this.JustifyCenterButton.Click += new System.EventHandler(this.JustifyCenterClicked);
 			// 
 			// JustifyLeftButton
@@ -251,7 +251,7 @@
 			this.JustifyLeftButton.Size = new System.Drawing.Size(20, 20);
 			this.JustifyLeftButton.TabIndex = 3;
 			this.JustifyLeftButton.Text = "L";
-			this.JustifyLeftButton.UseVisualStyleBackColor = true;
+			this.JustifyLeftButton.UseVisualStyleBackColor = false;
 			this.JustifyLeftButton.Click += new System.EventHandler(this.JustifyLeftClicked);
 			// 
 			// ApplyButton
@@ -261,7 +261,7 @@
 			this.ApplyButton.Size = new System.Drawing.Size(75, 23);
 			this.ApplyButton.TabIndex = 22;
 			this.ApplyButton.Text = "Apply";
-			this.ApplyButton.UseVisualStyleBackColor = true;
+			this.ApplyButton.UseVisualStyleBackColor = false;
 			this.ApplyButton.Click += new System.EventHandler(this.ApplyButtonClicked);
 			// 
 			// RotationValue
@@ -292,7 +292,7 @@
 			this.ReplaceButton.Size = new System.Drawing.Size(75, 23);
 			this.ReplaceButton.TabIndex = 24;
 			this.ReplaceButton.Text = "Replace...";
-			this.ReplaceButton.UseVisualStyleBackColor = true;
+			this.ReplaceButton.UseVisualStyleBackColor = false;
 			this.ReplaceButton.Click += new System.EventHandler(this.ReplaceButtonClicked);
 			// 
 			// BrowseButton
@@ -302,7 +302,7 @@
 			this.BrowseButton.Size = new System.Drawing.Size(75, 23);
 			this.BrowseButton.TabIndex = 23;
 			this.BrowseButton.Text = "Browse...";
-			this.BrowseButton.UseVisualStyleBackColor = true;
+			this.BrowseButton.UseVisualStyleBackColor = false;
 			this.BrowseButton.Click += new System.EventHandler(this.BrowseButtonClicked);
 			// 
 			// RotationLabel
@@ -587,7 +587,7 @@
 			this.LeftClickActionButton.Size = new System.Drawing.Size(148, 23);
 			this.LeftClickActionButton.TabIndex = 37;
 			this.LeftClickActionButton.Text = "Left click: Lift";
-			this.LeftClickActionButton.UseVisualStyleBackColor = true;
+			this.LeftClickActionButton.UseVisualStyleBackColor = false;
 			// 
 			// LeftClickActionMenu
 			// 
@@ -603,7 +603,7 @@
 			this.RightClickActionButton.Size = new System.Drawing.Size(148, 23);
 			this.RightClickActionButton.TabIndex = 37;
 			this.RightClickActionButton.Text = "Right click: Apply";
-			this.RightClickActionButton.UseVisualStyleBackColor = true;
+			this.RightClickActionButton.UseVisualStyleBackColor = false;
 			// 
 			// RightClickActionMenu
 			// 
@@ -618,7 +618,7 @@
 			this.ResetButton.Size = new System.Drawing.Size(75, 23);
 			this.ResetButton.TabIndex = 38;
 			this.ResetButton.Text = "Reset";
-			this.ResetButton.UseVisualStyleBackColor = true;
+			this.ResetButton.UseVisualStyleBackColor = false;
 			this.ResetButton.Click += new System.EventHandler(this.ResetButton_Click);
 			// 
 			// TextureApplicationForm

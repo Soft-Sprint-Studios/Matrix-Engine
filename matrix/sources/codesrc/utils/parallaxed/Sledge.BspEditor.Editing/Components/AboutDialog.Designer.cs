@@ -60,7 +60,7 @@
 			button1.Size = new System.Drawing.Size(153, 27);
 			button1.TabIndex = 1;
 			button1.Text = "Close";
-			button1.UseVisualStyleBackColor = true;
+			button1.UseVisualStyleBackColor = false;
 			// 
 			// pictureBox1
 			// 

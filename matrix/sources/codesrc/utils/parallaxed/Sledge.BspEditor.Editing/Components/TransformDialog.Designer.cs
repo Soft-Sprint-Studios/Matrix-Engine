@@ -60,7 +60,7 @@
             this.lblRotate.TabIndex = 0;
             this.lblRotate.TabStop = true;
             this.lblRotate.Text = "Rotate";
-            this.lblRotate.UseVisualStyleBackColor = true;
+            this.lblRotate.UseVisualStyleBackColor = false;
             this.lblRotate.Click += new System.EventHandler(this.TypeChanged);
             // 
             // lblTranslate
@@ -71,7 +71,7 @@
             this.lblTranslate.Size = new System.Drawing.Size(69, 17);
             this.lblTranslate.TabIndex = 0;
             this.lblTranslate.Text = "Translate";
-            this.lblTranslate.UseVisualStyleBackColor = true;
+            this.lblTranslate.UseVisualStyleBackColor = false;
             this.lblTranslate.Click += new System.EventHandler(this.TypeChanged);
             // 
             // lblScale
@@ -82,7 +82,7 @@
             this.lblScale.Size = new System.Drawing.Size(52, 17);
             this.lblScale.TabIndex = 0;
             this.lblScale.Text = "Scale";
-            this.lblScale.UseVisualStyleBackColor = true;
+            this.lblScale.UseVisualStyleBackColor = false;
             this.lblScale.Click += new System.EventHandler(this.TypeChanged);
             // 
             // ValueY
@@ -146,7 +146,7 @@
             this.SourceValueZButton.Size = new System.Drawing.Size(49, 20);
             this.SourceValueZButton.TabIndex = 18;
             this.SourceValueZButton.Text = "Source";
-            this.SourceValueZButton.UseVisualStyleBackColor = true;
+            this.SourceValueZButton.UseVisualStyleBackColor = false;
             // 
             // ZeroValueZButton
             // 
@@ -155,7 +155,7 @@
             this.ZeroValueZButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroValueZButton.TabIndex = 19;
             this.ZeroValueZButton.Text = "0";
-            this.ZeroValueZButton.UseVisualStyleBackColor = true;
+            this.ZeroValueZButton.UseVisualStyleBackColor = false;
             // 
             // SourceValueYButton
             // 
@@ -164,7 +164,7 @@
             this.SourceValueYButton.Size = new System.Drawing.Size(49, 20);
             this.SourceValueYButton.TabIndex = 20;
             this.SourceValueYButton.Text = "Source";
-            this.SourceValueYButton.UseVisualStyleBackColor = true;
+            this.SourceValueYButton.UseVisualStyleBackColor = false;
             // 
             // ZeroValueYButton
             // 
@@ -173,7 +173,7 @@
             this.ZeroValueYButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroValueYButton.TabIndex = 21;
             this.ZeroValueYButton.Text = "0";
-            this.ZeroValueYButton.UseVisualStyleBackColor = true;
+            this.ZeroValueYButton.UseVisualStyleBackColor = false;
             // 
             // SourceValueXButton
             // 
@@ -182,7 +182,7 @@
             this.SourceValueXButton.Size = new System.Drawing.Size(49, 20);
             this.SourceValueXButton.TabIndex = 22;
             this.SourceValueXButton.Text = "Source";
-            this.SourceValueXButton.UseVisualStyleBackColor = true;
+            this.SourceValueXButton.UseVisualStyleBackColor = false;
             // 
             // ZeroValueXButton
             // 
@@ -191,7 +191,7 @@
             this.ZeroValueXButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroValueXButton.TabIndex = 23;
             this.ZeroValueXButton.Text = "0";
-            this.ZeroValueXButton.UseVisualStyleBackColor = true;
+            this.ZeroValueXButton.UseVisualStyleBackColor = false;
             // 
             // label5
             // 
@@ -228,7 +228,7 @@
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 27;
             this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.UseVisualStyleBackColor = false;
             // 
             // OkButton
             // 
@@ -238,7 +238,7 @@
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 28;
             this.OkButton.Text = "OK";
-            this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.UseVisualStyleBackColor = false;
             // 
             // TransformDialog
             // 

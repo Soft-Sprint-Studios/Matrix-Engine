@@ -78,7 +78,7 @@
             this.RoundCreatedVerticesCheckbox.Size = new System.Drawing.Size(137, 17);
             this.RoundCreatedVerticesCheckbox.TabIndex = 6;
             this.RoundCreatedVerticesCheckbox.Text = "Round created vertices";
-            this.RoundCreatedVerticesCheckbox.UseVisualStyleBackColor = true;
+            this.RoundCreatedVerticesCheckbox.UseVisualStyleBackColor = false;
             this.RoundCreatedVerticesCheckbox.CheckedChanged += new System.EventHandler(this.RoundCreatedVerticesChanged);
             // 
             // BrushSidebarPanel

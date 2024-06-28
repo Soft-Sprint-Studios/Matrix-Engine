@@ -50,7 +50,7 @@
             this.Show3DWidgetsCheckbox.Size = new System.Drawing.Size(112, 17);
             this.Show3DWidgetsCheckbox.TabIndex = 6;
             this.Show3DWidgetsCheckbox.Text = "Show 3D Widgets";
-            this.Show3DWidgetsCheckbox.UseVisualStyleBackColor = true;
+            this.Show3DWidgetsCheckbox.UseVisualStyleBackColor = false;
             this.Show3DWidgetsCheckbox.CheckedChanged += new System.EventHandler(this.Show3DWidgetsChecked);
             // 
             // lblMode
@@ -72,7 +72,7 @@
             this.TranslateModeCheckbox.Size = new System.Drawing.Size(61, 23);
             this.TranslateModeCheckbox.TabIndex = 7;
             this.TranslateModeCheckbox.Text = "Translate";
-            this.TranslateModeCheckbox.UseVisualStyleBackColor = true;
+            this.TranslateModeCheckbox.UseVisualStyleBackColor = false;
             this.TranslateModeCheckbox.CheckedChanged += new System.EventHandler(this.TranslateModeChecked);
             // 
             // RotateModeCheckbox
@@ -84,7 +84,7 @@
             this.RotateModeCheckbox.Size = new System.Drawing.Size(49, 23);
             this.RotateModeCheckbox.TabIndex = 7;
             this.RotateModeCheckbox.Text = "Rotate";
-            this.RotateModeCheckbox.UseVisualStyleBackColor = true;
+            this.RotateModeCheckbox.UseVisualStyleBackColor = false;
             this.RotateModeCheckbox.CheckedChanged += new System.EventHandler(this.RotateModeChecked);
             // 
             // SkewModeCheckbox
@@ -96,7 +96,7 @@
             this.SkewModeCheckbox.Size = new System.Drawing.Size(44, 23);
             this.SkewModeCheckbox.TabIndex = 7;
             this.SkewModeCheckbox.Text = "Skew";
-            this.SkewModeCheckbox.UseVisualStyleBackColor = true;
+            this.SkewModeCheckbox.UseVisualStyleBackColor = false;
             this.SkewModeCheckbox.CheckedChanged += new System.EventHandler(this.SkewModeChecked);
             // 
             // MoveToWorldButton
@@ -108,7 +108,7 @@
             this.MoveToWorldButton.Size = new System.Drawing.Size(100, 23);
             this.MoveToWorldButton.TabIndex = 8;
             this.MoveToWorldButton.Text = "Move to World";
-            this.MoveToWorldButton.UseVisualStyleBackColor = true;
+            this.MoveToWorldButton.UseVisualStyleBackColor = false;
             this.MoveToWorldButton.Click += new System.EventHandler(this.MoveToWorldButtonClicked);
             // 
             // MoveToEntityButton
@@ -120,7 +120,7 @@
             this.MoveToEntityButton.Size = new System.Drawing.Size(100, 23);
             this.MoveToEntityButton.TabIndex = 9;
             this.MoveToEntityButton.Text = "Tie to Entity";
-            this.MoveToEntityButton.UseVisualStyleBackColor = true;
+            this.MoveToEntityButton.UseVisualStyleBackColor = false;
             this.MoveToEntityButton.Click += new System.EventHandler(this.TieToEntityButtonClicked);
             // 
             // lblActions

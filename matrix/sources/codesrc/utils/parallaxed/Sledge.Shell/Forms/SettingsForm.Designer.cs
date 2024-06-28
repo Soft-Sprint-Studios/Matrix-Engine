@@ -56,7 +56,7 @@
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 8;
             this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.UseVisualStyleBackColor = false;
             this.CancelButton.Click += new System.EventHandler(this.CancelClicked);
             // 
             // OKButton
@@ -67,7 +67,7 @@
             this.OKButton.Size = new System.Drawing.Size(75, 23);
             this.OKButton.TabIndex = 8;
             this.OKButton.Text = "OK";
-            this.OKButton.UseVisualStyleBackColor = true;
+            this.OKButton.UseVisualStyleBackColor = false;
             this.OKButton.Click += new System.EventHandler(this.OkClicked);
             // 
             // GroupList

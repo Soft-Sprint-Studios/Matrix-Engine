@@ -130,7 +130,7 @@
             this.StartSelection.Size = new System.Drawing.Size(185, 17);
             this.StartSelection.TabIndex = 0;
             this.StartSelection.Text = "Start at center of current selection";
-            this.StartSelection.UseVisualStyleBackColor = true;
+            this.StartSelection.UseVisualStyleBackColor = false;
             // 
             // StartOriginal
             // 
@@ -142,7 +142,7 @@
             this.StartOriginal.TabIndex = 0;
             this.StartOriginal.TabStop = true;
             this.StartOriginal.Text = "Start at center of original";
-            this.StartOriginal.UseVisualStyleBackColor = true;
+            this.StartOriginal.UseVisualStyleBackColor = false;
             // 
             // StartOrigin
             // 
@@ -152,7 +152,7 @@
             this.StartOrigin.Size = new System.Drawing.Size(110, 17);
             this.StartOrigin.TabIndex = 0;
             this.StartOrigin.Text = "Start at map origin";
-            this.StartOrigin.UseVisualStyleBackColor = true;
+            this.StartOrigin.UseVisualStyleBackColor = false;
             // 
             // grpGrouping
             // 
@@ -174,7 +174,7 @@
             this.GroupAll.Size = new System.Drawing.Size(101, 17);
             this.GroupAll.TabIndex = 0;
             this.GroupAll.Text = "Group all copies";
-            this.GroupAll.UseVisualStyleBackColor = true;
+            this.GroupAll.UseVisualStyleBackColor = false;
             // 
             // GroupIndividual
             // 
@@ -186,7 +186,7 @@
             this.GroupIndividual.TabIndex = 0;
             this.GroupIndividual.TabStop = true;
             this.GroupIndividual.Text = "Group individual copies";
-            this.GroupIndividual.UseVisualStyleBackColor = true;
+            this.GroupIndividual.UseVisualStyleBackColor = false;
             // 
             // GroupNone
             // 
@@ -196,7 +196,7 @@
             this.GroupNone.Size = new System.Drawing.Size(83, 17);
             this.GroupNone.TabIndex = 0;
             this.GroupNone.Text = "No grouping";
-            this.GroupNone.UseVisualStyleBackColor = true;
+            this.GroupNone.UseVisualStyleBackColor = false;
             // 
             // grpOffset
             // 
@@ -280,7 +280,7 @@
             this.SourceOffsetZButton.Size = new System.Drawing.Size(49, 20);
             this.SourceOffsetZButton.TabIndex = 13;
             this.SourceOffsetZButton.Text = "Source";
-            this.SourceOffsetZButton.UseVisualStyleBackColor = true;
+            this.SourceOffsetZButton.UseVisualStyleBackColor = false;
             // 
             // ZeroOffsetZButton
             // 
@@ -289,7 +289,7 @@
             this.ZeroOffsetZButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroOffsetZButton.TabIndex = 13;
             this.ZeroOffsetZButton.Text = "0";
-            this.ZeroOffsetZButton.UseVisualStyleBackColor = true;
+            this.ZeroOffsetZButton.UseVisualStyleBackColor = false;
             // 
             // SourceOffsetYButton
             // 
@@ -298,7 +298,7 @@
             this.SourceOffsetYButton.Size = new System.Drawing.Size(49, 20);
             this.SourceOffsetYButton.TabIndex = 13;
             this.SourceOffsetYButton.Text = "Source";
-            this.SourceOffsetYButton.UseVisualStyleBackColor = true;
+            this.SourceOffsetYButton.UseVisualStyleBackColor = false;
             // 
             // ZeroOffsetYButton
             // 
@@ -307,7 +307,7 @@
             this.ZeroOffsetYButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroOffsetYButton.TabIndex = 13;
             this.ZeroOffsetYButton.Text = "0";
-            this.ZeroOffsetYButton.UseVisualStyleBackColor = true;
+            this.ZeroOffsetYButton.UseVisualStyleBackColor = false;
             // 
             // SourceOffsetXButton
             // 
@@ -316,7 +316,7 @@
             this.SourceOffsetXButton.Size = new System.Drawing.Size(49, 20);
             this.SourceOffsetXButton.TabIndex = 13;
             this.SourceOffsetXButton.Text = "Source";
-            this.SourceOffsetXButton.UseVisualStyleBackColor = true;
+            this.SourceOffsetXButton.UseVisualStyleBackColor = false;
             // 
             // ZeroOffsetXButton
             // 
@@ -325,7 +325,7 @@
             this.ZeroOffsetXButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroOffsetXButton.TabIndex = 13;
             this.ZeroOffsetXButton.Text = "0";
-            this.ZeroOffsetXButton.UseVisualStyleBackColor = true;
+            this.ZeroOffsetXButton.UseVisualStyleBackColor = false;
             // 
             // label5
             // 
@@ -362,7 +362,7 @@
             this.UniqueEntityNames.Size = new System.Drawing.Size(150, 17);
             this.UniqueEntityNames.TabIndex = 15;
             this.UniqueEntityNames.Text = "Make entity names unique";
-            this.UniqueEntityNames.UseVisualStyleBackColor = true;
+            this.UniqueEntityNames.UseVisualStyleBackColor = false;
             // 
             // PrefixEntityNamesCheckbox
             // 
@@ -372,7 +372,7 @@
             this.PrefixEntityNamesCheckbox.Size = new System.Drawing.Size(148, 17);
             this.PrefixEntityNamesCheckbox.TabIndex = 15;
             this.PrefixEntityNamesCheckbox.Text = "Prefix named entities with:";
-            this.PrefixEntityNamesCheckbox.UseVisualStyleBackColor = true;
+            this.PrefixEntityNamesCheckbox.UseVisualStyleBackColor = false;
             // 
             // EntityPrefix
             // 
@@ -389,7 +389,7 @@
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 16;
             this.OkButton.Text = "OK";
-            this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.UseVisualStyleBackColor = false;
             this.OkButton.Click += new System.EventHandler(this.OkButtonClicked);
             // 
             // CancelButton
@@ -400,7 +400,7 @@
             this.CancelButton.Size = new System.Drawing.Size(75, 23);
             this.CancelButton.TabIndex = 16;
             this.CancelButton.Text = "Cancel";
-            this.CancelButton.UseVisualStyleBackColor = true;
+            this.CancelButton.UseVisualStyleBackColor = false;
             // 
             // grpRotation
             // 
@@ -481,7 +481,7 @@
             this.ZeroRotationZButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroRotationZButton.TabIndex = 13;
             this.ZeroRotationZButton.Text = "0";
-            this.ZeroRotationZButton.UseVisualStyleBackColor = true;
+            this.ZeroRotationZButton.UseVisualStyleBackColor = false;
             // 
             // ZeroRotationYButton
             // 
@@ -490,7 +490,7 @@
             this.ZeroRotationYButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroRotationYButton.TabIndex = 13;
             this.ZeroRotationYButton.Text = "0";
-            this.ZeroRotationYButton.UseVisualStyleBackColor = true;
+            this.ZeroRotationYButton.UseVisualStyleBackColor = false;
             // 
             // ZeroRotationXButton
             // 
@@ -499,7 +499,7 @@
             this.ZeroRotationXButton.Size = new System.Drawing.Size(25, 20);
             this.ZeroRotationXButton.TabIndex = 13;
             this.ZeroRotationXButton.Text = "0";
-            this.ZeroRotationXButton.UseVisualStyleBackColor = true;
+            this.ZeroRotationXButton.UseVisualStyleBackColor = false;
             // 
             // label8
             // 

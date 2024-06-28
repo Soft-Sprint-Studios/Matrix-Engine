@@ -50,7 +50,7 @@
 			OKButton.Size = new System.Drawing.Size(88, 27);
 			OKButton.TabIndex = 13;
 			OKButton.Text = "OK";
-			OKButton.UseVisualStyleBackColor = true;
+			OKButton.UseVisualStyleBackColor = false;
 			OKButton.Click += OkClicked;
 			// 
 			// label1
@@ -78,7 +78,7 @@
 			CancelButton.Size = new System.Drawing.Size(88, 27);
 			CancelButton.TabIndex = 14;
 			CancelButton.Text = "Cancel";
-			CancelButton.UseVisualStyleBackColor = true;
+			CancelButton.UseVisualStyleBackColor = false;
 			CancelButton.Click += CancelClicked;
 			// 
 			// label2
@@ -137,7 +137,7 @@
 			retriggerCheck.Size = new System.Drawing.Size(116, 19);
 			retriggerCheck.TabIndex = 24;
 			retriggerCheck.Text = "Wait for retrigger";
-			retriggerCheck.UseVisualStyleBackColor = true;
+			retriggerCheck.UseVisualStyleBackColor = false;
 			// 
 			// NodeProperties
 			// 

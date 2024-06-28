@@ -39,7 +39,7 @@
             this.Checkbox.Size = new System.Drawing.Size(80, 17);
             this.Checkbox.TabIndex = 0;
             this.Checkbox.Text = "checkBox1";
-            this.Checkbox.UseVisualStyleBackColor = true;
+            this.Checkbox.UseVisualStyleBackColor = false;
             // 
             // BooleanEditor
             // 

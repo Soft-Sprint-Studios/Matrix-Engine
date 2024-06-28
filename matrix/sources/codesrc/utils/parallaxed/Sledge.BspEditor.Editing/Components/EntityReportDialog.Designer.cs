@@ -113,7 +113,7 @@
             this.ResetFiltersButton.Size = new System.Drawing.Size(75, 23);
             this.ResetFiltersButton.TabIndex = 6;
             this.ResetFiltersButton.Text = "Reset Filters";
-            this.ResetFiltersButton.UseVisualStyleBackColor = true;
+            this.ResetFiltersButton.UseVisualStyleBackColor = false;
             this.ResetFiltersButton.Click += new System.EventHandler(this.ResetFilters);
             // 
             // IncludeHidden
@@ -126,7 +126,7 @@
             this.IncludeHidden.Size = new System.Drawing.Size(133, 17);
             this.IncludeHidden.TabIndex = 5;
             this.IncludeHidden.Text = "Include hidden objects";
-            this.IncludeHidden.UseVisualStyleBackColor = true;
+            this.IncludeHidden.UseVisualStyleBackColor = false;
             this.IncludeHidden.CheckedChanged += new System.EventHandler(this.FiltersChanged);
             // 
             // FilterClassExact
@@ -137,7 +137,7 @@
             this.FilterClassExact.Size = new System.Drawing.Size(53, 17);
             this.FilterClassExact.TabIndex = 4;
             this.FilterClassExact.Text = "Exact";
-            this.FilterClassExact.UseVisualStyleBackColor = true;
+            this.FilterClassExact.UseVisualStyleBackColor = false;
             this.FilterClassExact.CheckedChanged += new System.EventHandler(this.FiltersChanged);
             // 
             // FilterKeyValueExact
@@ -148,7 +148,7 @@
             this.FilterKeyValueExact.Size = new System.Drawing.Size(53, 17);
             this.FilterKeyValueExact.TabIndex = 4;
             this.FilterKeyValueExact.Text = "Exact";
-            this.FilterKeyValueExact.UseVisualStyleBackColor = true;
+            this.FilterKeyValueExact.UseVisualStyleBackColor = false;
             this.FilterKeyValueExact.CheckedChanged += new System.EventHandler(this.FiltersChanged);
             // 
             // label2
@@ -210,7 +210,7 @@
             this.TypeBrush.Size = new System.Drawing.Size(113, 17);
             this.TypeBrush.TabIndex = 0;
             this.TypeBrush.Text = "Brush Entities Only";
-            this.TypeBrush.UseVisualStyleBackColor = true;
+            this.TypeBrush.UseVisualStyleBackColor = false;
             this.TypeBrush.Click += new System.EventHandler(this.FiltersChanged);
             // 
             // TypePoint
@@ -221,7 +221,7 @@
             this.TypePoint.Size = new System.Drawing.Size(110, 17);
             this.TypePoint.TabIndex = 0;
             this.TypePoint.Text = "Point Entities Only";
-            this.TypePoint.UseVisualStyleBackColor = true;
+            this.TypePoint.UseVisualStyleBackColor = false;
             this.TypePoint.Click += new System.EventHandler(this.FiltersChanged);
             // 
             // TypeAll
@@ -234,7 +234,7 @@
             this.TypeAll.TabIndex = 0;
             this.TypeAll.TabStop = true;
             this.TypeAll.Text = "Show All";
-            this.TypeAll.UseVisualStyleBackColor = true;
+            this.TypeAll.UseVisualStyleBackColor = false;
             this.TypeAll.Click += new System.EventHandler(this.FiltersChanged);
             // 
             // GoToButton
@@ -245,7 +245,7 @@
             this.GoToButton.Size = new System.Drawing.Size(75, 23);
             this.GoToButton.TabIndex = 2;
             this.GoToButton.Text = "Go to";
-            this.GoToButton.UseVisualStyleBackColor = true;
+            this.GoToButton.UseVisualStyleBackColor = false;
             this.GoToButton.Click += new System.EventHandler(this.GoToSelectedEntity);
             // 
             // DeleteButton
@@ -256,7 +256,7 @@
             this.DeleteButton.Size = new System.Drawing.Size(75, 23);
             this.DeleteButton.TabIndex = 3;
             this.DeleteButton.Text = "Delete";
-            this.DeleteButton.UseVisualStyleBackColor = true;
+            this.DeleteButton.UseVisualStyleBackColor = false;
             this.DeleteButton.Click += new System.EventHandler(this.DeleteSelectedEntity);
             // 
             // PropertiesButton
@@ -267,7 +267,7 @@
             this.PropertiesButton.Size = new System.Drawing.Size(75, 23);
             this.PropertiesButton.TabIndex = 4;
             this.PropertiesButton.Text = "Properties";
-            this.PropertiesButton.UseVisualStyleBackColor = true;
+            this.PropertiesButton.UseVisualStyleBackColor = false;
             this.PropertiesButton.Click += new System.EventHandler(this.OpenEntityProperties);
             // 
             // CloseButton
@@ -279,7 +279,7 @@
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
             this.CloseButton.TabIndex = 5;
             this.CloseButton.Text = "Close";
-            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.UseVisualStyleBackColor = false;
             this.CloseButton.Click += new System.EventHandler(this.CloseButtonClicked);
             // 
             // FollowSelection
@@ -293,7 +293,7 @@
             this.FollowSelection.Size = new System.Drawing.Size(101, 17);
             this.FollowSelection.TabIndex = 6;
             this.FollowSelection.Text = "Follow selection";
-            this.FollowSelection.UseVisualStyleBackColor = true;
+            this.FollowSelection.UseVisualStyleBackColor = false;
             // 
             // EntityReportDialog
             // 

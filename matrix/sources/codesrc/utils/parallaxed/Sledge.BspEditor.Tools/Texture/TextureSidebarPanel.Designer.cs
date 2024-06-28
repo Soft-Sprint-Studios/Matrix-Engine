@@ -45,7 +45,7 @@
             this.BrowseButton.Size = new System.Drawing.Size(95, 22);
             this.BrowseButton.TabIndex = 11;
             this.BrowseButton.Text = "Browse...";
-            this.BrowseButton.UseVisualStyleBackColor = true;
+            this.BrowseButton.UseVisualStyleBackColor = false;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButtonClicked);
             // 
             // ReplaceButton
@@ -56,7 +56,7 @@
             this.ReplaceButton.Size = new System.Drawing.Size(95, 22);
             this.ReplaceButton.TabIndex = 12;
             this.ReplaceButton.Text = "Replace...";
-            this.ReplaceButton.UseVisualStyleBackColor = true;
+            this.ReplaceButton.UseVisualStyleBackColor = false;
             this.ReplaceButton.Click += new System.EventHandler(this.ReplaceButtonClicked);
             // 
             // ApplyButton
@@ -67,7 +67,7 @@
             this.ApplyButton.Size = new System.Drawing.Size(95, 22);
             this.ApplyButton.TabIndex = 11;
             this.ApplyButton.Text = "Apply";
-            this.ApplyButton.UseVisualStyleBackColor = true;
+            this.ApplyButton.UseVisualStyleBackColor = false;
             this.ApplyButton.Click += new System.EventHandler(this.ApplyButtonClicked);
             // 
             // SelectionPictureBox

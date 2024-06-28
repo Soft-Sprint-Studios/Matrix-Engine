@@ -73,7 +73,7 @@
             this.ResetButton.Size = new System.Drawing.Size(95, 23);
             this.ResetButton.TabIndex = 6;
             this.ResetButton.Text = "Reset to Original";
-            this.ResetButton.UseVisualStyleBackColor = true;
+            this.ResetButton.UseVisualStyleBackColor = false;
             this.ResetButton.Click += new System.EventHandler(this.ResetButtonClicked);
             // 
             // DeselectAllButton
@@ -83,7 +83,7 @@
             this.DeselectAllButton.Size = new System.Drawing.Size(83, 23);
             this.DeselectAllButton.TabIndex = 5;
             this.DeselectAllButton.Text = "Deselect All";
-            this.DeselectAllButton.UseVisualStyleBackColor = true;
+            this.DeselectAllButton.UseVisualStyleBackColor = false;
             this.DeselectAllButton.Click += new System.EventHandler(this.DeselectAllButtonClicked);
             // 
             // VertexSidebarPanel

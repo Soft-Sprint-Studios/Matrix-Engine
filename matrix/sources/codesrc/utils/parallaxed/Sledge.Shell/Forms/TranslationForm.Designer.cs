@@ -120,7 +120,7 @@
             this.btnSave.Size = new System.Drawing.Size(126, 21);
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Save changes";
-            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.SaveClicked);
             // 
             // btnNewLanguage
@@ -130,7 +130,7 @@
             this.btnNewLanguage.Size = new System.Drawing.Size(127, 21);
             this.btnNewLanguage.TabIndex = 4;
             this.btnNewLanguage.Text = "Add a new language";
-            this.btnNewLanguage.UseVisualStyleBackColor = true;
+            this.btnNewLanguage.UseVisualStyleBackColor = false;
             this.btnNewLanguage.Click += new System.EventHandler(this.AddLanguageClicked);
             // 
             // colFullID

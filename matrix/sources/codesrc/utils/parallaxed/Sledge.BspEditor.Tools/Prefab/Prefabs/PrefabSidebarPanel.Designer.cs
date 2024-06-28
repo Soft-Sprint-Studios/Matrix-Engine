@@ -78,7 +78,7 @@ namespace Sledge.BspEditor.Tools.Prefab {
 			this.CreateButton.Size = new System.Drawing.Size(143, 23);
 			this.CreateButton.TabIndex = 2;
 			this.CreateButton.Text = "Create Prefab";
-			this.CreateButton.UseVisualStyleBackColor = true;
+			this.CreateButton.UseVisualStyleBackColor = false;
 			this.CreateButton.Click += new System.EventHandler(this.CreateButton_Click);
 			// 
 			// NewPrefab
@@ -90,7 +90,7 @@ namespace Sledge.BspEditor.Tools.Prefab {
 			this.NewPrefab.Size = new System.Drawing.Size(143, 23);
 			this.NewPrefab.TabIndex = 3;
 			this.NewPrefab.Text = "Save as new prefab";
-			this.NewPrefab.UseVisualStyleBackColor = true;
+			this.NewPrefab.UseVisualStyleBackColor = false;
 			this.NewPrefab.Click += new System.EventHandler(this.NewPrefab_Click);
 			// 
 			// NewPrefabName
@@ -122,7 +122,7 @@ namespace Sledge.BspEditor.Tools.Prefab {
 			this.CreateLib.Size = new System.Drawing.Size(143, 23);
 			this.CreateLib.TabIndex = 6;
 			this.CreateLib.Text = "Create library";
-			this.CreateLib.UseVisualStyleBackColor = true;
+			this.CreateLib.UseVisualStyleBackColor = false;
 			this.CreateLib.Click += new System.EventHandler(this.CreateLib_Click);
 			// 
 			// PrefabSidebarPanel

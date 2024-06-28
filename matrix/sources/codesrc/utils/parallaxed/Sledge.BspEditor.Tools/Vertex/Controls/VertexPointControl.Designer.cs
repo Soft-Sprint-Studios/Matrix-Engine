@@ -43,7 +43,7 @@
             this.MergeButton.Size = new System.Drawing.Size(144, 23);
             this.MergeButton.TabIndex = 8;
             this.MergeButton.Text = "Merge overlapping vertices";
-            this.MergeButton.UseVisualStyleBackColor = true;
+            this.MergeButton.UseVisualStyleBackColor = false;
             this.MergeButton.Click += new System.EventHandler(this.MergeButtonClicked);
             // 
             // AutoMerge
@@ -56,7 +56,7 @@
             this.AutoMerge.Size = new System.Drawing.Size(120, 17);
             this.AutoMerge.TabIndex = 7;
             this.AutoMerge.Text = "Merge automatically";
-            this.AutoMerge.UseVisualStyleBackColor = true;
+            this.AutoMerge.UseVisualStyleBackColor = false;
             // 
             // SplitButton
             // 
@@ -65,7 +65,7 @@
             this.SplitButton.Size = new System.Drawing.Size(76, 23);
             this.SplitButton.TabIndex = 8;
             this.SplitButton.Text = "Split face";
-            this.SplitButton.UseVisualStyleBackColor = true;
+            this.SplitButton.UseVisualStyleBackColor = false;
             this.SplitButton.Click += new System.EventHandler(this.SplitButtonClicked);
             // 
             // MergeResultsLabel
@@ -89,7 +89,7 @@
             this.ShowPointsCheckbox.Size = new System.Drawing.Size(84, 17);
             this.ShowPointsCheckbox.TabIndex = 10;
             this.ShowPointsCheckbox.Text = "Show points";
-            this.ShowPointsCheckbox.UseVisualStyleBackColor = true;
+            this.ShowPointsCheckbox.UseVisualStyleBackColor = false;
             this.ShowPointsCheckbox.CheckedChanged += new System.EventHandler(this.ShowPointsChanged);
             // 
             // ShowMidpointsCheckbox
@@ -102,7 +102,7 @@
             this.ShowMidpointsCheckbox.Size = new System.Drawing.Size(100, 17);
             this.ShowMidpointsCheckbox.TabIndex = 11;
             this.ShowMidpointsCheckbox.Text = "Show midpoints";
-            this.ShowMidpointsCheckbox.UseVisualStyleBackColor = true;
+            this.ShowMidpointsCheckbox.UseVisualStyleBackColor = false;
             this.ShowMidpointsCheckbox.CheckedChanged += new System.EventHandler(this.ShowPointsChanged);
             // 
             // VertexPointControl

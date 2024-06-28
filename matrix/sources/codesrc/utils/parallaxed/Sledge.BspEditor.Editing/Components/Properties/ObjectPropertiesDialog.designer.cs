@@ -57,7 +57,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.CancelClicked);
             // 
             // btnApply
@@ -67,7 +67,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties
             this.btnApply.Size = new System.Drawing.Size(75, 23);
             this.btnApply.TabIndex = 2;
             this.btnApply.Text = "Apply";
-            this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.UseVisualStyleBackColor = false;
             this.btnApply.Click += new System.EventHandler(this.ApplyClicked);
             // 
             // btnReset
@@ -78,7 +78,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties
             this.btnReset.Size = new System.Drawing.Size(158, 23);
             this.btnReset.TabIndex = 3;
             this.btnReset.Text = "Reset unsaved changes";
-            this.btnReset.UseVisualStyleBackColor = true;
+            this.btnReset.UseVisualStyleBackColor = false;
             this.btnReset.Click += new System.EventHandler(this.ResetClicked);
             // 
             // ObjectPropertiesDialog

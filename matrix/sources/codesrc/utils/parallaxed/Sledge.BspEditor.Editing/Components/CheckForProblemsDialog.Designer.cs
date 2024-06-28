@@ -75,7 +75,7 @@
             this.btnGoToError.Size = new System.Drawing.Size(151, 23);
             this.btnGoToError.TabIndex = 2;
             this.btnGoToError.Text = "Go to error";
-            this.btnGoToError.UseVisualStyleBackColor = true;
+            this.btnGoToError.UseVisualStyleBackColor = false;
             this.btnGoToError.Click += new System.EventHandler(this.GoToError);
             // 
             // btnFix
@@ -86,7 +86,7 @@
             this.btnFix.Size = new System.Drawing.Size(151, 23);
             this.btnFix.TabIndex = 2;
             this.btnFix.Text = "Fix error";
-            this.btnFix.UseVisualStyleBackColor = true;
+            this.btnFix.UseVisualStyleBackColor = false;
             this.btnFix.Click += new System.EventHandler(this.FixError);
             // 
             // btnFixAllOfType
@@ -97,7 +97,7 @@
             this.btnFixAllOfType.Size = new System.Drawing.Size(151, 23);
             this.btnFixAllOfType.TabIndex = 2;
             this.btnFixAllOfType.Text = "Fix all of type";
-            this.btnFixAllOfType.UseVisualStyleBackColor = true;
+            this.btnFixAllOfType.UseVisualStyleBackColor = false;
             this.btnFixAllOfType.Click += new System.EventHandler(this.FixAllOfType);
             // 
             // btnFixAll
@@ -108,7 +108,7 @@
             this.btnFixAll.Size = new System.Drawing.Size(151, 23);
             this.btnFixAll.TabIndex = 2;
             this.btnFixAll.Text = "Fix all problems";
-            this.btnFixAll.UseVisualStyleBackColor = true;
+            this.btnFixAll.UseVisualStyleBackColor = false;
             this.btnFixAll.Click += new System.EventHandler(this.FixAll);
             // 
             // btnClose
@@ -120,7 +120,7 @@
             this.btnClose.Size = new System.Drawing.Size(98, 23);
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
+            this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.CloseWindow);
             // 
             // grpDetails
@@ -161,7 +161,7 @@
             this.chkVisibleOnly.Size = new System.Drawing.Size(115, 17);
             this.chkVisibleOnly.TabIndex = 4;
             this.chkVisibleOnly.Text = "Visible objects only";
-            this.chkVisibleOnly.UseVisualStyleBackColor = true;
+            this.chkVisibleOnly.UseVisualStyleBackColor = false;
             this.chkVisibleOnly.CheckedChanged += new System.EventHandler(this.VisibleOnlyCheckboxChanged);
             // 
             // chkSelectedOnly
@@ -172,7 +172,7 @@
             this.chkSelectedOnly.Size = new System.Drawing.Size(127, 17);
             this.chkSelectedOnly.TabIndex = 4;
             this.chkSelectedOnly.Text = "Selected objects only";
-            this.chkSelectedOnly.UseVisualStyleBackColor = true;
+            this.chkSelectedOnly.UseVisualStyleBackColor = false;
             this.chkSelectedOnly.CheckedChanged += new System.EventHandler(this.VisibleOnlyCheckboxChanged);
             // 
             // CheckForProblemsDialog

@@ -207,7 +207,7 @@
             this.CloseDialogButton.Size = new System.Drawing.Size(75, 23);
             this.CloseDialogButton.TabIndex = 3;
             this.CloseDialogButton.Text = "Close";
-            this.CloseDialogButton.UseVisualStyleBackColor = true;
+            this.CloseDialogButton.UseVisualStyleBackColor = false;
             this.CloseDialogButton.Click += new System.EventHandler(this.CloseButtonClicked);
             // 
             // TextureMemoryValue

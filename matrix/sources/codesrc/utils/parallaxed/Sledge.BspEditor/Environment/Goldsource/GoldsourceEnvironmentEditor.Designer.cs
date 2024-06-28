@@ -152,7 +152,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			btnGameDirBrowse.Size = new System.Drawing.Size(86, 23);
 			btnGameDirBrowse.TabIndex = 15;
 			btnGameDirBrowse.Text = "Browse...";
-			btnGameDirBrowse.UseVisualStyleBackColor = true;
+			btnGameDirBrowse.UseVisualStyleBackColor = false;
 			btnGameDirBrowse.Click += BrowseGameDirectory;
 			// 
 			// lblGameExe
@@ -228,7 +228,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			btnAddFgd.Size = new System.Drawing.Size(86, 27);
 			btnAddFgd.TabIndex = 27;
 			btnAddFgd.Text = "Add...";
-			btnAddFgd.UseVisualStyleBackColor = true;
+			btnAddFgd.UseVisualStyleBackColor = false;
 			btnAddFgd.Click += BrowseFgd;
 			// 
 			// lblDefaultBrushEntity
@@ -249,7 +249,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			btnRemoveFgd.Size = new System.Drawing.Size(86, 27);
 			btnRemoveFgd.TabIndex = 28;
 			btnRemoveFgd.Text = "Remove";
-			btnRemoveFgd.UseVisualStyleBackColor = true;
+			btnRemoveFgd.UseVisualStyleBackColor = false;
 			btnRemoveFgd.Click += RemoveFgd;
 			// 
 			// lblDefaultPointEntity
@@ -319,7 +319,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkIncludeFgdDirectories.Size = new System.Drawing.Size(416, 28);
 			chkIncludeFgdDirectories.TabIndex = 39;
 			chkIncludeFgdDirectories.Text = "Load sprites and models from FGD directories";
-			chkIncludeFgdDirectories.UseVisualStyleBackColor = true;
+			chkIncludeFgdDirectories.UseVisualStyleBackColor = false;
 			// 
 			// cmbMapSizeOverrideHigh
 			// 
@@ -363,7 +363,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkOverrideMapSize.Size = new System.Drawing.Size(229, 28);
 			chkOverrideMapSize.TabIndex = 41;
 			chkOverrideMapSize.Text = "Override FGD map size";
-			chkOverrideMapSize.UseVisualStyleBackColor = true;
+			chkOverrideMapSize.UseVisualStyleBackColor = false;
 			// 
 			// lblMapSizeOverrideLow
 			// 
@@ -385,7 +385,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkLoadHdModels.Size = new System.Drawing.Size(284, 28);
 			chkLoadHdModels.TabIndex = 45;
 			chkLoadHdModels.Text = "Load HD Models (if available)";
-			chkLoadHdModels.UseVisualStyleBackColor = true;
+			chkLoadHdModels.UseVisualStyleBackColor = false;
 			// 
 			// grpDirectories
 			// 
@@ -504,7 +504,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkCopyBsp.Size = new System.Drawing.Size(429, 23);
 			chkCopyBsp.TabIndex = 42;
 			chkCopyBsp.Text = "Copy BSP/RES to game folder";
-			chkCopyBsp.UseVisualStyleBackColor = true;
+			chkCopyBsp.UseVisualStyleBackColor = false;
 			// 
 			// chkCopyRes
 			// 
@@ -516,7 +516,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkCopyRes.Size = new System.Drawing.Size(57, 28);
 			chkCopyRes.TabIndex = 42;
 			chkCopyRes.Text = "RES";
-			chkCopyRes.UseVisualStyleBackColor = true;
+			chkCopyRes.UseVisualStyleBackColor = false;
 			// 
 			// chkCopyErr
 			// 
@@ -528,7 +528,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkCopyErr.Size = new System.Drawing.Size(57, 28);
 			chkCopyErr.TabIndex = 42;
 			chkCopyErr.Text = "ERR";
-			chkCopyErr.UseVisualStyleBackColor = true;
+			chkCopyErr.UseVisualStyleBackColor = false;
 			// 
 			// chkCopyLog
 			// 
@@ -540,7 +540,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkCopyLog.Size = new System.Drawing.Size(57, 28);
 			chkCopyLog.TabIndex = 42;
 			chkCopyLog.Text = "LOG";
-			chkCopyLog.UseVisualStyleBackColor = true;
+			chkCopyLog.UseVisualStyleBackColor = false;
 			// 
 			// chkCopyMap
 			// 
@@ -552,7 +552,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkCopyMap.Size = new System.Drawing.Size(57, 28);
 			chkCopyMap.TabIndex = 42;
 			chkCopyMap.Text = "MAP";
-			chkCopyMap.UseVisualStyleBackColor = true;
+			chkCopyMap.UseVisualStyleBackColor = false;
 			// 
 			// chkMapCopyBsp
 			// 
@@ -564,7 +564,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkMapCopyBsp.Size = new System.Drawing.Size(57, 28);
 			chkMapCopyBsp.TabIndex = 42;
 			chkMapCopyBsp.Text = "BSP";
-			chkMapCopyBsp.UseVisualStyleBackColor = true;
+			chkMapCopyBsp.UseVisualStyleBackColor = false;
 			// 
 			// chkAskRunGame
 			// 
@@ -576,7 +576,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkAskRunGame.Size = new System.Drawing.Size(429, 23);
 			chkAskRunGame.TabIndex = 42;
 			chkAskRunGame.Text = "Ask before running the game";
-			chkAskRunGame.UseVisualStyleBackColor = true;
+			chkAskRunGame.UseVisualStyleBackColor = false;
 			// 
 			// chkRunGame
 			// 
@@ -588,7 +588,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkRunGame.Size = new System.Drawing.Size(429, 23);
 			chkRunGame.TabIndex = 42;
 			chkRunGame.Text = "Run the game after successful compile";
-			chkRunGame.UseVisualStyleBackColor = true;
+			chkRunGame.UseVisualStyleBackColor = false;
 			// 
 			// chkIncludeToolsDirectory
 			// 
@@ -600,7 +600,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkIncludeToolsDirectory.Size = new System.Drawing.Size(506, 23);
 			chkIncludeToolsDirectory.TabIndex = 33;
 			chkIncludeToolsDirectory.Text = "Automatically include textures found in this directory";
-			chkIncludeToolsDirectory.UseVisualStyleBackColor = true;
+			chkIncludeToolsDirectory.UseVisualStyleBackColor = false;
 			chkIncludeToolsDirectory.CheckedChanged += IncludeBuildToolsChanged;
 			// 
 			// lblBuildExeFolder
@@ -712,7 +712,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			btnBuildToolsBrowse.Size = new System.Drawing.Size(86, 23);
 			btnBuildToolsBrowse.TabIndex = 32;
 			btnBuildToolsBrowse.Text = "Browse...";
-			btnBuildToolsBrowse.UseVisualStyleBackColor = true;
+			btnBuildToolsBrowse.UseVisualStyleBackColor = false;
 			btnBuildToolsBrowse.Click += BrowseBuildToolsDirectory;
 			// 
 			// grpTextures
@@ -775,7 +775,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			btnRemoveTextures.Size = new System.Drawing.Size(86, 27);
 			btnRemoveTextures.TabIndex = 44;
 			btnRemoveTextures.Text = "Remove";
-			btnRemoveTextures.UseVisualStyleBackColor = true;
+			btnRemoveTextures.UseVisualStyleBackColor = false;
 			btnRemoveTextures.Click += RemoveWad;
 			// 
 			// btnAddTextures
@@ -786,7 +786,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			btnAddTextures.Size = new System.Drawing.Size(86, 27);
 			btnAddTextures.TabIndex = 43;
 			btnAddTextures.Text = "Add...";
-			btnAddTextures.UseVisualStyleBackColor = true;
+			btnAddTextures.UseVisualStyleBackColor = false;
 			btnAddTextures.Click += BrowseWad;
 			// 
 			// lblAdditionalTexturePackages
@@ -832,7 +832,7 @@ namespace Sledge.BspEditor.Environment.Goldsource
 			chkToggleAllTextures.Size = new System.Drawing.Size(141, 21);
 			chkToggleAllTextures.TabIndex = 42;
 			chkToggleAllTextures.Text = "Toggle all";
-			chkToggleAllTextures.UseVisualStyleBackColor = true;
+			chkToggleAllTextures.UseVisualStyleBackColor = false;
 			chkToggleAllTextures.CheckedChanged += ToggleAllTextures;
 			// 
 			// GoldsourceEnvironmentEditor

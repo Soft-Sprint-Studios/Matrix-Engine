@@ -23,7 +23,7 @@ namespace Sledge.BspEditor.Editing.Components.Properties.Tabs
             this.btnEditVisgroups.Size = new System.Drawing.Size(98, 23);
             this.btnEditVisgroups.TabIndex = 5;
             this.btnEditVisgroups.Text = "Edit Visgroups";
-            this.btnEditVisgroups.UseVisualStyleBackColor = true;
+            this.btnEditVisgroups.UseVisualStyleBackColor = false;
             this.btnEditVisgroups.Click += new System.EventHandler(this.EditVisgroupsClicked);
             // 
             // lblMemberOfGroup

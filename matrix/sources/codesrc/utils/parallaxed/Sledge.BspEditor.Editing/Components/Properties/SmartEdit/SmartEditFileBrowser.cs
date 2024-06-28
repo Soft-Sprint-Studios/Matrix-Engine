@@ -35,11 +35,11 @@ namespace Sledge.BspEditor.Editing.Components.Properties.SmartEdit
             _textBox.TextChanged += (sender, e) => OnValueChanged();
             Controls.Add(_textBox);
 
-            _browseButton = new Button { Text = "Browse", Margin = new Padding(1), UseVisualStyleBackColor = true };
+            _browseButton = new Button { Text = "Browse", Margin = new Padding(1), UseVisualStyleBackColor = false};
             _browseButton.Click += OpenModelBrowser;
             Controls.Add(_browseButton);
 
-            _previewButton = new Button { Text = "Preview", Margin = new Padding(1), UseVisualStyleBackColor = true };
+            _previewButton = new Button { Text = "Preview", Margin = new Padding(1), UseVisualStyleBackColor = false };
             _previewButton.Click += PreviewSelection;
             Controls.Add(_previewButton);
 

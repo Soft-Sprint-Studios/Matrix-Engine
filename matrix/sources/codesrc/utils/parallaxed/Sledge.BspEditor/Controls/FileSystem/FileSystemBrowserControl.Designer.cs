@@ -90,7 +90,7 @@
             this.UpButton.Size = new System.Drawing.Size(35, 20);
             this.UpButton.TabIndex = 3;
             this.UpButton.Text = "Up";
-            this.UpButton.UseVisualStyleBackColor = true;
+            this.UpButton.UseVisualStyleBackColor = false;
             this.UpButton.Click += new System.EventHandler(this.UpButtonClicked);
             // 
             // SelectionTextbox
@@ -121,7 +121,7 @@
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 4;
             this.button1.Text = "OK";
-            this.button1.UseVisualStyleBackColor = true;
+            this.button1.UseVisualStyleBackColor = false;
             this.button1.Click += new System.EventHandler(this.OkButtonClicked);
             // 
             // button2
@@ -132,7 +132,7 @@
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 4;
             this.button2.Text = "Cancel";
-            this.button2.UseVisualStyleBackColor = true;
+            this.button2.UseVisualStyleBackColor = false;
             this.button2.Click += new System.EventHandler(this.CancelButtonClicked);
             // 
             // FilterLabelStart

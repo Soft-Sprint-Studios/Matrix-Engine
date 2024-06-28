@@ -30,7 +30,7 @@ namespace Sledge.BspEditor.Tools.Texture
             _textBox.TextChanged += (sender, e) => OnValueChanged();
             Controls.Add(_textBox);
 
-            _browseButton = new Button { Text = "Browse...", Margin = new Padding(1), UseVisualStyleBackColor = true };
+            _browseButton = new Button { Text = "Browse...", Margin = new Padding(1), UseVisualStyleBackColor = false };
             _browseButton.Click += OpenTextureBrowser;
             Controls.Add(_browseButton);
 
