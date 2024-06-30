@@ -2,7 +2,7 @@
 // - PMF format -
 //===========================
 
-Pathos uses material scripts not unlike Source's for defining textures 
+Matrix Engine uses material scripts not unlike Source's for defining textures 
 used by the world and models. A PMF file(short for Pathos Material File)
 has two main types:
  
@@ -44,6 +44,7 @@ Currently five types of textures are supported:
  - luminance : This is used for textures that have a self-illumination
                component to them.
 - ao : This defines Ambient Occlusion map of the texture,Similar to Physiclly Based Rendering AO maps.
+- height : This defines Heightmap of the texture For use in Parallax Occlusion Mapping.
 
 Flags and values:
  - $cubemaps : Marks that the texture will use cubemap reflections.
@@ -90,6 +91,8 @@ Flags and values:
  - $cubemapstrength : Defines the strength of the cubemap effect's
                       reflections, with a value between 0 and 1.
  - $cubemapnormal : Defines the strength of the normalmap effect on the cubemap
+ - $parallaxscale : Defines the depth of the Parallax Occlusion Mapping
+ - $parallaxlayers : Defines the Layers of the Parallax Occlusion Mapping (Less = more performance less quality, More = less performance more quality)
  - $container : Used by textures stored in WAD3 files, and should
                 specify the name of the WAD3 file.
  - $scrollu : Defines the scroll speed on the U coordinate.

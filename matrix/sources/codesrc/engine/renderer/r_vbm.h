@@ -351,9 +351,6 @@ public:
 	// Shuts down the class
 	void Shutdown( void );
 
-	void InitializeFBO();
-	void CleanupFBO();
-
 public:
 	// Initializes OpenGL objects
 	bool InitGL( void );
@@ -506,7 +503,6 @@ private:
 
 	// Draws collected submodels
 	bool DrawNormalSubmodels( void );
-	bool DrawNormalSubmodelsFBO(void);
 	// Draws submodels with flexes on them
 	bool DrawFlexedSubmodels( void );
 
@@ -568,8 +564,6 @@ private:
 
 	// Flex texture allocation
 	struct en_texalloc_t* m_pFlexTexture;
-	// screen space normal texture allocation
-	struct en_texalloc_t* m_pScreenNormalsTexture;
 	// Screen texture pointer
 	struct rtt_texture_t* m_pScreenTexture;
 

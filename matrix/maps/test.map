@@ -122,19 +122,3 @@
 "maxdelay" "0"
 "origin" "4128.000 -832.000 2256.000"
 }
-{
-"classname" "env_model"
-"angles" "0 0 0"
-"renderfx" "0"
-"rendermode" "0"
-"renderamt" "255"
-"rendercolor" "0 0 0"
-"body" "0"
-"skin" "0"
-"sequence" "0"
-"framerate" "1"
-"disableshadows" "0"
-"scale" "1"
-"model" "models/props/bed2.mdl"
-"origin" "3616.000 -944.000 2176.000"
-}

@@ -6,7 +6,11 @@ $texture
 	$cubemaps
 	$cubemapstrength 1
 	$cubemapnormal 0.1
+	$parallaxscale 0.05
+	$parallaxlayers 64
 	$texture diffuse world/slatefloor01/slatefloor01.dds
 	$texture normal world/slatefloor01/slatefloor01_normal.dds
 	$texture specular world/slatefloor01/slatefloor01_specular.dds
+	$texture ao world/slatefloor01/slatefloor01_ao.dds
+	$texture height world/slatefloor01/slatefloor01_height.dds
 }

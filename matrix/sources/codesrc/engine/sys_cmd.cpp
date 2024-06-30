@@ -87,7 +87,6 @@ void Cmd_LoadMap( void )
 	SV_SpawnGame(pstrFilename);
 }
 
-
 //=============================================
 // @brief Shows list of active bsps in the maps folder
 // 

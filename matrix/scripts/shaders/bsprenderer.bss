@@ -7,6 +7,7 @@ $global_determinator cubemaps 0 2
 $global_determinator luminance 0 1
 $global_determinator ao 0 1
 $global_determinator normals 0 1
+$global_determinator parallax 0 1
 $global_determinator numlights 0 4
 $global_determinator light0_shadowmap 0 1
 $global_determinator light1_shadowmap 0 1
@@ -254,6 +255,12 @@ $begin
 uniform sampler2D luminance;
 $end
 uniform sampler2D aomaptex;
+$branch parallax == 1
+$begin
+uniform sampler2D heightmaptex;
+uniform float parallaxdepth;
+uniform float parallaxlayers;
+$end
 uniform float aoscale;
 
 $branch numlights >= 1
@@ -377,8 +384,6 @@ in vec4 ps_light_3_vertexcoord; // projection space
 in float ps_fogcoord; // static fogcoord
 in vec3 ps_vertexpos; // for radial fog
 
-
-
 $branch cubemaps >= 1
 $begin
 in vec3 ps_cubenormal;
@@ -388,6 +393,71 @@ in vec3 ps_cubevertexpos;
 $end
 
 out vec4 oColor;
+
+vec3 GetTangentSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal )
+{
+$branch bumpmapping == 0
+$begin
+	return v_normal;
+$end
+$branch bumpmapping == 1
+$begin
+	vec3 out_normal = (2.0 * texture2D (normalmap, texcoord).xyz) - 1.0;
+	return normalize(out_normal);
+$end
+}
+
+vec3 GetEyeSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal, mat3 tbnMatrix )
+{
+$branch bumpmapping == 0
+$begin
+	return v_normal;
+$end
+$branch bumpmapping == 1
+$begin
+	vec3 out_normal = (2.0 * texture2D (normalmap, texcoord).xyz) - 1.0;
+	return normalize(tbnMatrix * out_normal);
+$end
+}
+
+$branch parallax == 1
+$begin
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir, float parallaxDepth, float numSteps, sampler2D heightSampler)
+{
+    const float layerDepth = 1.0 / numSteps;
+    float currentLayerDepth = 0.0;
+    vec2 P = viewDir.xy * parallaxDepth; 
+    vec2 deltaTexCoords = P / numSteps; 
+
+    vec2 currentTexCoords = texCoords;
+    float currentDepthMapValue = texture(heightSampler, currentTexCoords).r;
+
+    while (currentLayerDepth < currentDepthMapValue)
+    {
+        currentTexCoords -= deltaTexCoords;
+        currentDepthMapValue = texture(heightSampler, currentTexCoords).r;  
+        currentLayerDepth += layerDepth;  
+    }
+
+    vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
+    float depthAfterCurrentLayer = currentDepthMapValue - currentLayerDepth;
+    float depthBeforeCurrentLayer = texture(heightSampler, prevTexCoords).r - currentLayerDepth + layerDepth;
+    float weight = depthAfterCurrentLayer / (depthAfterCurrentLayer - depthBeforeCurrentLayer);
+    vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
+
+    return finalTexCoords;
+}
+$end
+
+$branch parallax == 1
+$begin
+vec3 T = normalize(ps_tangent);
+vec3 B = normalize(ps_binormal);
+vec3 N = normalize(ps_normal);
+mat3 tbnMatrix = transpose(mat3(T, B, N));
+vec3 viewDirTS = normalize(tbnMatrix * normalize(ps_vertexpos));
+vec2 ps_parallaxcoord = ParallaxMapping(ps_texcoord, viewDirTS, parallaxdepth, parallaxlayers, heightmaptex);
+$end
 
 float CalcShininess( vec3 v_origin, vec3 v_normal, vec3 l_origin )
 {
@@ -450,7 +520,14 @@ float CalcSpecular(vec3 v_origin, vec3 v_normal, vec3 lightDir, float specularSt
     vec3 reflectVec = reflect(lightDir, v_normal);
     float cosAlpha = clamp(dot(eyeVec, reflectVec), 0.0, 1.0);
     
-    vec4 specularColor = texture(speculartex, ps_texcoord.xy);
+	$branch parallax == 1
+	$begin
+	vec4 specularColor = texture(speculartex, ps_parallaxcoord.xy);
+	$end
+	$branch parallax == 0
+	$begin
+	vec4 specularColor = texture(speculartex, ps_texcoord.xy);
+	$end
     float specularReflectance = specularColor.r;
     vec3 specularTint = specularColor.rgb;
     float specularComponent = specfactor * pow(cosAlpha, phong_exponent) * specularStrength * specularReflectance;
@@ -611,32 +688,36 @@ $begin
 $end
 }
 
-vec3 GetTangentSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal )
+$branch parallax == 1
+$begin
+vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
 {
 $branch bumpmapping == 0
 $begin
-	return v_normal;
+	vec4 lightmapColor = texture2D(ambLightmap, ps_lmapcoord);
+	$branch luminance == 1
+	$begin
+		lightmapColor.xyz += texture(luminance, ps_parallaxcoord).xyz;
+	$end
+	return clamp(lightmapColor, 0, 1); // To prevent multipass inconsistencies
 $end
 $branch bumpmapping == 1
 $begin
-	vec3 out_normal = (2.0 * texture2D (normalmap, texcoord).xyz) - 1.0;
-	return normalize(out_normal);
+	// Lightmap is always on unit 0
+	vec4 ambientColor = texture2D(ambLightmap, ps_lmapcoord);
+	vec4 finalColor = ambientColor + diffuseColor * dot(lightDir, v_normal);
+	
+	$branch luminance == 1
+	$begin
+		finalColor.xyz += texture(luminance, ps_parallaxcoord).xyz;
+	$end	
+
+	return clamp(finalColor, 0, 1); // To prevent multipass inconsistencies
 $end
 }
-
-vec3 GetEyeSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal, mat3 tbnMatrix )
-{
-$branch bumpmapping == 0
-$begin
-	return v_normal;
 $end
-$branch bumpmapping == 1
+$branch parallax == 0
 $begin
-	vec3 out_normal = (2.0 * texture2D (normalmap, texcoord).xyz) - 1.0;
-	return normalize(tbnMatrix * out_normal);
-$end
-}
-
 vec4 AddBaseLight( sampler2D ambLightmap, vec4 diffuseColor, vec3 lightDir, vec3 v_normal )
 {
 $branch bumpmapping == 0
@@ -662,6 +743,7 @@ $begin
 	return clamp(finalColor, 0, 1); // To prevent multipass inconsistencies
 $end
 }
+$end
 
 float SplineFraction( float value, float scale )
 {
@@ -705,6 +787,59 @@ $begin
 $end
 }
 
+$branch parallax == 1
+$begin
+vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength )
+{
+	vec3 lightDir = GetLightDir( lightvecstex );
+	vec4 lightDiffuse = GetDiffuseLight( difflightmap );
+	vec4 finalColor = AddBaseLight(baselightmap, lightDiffuse, lightDir, v_normal);
+
+	$branch shadertype == 0
+	$begin
+		vec4 texColor = texture2D(maintexture, ps_parallaxcoord);
+		vec4 detailTexColor = texture2D(detailtex, ps_dtexcoord);
+		
+		finalColor = finalColor*texColor*detailTexColor;
+		finalColor.xyz = finalColor.xyz*4;
+	$end
+	$branch shadertype == 1
+	$begin
+		vec4 texColor = texture2D(maintexture, ps_parallaxcoord);
+		finalColor = finalColor*texColor;
+		finalColor.xyz = finalColor.xyz*2;
+	$end
+	$branch shadertype == 2
+	$begin
+		// Store light color
+		vec4 lightColor = finalColor;
+	
+		vec4 texColor = texture2D(maintexture, ps_parallaxcoord);
+		finalColor = lightColor*texColor;
+		finalColor.xyz = finalColor.xyz*2;
+
+		vec4 chromeTex = texture2D(chrometex, ps_chromecoord);
+		finalColor.xyz += chromeTex.xyz*lightColor.xyz*2*color.w;
+	$end
+	
+	$branch specular == 1
+	$begin
+		// Add specular if any
+		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
+		vec3 eyeSpaceDir = normalize(tbnMatrix * vec3(lightDir[0], -lightDir[1], lightDir[2]));
+		vec3 eyeSpaceNormal = normalize(tbnMatrix * v_normal);
+		
+		float shineFactor = CalcShininess(normalize(v_origin), eyeSpaceNormal, eyeSpaceDir);
+		float specularValue = CalcSpecular(v_origin, eyeSpaceNormal, -eyeSpaceDir, specularStrength);
+		
+		finalColor += specularValue * lightDiffuse * shineFactor;
+	$end	
+	
+	return finalColor;
+}
+$end
+$branch parallax == 0
+$begin
 vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength )
 {
 	vec3 lightDir = GetLightDir( lightvecstex );
@@ -753,6 +888,7 @@ vec4 CombineTextureLayers( vec3 v_origin, vec3 v_normal, float specularStrength 
 	
 	return finalColor;
 }
+$end
 
 vec4 GetLightmappedSpecular(vec3 v_origin, vec3 v_normal, float specularStrength)
 {
@@ -834,7 +970,14 @@ void main()
 
 	$branch specular == 1 || cubemaps >= 1
 $begin
-            vec4 specTexture = texture2D(speculartex, ps_texcoord);
+$branch parallax == 1
+$begin
+vec4 specTexture = texture2D(speculartex, ps_parallaxcoord);
+$end
+$branch parallax == 0
+$begin
+vec4 specTexture = texture2D(speculartex, ps_texcoord);
+$end
 		    specularFactor = (specTexture.x + specTexture.y + specTexture.z) / 3.0;
 $end
 
@@ -851,7 +994,6 @@ $begin
             $end
 $end
 
-
 	$branch shadertype == 3 || shadertype == 22
 	$begin
 		finalColor = texture2D(baselightmap, ps_lmapcoord) * color;
@@ -862,13 +1004,27 @@ $end
 	$end
 	$branch shadertype == 4
 $begin
-            finalColor = texture2D(maintexture, ps_texcoord) * color;
+$branch parallax == 1
+$begin
+finalColor = texture2D(maintexture, ps_parallaxcoord) * color;
+$end
+$branch parallax == 0
+$begin
+finalColor = texture2D(maintexture, ps_texcoord) * color;
+$end
 $end
 	$branch shadertype == 5
 	$begin
 		// Build the TBN matrix and get the vertex normal
 		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-		vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
+		$branch parallax == 1
+		$begin
+				vec3 v_normal = GetEyeSpaceNormal(ps_parallaxcoord, normalmap, ps_normal, tbnMatrix);
+		$end
+		$branch parallax == 0
+		$begin
+				vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
+		$end
 		
 		//
 		// Light 1
@@ -950,7 +1106,14 @@ $end
 	$begin
 		// Build the TBN matrix and get the vertex normal
 		mat3 tbnMatrix = mat3(ps_tangent, ps_binormal, ps_normal);
-		vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
+		$branch parallax == 1
+		$begin
+				vec3 v_normal = GetEyeSpaceNormal(ps_parallaxcoord, normalmap, ps_normal, tbnMatrix);
+		$end
+		$branch parallax == 0
+		$begin
+				vec3 v_normal = GetEyeSpaceNormal(ps_texcoord, normalmap, ps_normal, tbnMatrix);
+		$end
 		
 		//
 		// Light 1
@@ -1030,8 +1193,16 @@ $end
 	$end
 	$branch shadertype == 9
 $begin
+$branch parallax == 1
+$begin
+            vec4 caustics1 = texture2D(maintexture, ps_parallaxcoord);
+            vec4 caustics2 = texture2D(detailtex, ps_parallaxcoord);
+$end
+$branch parallax == 0
+$begin
             vec4 caustics1 = texture2D(maintexture, ps_texcoord);
             vec4 caustics2 = texture2D(detailtex, ps_texcoord);
+$end
             
             finalColor = caustics1 * (1.0 - interpolant) + caustics2 * interpolant;
 $end
@@ -1039,7 +1210,14 @@ $end
 	$branch shadertype == 10
 	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
+		$branch parallax == 1
+		$begin
+		vec3 v_normal = GetTangentSpaceNormal(ps_parallaxcoord, normalmap, ps_normal);
+		$end
+		$branch parallax == 0
+		$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+		$end
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
@@ -1056,8 +1234,16 @@ $end
 		
 		$branch shadertype == 13
 		$begin
-			if(texture2D(maintexture, ps_texcoord).w < 0.5)
+		$branch parallax == 1
+$begin
+           if(texture2D(maintexture, ps_parallaxcoord).w < 0.5)
 				discard;
+$end
+$branch parallax == 0
+$begin
+           if(texture2D(maintexture, ps_texcoord).w < 0.5)
+				discard;
+$end
 		$end
 	$end
 	
@@ -1077,14 +1263,28 @@ $end
 	$branch shadertype == 16
 	$begin
 		vec3 lightDir = GetLightDir( lightvecstex );
+		$branch parallax == 1
+		$begin
+		vec3 v_normal = GetTangentSpaceNormal(ps_parallaxcoord, normalmap, ps_normal);
+		$end
+		$branch parallax == 0
+		$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+		$end
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
 	$end
 	$branch shadertype == 17
 $begin
-		vec4 tex0 = texture2D(maintexture, ps_texcoord);
+$branch parallax == 1
+$begin
+vec4 tex0 = texture2D(maintexture, ps_parallaxcoord);
+$end
+$branch parallax == 0
+$begin
+vec4 tex0 = texture2D(maintexture, ps_texcoord);
+$end
 		vec4 tex1 = texture2D(detailtex, ps_dtexcoord);
 		finalColor = tex0*tex1;
 		finalColor.xyz = finalColor.xyz*2;
@@ -1092,7 +1292,14 @@ $begin
 	$end
 	$branch shadertype == 18
 	$begin
+		$branch parallax == 1
+		$begin
+		vec3 v_normal = GetTangentSpaceNormal(ps_parallaxcoord, normalmap, ps_normal);
+		$end
+		$branch parallax == 0
+		$begin
 		vec3 v_normal = GetTangentSpaceNormal(ps_texcoord, normalmap, ps_normal);
+		$end
 		finalColor = GetLightmappedSpecular( ps_vertexpos, v_normal, specularFactor );
 	$end
 	$branch shadertype == 19
@@ -1101,7 +1308,14 @@ $begin
 	$end
 	$branch shadertype == 20
 $begin
-    vec4 tex01 = texture2D(maintexture, ps_texcoord);
+$branch parallax == 1
+$begin
+ vec4 tex01 = texture2D(maintexture, ps_parallaxcoord);
+$end
+$branch parallax == 0
+$begin
+ vec4 tex01 = texture2D(maintexture, ps_texcoord);
+$end
     vec4 tex11 = texture2D(detailtex, ps_dtexcoord);
     finalColor.a *= tex11.a;
     finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
@@ -1109,7 +1323,14 @@ $end
 
 $branch shadertype == 21
 $begin
-    finalColor = texture2D(maintexture, ps_texcoord);
+$branch parallax == 1
+$begin
+finalColor = texture2D(maintexture, ps_parallaxcoord);
+$end
+$branch parallax == 0
+$begin
+finalColor = texture2D(maintexture, ps_texcoord);
+$end
     finalColor.xyz = (decalalpha * finalColor.xyz) + (1.0 - decalalpha) * vec3(0.5, 0.5, 0.5);
 $end
 
@@ -1131,7 +1352,14 @@ $end
 	
 	$branch ao == 1
 $begin
-    float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
+$branch parallax == 1
+$begin
+ float aoFactor = texture2D(aomaptex, ps_parallaxcoord).r * aoscale;
+$end
+$branch parallax == 0
+$begin
+ float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
+$end
     finalColor.rgb *= aoFactor;
 $end
     

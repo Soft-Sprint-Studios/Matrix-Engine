@@ -54,6 +54,7 @@ enum mt_texture_t
 	MT_TX_SPECULAR,
 	MT_TX_LUMINANCE,
 	MT_TX_AO,
+	MT_TX_HEIGHT,
 
 	// Must be last
 	NB_MT_TX,
@@ -144,6 +145,8 @@ struct en_material_t
 		alpha(0),
 		phong_exp(0),
 		aoscale(0),
+		parallaxscale(0),
+		parallaxlayers(0),
 		cubemapnormal(0),
 		spec_factor(0),
 		scale(0),
@@ -162,6 +165,7 @@ struct en_material_t
 	inline en_texture_t* getspecular( void ) { return ptextures[MT_TX_SPECULAR]; }
 	inline en_texture_t* getluminance( void ) { return ptextures[MT_TX_LUMINANCE]; }
 	inline en_texture_t* getao(void) { return ptextures[MT_TX_AO]; }
+	inline en_texture_t* getheight(void) { return ptextures[MT_TX_HEIGHT]; }
 
 	CString filepath;
 	rs_level_t level;
@@ -175,6 +179,8 @@ struct en_material_t
 	Float alpha;
 	Float phong_exp;
 	Float aoscale;
+	Float parallaxscale;
+	Float parallaxlayers;
 	Float cubemapnormal;
 	Float spec_factor;
 	Float scale;

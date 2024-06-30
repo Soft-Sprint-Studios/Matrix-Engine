@@ -570,6 +570,8 @@ mt_texture_t CTextureManager::GetTextureType( const Char* pstrTypename )
 		return MT_TX_LUMINANCE;
 	else if (!qstrcmp(pstrTypename, "ao"))
 		return MT_TX_AO;
+	else if (!qstrcmp(pstrTypename, "height"))
+		return MT_TX_HEIGHT;
 	else
 		return MT_TX_UNKNOWN;
 }
@@ -675,6 +677,8 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		pmaterial->spec_factor = DEFAULT_SPECFACTOR;
 		pmaterial->phong_exp = DEFAULT_PHONG_EXP;
 		pmaterial->aoscale = 1;
+		pmaterial->parallaxscale = 0;
+		pmaterial->parallaxlayers = 16;
 		pmaterial->cubemapnormal = DEFAULT_CUBEMAPNORMAL;
 	}
 
@@ -777,6 +781,8 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 					|| !qstrcmp(token, "$alpha") || !qstrcmp(token, "$phong_exp")
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$aoscale")
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$cubemapnormal")
+				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxscale")
+				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxlayers")
 					|| !qstrcmp(token, "$spec") || !qstrcmp(token, "$scopescale") 
 					|| !qstrcmp(token, "$cubemapstrength") || !qstrcmp(token, "$container")
 					|| !qstrcmp(token, "$scrollu") || !qstrcmp(token, "$scrollv"))
@@ -811,6 +817,10 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 					pmaterial->phong_exp = (Float)SDL_atof(value);
 				else if (!qstrcmp(token, "$aoscale"))
 					pmaterial->aoscale = (Float)SDL_atof(value);
+				else if (!qstrcmp(token, "$parallaxscale"))
+					pmaterial->parallaxscale = (Float)SDL_atof(value);
+				else if (!qstrcmp(token, "$parallaxlayers"))
+					pmaterial->parallaxlayers = (Float)SDL_atof(value);
 				else if (!qstrcmp(token, "$cubemapnormal"))
 					pmaterial->cubemapnormal = (Float)SDL_atof(value);
 				else if(!qstrcmp(token, "$spec"))
@@ -1695,6 +1705,12 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if (pmaterial->aoscale)
 		data << "\t$aoscale " << pmaterial->aoscale << NEWLINE;
 
+	if (pmaterial->parallaxscale)
+		data << "\t$parallaxscale " << pmaterial->parallaxscale << NEWLINE;
+
+	if (pmaterial->parallaxlayers)
+		data << "\t$parallaxlayers " << pmaterial->parallaxlayers << NEWLINE;
+
 	if (pmaterial->cubemapnormal)
 		data << "\t$cubemapnormal " << pmaterial->cubemapnormal << NEWLINE;
 
@@ -1724,6 +1740,9 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 
 	if (pmaterial->ptextures[MT_TX_AO])
 		data << "\t$texture ao " << pmaterial->ptextures[MT_TX_AO]->filepath << NEWLINE;
+
+	if (pmaterial->ptextures[MT_TX_HEIGHT])
+		data << "\t$texture height " << pmaterial->ptextures[MT_TX_HEIGHT]->filepath << NEWLINE;
 
 	data << "}" << NEWLINE;
 

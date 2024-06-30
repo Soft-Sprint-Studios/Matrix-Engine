@@ -3,9 +3,11 @@ $texture
 	$int_width 1024
 	$int_height 1024
 	$material concrete
-	$aoscale 2
+	$parallaxscale 0.05
+	$parallaxlayers 64
 	$texture diffuse world/redbrick01/redbrick01_diffuse.dds
 	$texture normal world/redbrick01/redbrick01_normal.dds
 	$texture specular world/redbrick01/redbrick01_specular.dds
 	$texture ao world/redbrick01/redbrick01_ao.dds
+	$texture height world/redbrick01/redbrick01_height.dds
 }

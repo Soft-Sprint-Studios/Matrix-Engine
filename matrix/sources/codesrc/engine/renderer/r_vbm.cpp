@@ -1135,7 +1135,7 @@ bool CVBMRenderer::DrawModel( Int32 flags, cl_entity_t* pentity )
 	glDisable(GL_BLEND);
 	glDepthFunc(GL_LEQUAL);
 
-	//RenderScreenSpaceNormals();
+	RenderScreenSpaceNormals();
 
 	return result;
 }
@@ -2223,12 +2223,13 @@ bool CVBMRenderer::RenderScreenSpaceNormals(void)
 		gGLExtF.glGenFramebuffers(1, &fbo);
 	}
 	gGLExtF.glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (vbmnormalstex == 0)
 	{
 		glGenTextures(1, &vbmnormalstex);
 		glBindTexture(GL_TEXTURE_2D, vbmnormalstex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rns.screenwidth, rns.screenheight, 0, GL_RGBA, GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, rns.screenwidth, rns.screenheight, 0, GL_RGBA, GL_FLOAT, nullptr);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -2262,9 +2263,6 @@ bool CVBMRenderer::RenderScreenSpaceNormals(void)
 	}
 
 	gGLExtF.glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glDeleteTextures(1, &vbmnormalstex);
-	gGLExtF.glDeleteFramebuffers(1, &fbo);
 
 	return true;
 }
