@@ -3167,6 +3167,7 @@ bool CBSPRenderer::DrawLights( bool specular )
 			// sampler types being set to texture unit 0
 			m_pShader->SetUniform1i(m_attribs.u_normalmap, texunit);
 			m_pShader->SetUniform1i(m_attribs.u_specular, texunit+1);
+			m_pShader->SetUniform1i(m_attribs.u_heightmap, texunit + 2);
 
 			if (specular)
 			{
@@ -3175,6 +3176,19 @@ bool CBSPRenderer::DrawLights( bool specular )
 
 				R_Bind2DTexture(GL_TEXTURE0 + texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
 				R_Bind2DTexture(GL_TEXTURE0 + texunit + 1, pmaterial->ptextures[MT_TX_SPECULAR]->palloc->gl_index);
+				if (pmaterial->ptextures[MT_TX_HEIGHT])
+				{
+					if (!m_pShader->SetDeterminator(m_attribs.d_parallax, TRUE, false))
+						return false;
+					m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
+					m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
+					R_Bind2DTexture(GL_TEXTURE0 + texunit + 2, pmaterial->ptextures[MT_TX_HEIGHT]->palloc->gl_index);
+				}
+				else
+				{
+					if (!m_pShader->SetDeterminator(m_attribs.d_parallax, FALSE, false))
+						return false;
+				}
 
 				m_pShader->EnableAttribute(m_attribs.a_tangent);
 				m_pShader->EnableAttribute(m_attribs.a_binormal);
@@ -3183,6 +3197,19 @@ bool CBSPRenderer::DrawLights( bool specular )
 			else if (pmaterial->ptextures[MT_TX_NORMALMAP] && g_pCvarBumpMaps->GetValue() > 0)
 			{
 				R_Bind2DTexture(GL_TEXTURE0 + texunit, pmaterial->ptextures[MT_TX_NORMALMAP]->palloc->gl_index);
+				if (pmaterial->ptextures[MT_TX_HEIGHT])
+				{
+					if (!m_pShader->SetDeterminator(m_attribs.d_parallax, TRUE, false))
+						return false;
+					m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
+					m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
+					R_Bind2DTexture(GL_TEXTURE0 + texunit + 2, pmaterial->ptextures[MT_TX_HEIGHT]->palloc->gl_index);
+				}
+				else
+				{
+					if (!m_pShader->SetDeterminator(m_attribs.d_parallax, FALSE, false))
+						return false;
+				}
 
 				m_pShader->EnableAttribute(m_attribs.a_tangent);
 				m_pShader->EnableAttribute(m_attribs.a_binormal);
