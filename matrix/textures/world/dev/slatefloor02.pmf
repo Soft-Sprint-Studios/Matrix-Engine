@@ -1,0 +1,16 @@
+$texture
+{
+	$int_width 1024
+	$int_height 1024
+	$material concrete
+	$cubemaps
+	$cubemapstrength 1
+	$cubemapnormal 0.1
+	$parallaxscale 0.10
+	$parallaxlayers 64
+	$aoscale 10
+	$texture diffuse world/dev/slatefloor02.dds
+	$texture normal world/dev/slatefloor02_normal.dds
+	$texture specular world/dev/slatefloor02_specular.dds
+	$texture ao world/dev/slatefloor02_ao.dds
+}

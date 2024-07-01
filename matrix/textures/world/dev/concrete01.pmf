@@ -6,5 +6,4 @@ $texture
 	$texture diffuse world/dev/concrete01.dds
 	$texture normal world/dev/concrete01_normal.dds
 	$texture specular world/dev/concrete01_specular.dds
-	$texture ao world/dev/concrete01_ao.dds
 }

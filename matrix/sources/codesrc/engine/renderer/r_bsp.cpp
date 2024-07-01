@@ -281,7 +281,6 @@ bool CBSPRenderer::InitGL( void )
 			|| !R_CheckShaderUniform(m_attribs.u_vright, "v_right", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_uvoffset, "uvoffset", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_phong_exponent, "phong_exponent", m_pShader, Sys_ErrorPopup)
-			|| !R_CheckShaderUniform(m_attribs.u_aoscale, "aoscale", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_specularfactor, "specfactor", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_decalalpha, "decalalpha", m_pShader, Sys_ErrorPopup)
 			|| !R_CheckShaderUniform(m_attribs.u_decalscale, "decalscale", m_pShader, Sys_ErrorPopup)
@@ -2013,6 +2012,8 @@ bool CBSPRenderer::DrawFirst( void )
 				|| !m_pShader->SetDeterminator(m_attribs.d_specular, FALSE, false)
 				|| !m_pShader->SetDeterminator(m_attribs.d_bumpmapping, FALSE, false)
 				|| !m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false)
+				|| !m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false)
+				|| !m_pShader->SetDeterminator(m_attribs.d_parallax, FALSE, false)
 				|| !m_pShader->SetDeterminator(m_attribs.d_shadertype, shader_solidcolor))
 				return false;
 
@@ -2236,11 +2237,11 @@ bool CBSPRenderer::DrawFirst( void )
 				if (!m_pShader->SetDeterminator(m_attribs.d_parallax, TRUE))
 					return false;
 
-				en_texture_t* paotexture = pmaterial->ptextures[MT_TX_HEIGHT];
+				en_texture_t* pheighttexture = pmaterial->ptextures[MT_TX_HEIGHT];
 				m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
 				m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
 				m_pShader->SetUniform1i(m_attribs.u_heightmap, textureIndex);
-				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, paotexture->palloc->gl_index);
+				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, pheighttexture->palloc->gl_index);
 				textureIndex++;
 
 				// We'll need texcoords
@@ -2287,6 +2288,8 @@ bool CBSPRenderer::DrawFirst( void )
 	// Make sure to restore these
 	if(!m_pShader->SetDeterminator(m_attribs.d_alphatest, ALPHATEST_DISABLED, false)
 		|| !m_pShader->SetDeterminator(m_attribs.d_bumpmapping, FALSE, false)
+		|| !m_pShader->SetDeterminator(m_attribs.d_ao, FALSE, false)
+		|| !m_pShader->SetDeterminator(m_attribs.d_parallax, FALSE, false)
 		|| !m_pShader->SetDeterminator(m_attribs.d_luminance, FALSE, false))
 		return false;
 

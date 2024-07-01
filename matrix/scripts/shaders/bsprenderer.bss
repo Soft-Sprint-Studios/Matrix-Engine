@@ -126,7 +126,7 @@ void main()
 		ps_lmapcoord = in_lmapcoord;
 	$end
 	
-	$branch shadertype == 0 || shadertype == 1 || shadertype == 2 || shadertype == 4 || shadertype == 5 || shadertype == 7 || shadertype == 10 || shadertype == 13 || shadertype == 16 || shadertype == 17 || shadertype == 18 || shadertype == 19 || luminance == 1
+	$branch shadertype == 0 || shadertype == 1 || shadertype == 2 || shadertype == 4 || shadertype == 5 || shadertype == 7 || shadertype == 10 || shadertype == 13 || shadertype == 16 || shadertype == 17 || shadertype == 18 || shadertype == 19 || luminance == 1 || parallax == 1
 	$begin
 		ps_texcoord = in_texcoord+uvoffset;
 	$end
@@ -139,7 +139,7 @@ void main()
 	
 	$branch specular == 1 || shadertype == 5 || shadertype == 7 || shadertype == 18
 	$begin
-		$branch bumpmapping == 1
+		$branch bumpmapping == 1 || parallax == 1
 		$begin
 			ps_tangent = (normalmatrix*vec4(in_tangent, 0.0)).xyz;
 			ps_binormal = (normalmatrix*vec4(in_binormal, 0.0)).xyz;
@@ -150,7 +150,7 @@ void main()
 	
 	$branch cubemaps >= 1
 	$begin
-		$branch bumpmapping == 1
+		$branch bumpmapping == 1 || parallax == 1
 		$begin
 			ps_cubetangent = (inv_modelmatrix*vec4(in_tangent, 0.0)).xyz;
 			ps_cubebinormal = (inv_modelmatrix*vec4(in_binormal, 0.0)).xyz;
@@ -1221,7 +1221,14 @@ $end
 		vec4 diffuseLight = GetDiffuseLight( difflightmap );
 		
 		finalColor = AddBaseLight(baselightmap, diffuseLight, lightDir, v_normal);
+		$branch parallax == 1
+		$begin
+		finalColor.w = finalColor.w * texture2D(maintexture, ps_parallaxcoord).w;
+		$end
+		$branch parallax == 0
+		$begin
 		finalColor.w = finalColor.w * texture2D(maintexture, ps_texcoord).w;
+		$end
 	$end
 	$branch shadertype == 11
 	$begin
@@ -1351,16 +1358,15 @@ $end
 	$end
 	
 	$branch ao == 1
-$begin
-$branch parallax == 1
-$begin
- float aoFactor = texture2D(aomaptex, ps_parallaxcoord).r * aoscale;
-$end
-$branch parallax == 0
-$begin
- float aoFactor = texture2D(aomaptex, ps_texcoord).r * aoscale;
-$end
-    finalColor.rgb *= aoFactor;
+	$begin
+	$branch parallax == 1
+	$begin
+	    finalColor.xyz *= texture(aomaptex, ps_parallaxcoord).xyz *aoscale;
+	$end
+	$branch parallax == 0
+	$begin
+	    finalColor.xyz *= texture(aomaptex, ps_texcoord).xyz * aoscale;
+	$end
 $end
     
 	$branch normals	== 1
