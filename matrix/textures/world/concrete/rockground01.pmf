@@ -1,0 +1,6 @@
+$texture
+{
+	$int_width 1024
+	$int_height 1024
+	$texture diffuse world/dev/rockground01.dds
+}

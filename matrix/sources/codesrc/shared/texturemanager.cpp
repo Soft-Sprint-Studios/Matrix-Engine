@@ -678,7 +678,8 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 		pmaterial->phong_exp = DEFAULT_PHONG_EXP;
 		pmaterial->aoscale = 1;
 		pmaterial->parallaxscale = 0;
-		pmaterial->parallaxlayers = 16;
+		pmaterial->parallaxminlayers = 8;
+		pmaterial->parallaxmaxlayers = 16;
 		pmaterial->cubemapnormal = DEFAULT_CUBEMAPNORMAL;
 	}
 
@@ -782,7 +783,8 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$aoscale")
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$cubemapnormal")
 				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxscale")
-				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxlayers")
+				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxminlayers")
+				    || !qstrcmp(token, "$alpha") || !qstrcmp(token, "$parallaxmaxlayers")
 					|| !qstrcmp(token, "$spec") || !qstrcmp(token, "$scopescale") 
 					|| !qstrcmp(token, "$cubemapstrength") || !qstrcmp(token, "$container")
 					|| !qstrcmp(token, "$scrollu") || !qstrcmp(token, "$scrollv"))
@@ -819,8 +821,10 @@ en_material_t* CTextureManager::LoadMaterialScript( const Char* pstrFilename, rs
 					pmaterial->aoscale = (Float)SDL_atof(value);
 				else if (!qstrcmp(token, "$parallaxscale"))
 					pmaterial->parallaxscale = (Float)SDL_atof(value);
-				else if (!qstrcmp(token, "$parallaxlayers"))
-					pmaterial->parallaxlayers = (Float)SDL_atof(value);
+				else if (!qstrcmp(token, "$parallaxminlayers"))
+					pmaterial->parallaxminlayers = (Float)SDL_atof(value);
+				else if (!qstrcmp(token, "$parallaxmaxlayers"))
+					pmaterial->parallaxmaxlayers = (Float)SDL_atof(value);
 				else if (!qstrcmp(token, "$cubemapnormal"))
 					pmaterial->cubemapnormal = (Float)SDL_atof(value);
 				else if(!qstrcmp(token, "$spec"))
@@ -1708,8 +1712,11 @@ void CTextureManager::WritePMFFile( en_material_t* pmaterial )
 	if (pmaterial->parallaxscale)
 		data << "\t$parallaxscale " << pmaterial->parallaxscale << NEWLINE;
 
-	if (pmaterial->parallaxlayers)
-		data << "\t$parallaxlayers " << pmaterial->parallaxlayers << NEWLINE;
+	if (pmaterial->parallaxminlayers)
+		data << "\t$parallaxminlayers " << pmaterial->parallaxminlayers << NEWLINE;
+
+	if (pmaterial->parallaxminlayers)
+		data << "\t$parallaxminlayers " << pmaterial->parallaxminlayers << NEWLINE;
 
 	if (pmaterial->cubemapnormal)
 		data << "\t$cubemapnormal " << pmaterial->cubemapnormal << NEWLINE;

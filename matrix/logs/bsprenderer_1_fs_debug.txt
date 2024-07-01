@@ -1,3 +1,1 @@
-0(79) : error C1503: undefined variable "numIterations"
-0(82) : error C1503: undefined variable "heightMap"
-0(102) : error C7011: implicit cast from "float" to "int"
+0(90) : error C1503: undefined variable "parallaxmaxlayers"

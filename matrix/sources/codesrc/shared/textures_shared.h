@@ -146,7 +146,8 @@ struct en_material_t
 		phong_exp(0),
 		aoscale(0),
 		parallaxscale(0),
-		parallaxlayers(0),
+		parallaxminlayers(0),
+		parallaxmaxlayers(0),
 		cubemapnormal(0),
 		spec_factor(0),
 		scale(0),
@@ -180,7 +181,8 @@ struct en_material_t
 	Float phong_exp;
 	Float aoscale;
 	Float parallaxscale;
-	Float parallaxlayers;
+	Float parallaxminlayers;
+	Float parallaxmaxlayers;
 	Float cubemapnormal;
 	Float spec_factor;
 	Float scale;

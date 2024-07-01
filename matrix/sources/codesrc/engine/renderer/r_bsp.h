@@ -121,7 +121,8 @@ struct bsp_shader_attribs
 		u_phong_exponent(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_aoscale(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_parallaxscale(CGLSLShader::PROPERTY_UNAVAILABLE),
-		u_parallaxlayers(CGLSLShader::PROPERTY_UNAVAILABLE),
+		u_parallaxminlayers(CGLSLShader::PROPERTY_UNAVAILABLE),
+		u_parallaxmaxlayers(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_cubemapnormal(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_specularfactor(CGLSLShader::PROPERTY_UNAVAILABLE),
 		u_interpolant(CGLSLShader::PROPERTY_UNAVAILABLE),
@@ -190,7 +191,8 @@ struct bsp_shader_attribs
 	Int32 u_phong_exponent;
 	Int32 u_aoscale;
 	Int32 u_parallaxscale;
-	Int32 u_parallaxlayers;
+	Int32 u_parallaxmaxlayers;
+	Int32 u_parallaxminlayers;
 	Int32 u_cubemapnormal;
 	Int32 u_specularfactor;
 	Int32 u_interpolant;

@@ -11,7 +11,8 @@ uniform sampler2D speculartex;
 uniform sampler2D aomaptex;
 uniform sampler2D heightmaptex;
 uniform float parallaxdepth;
-uniform float parallaxlayers;
+uniform float parallaxminlayers;
+uniform float parallaxmmaxlayers;
 uniform float aoscale;
 
 uniform float phong_exponent;
@@ -55,51 +56,38 @@ vec3 GetEyeSpaceNormal( vec2 texcoord, sampler2D normalmap, vec3 v_normal, mat3 
 return v_normal;
 }
 
-vec2 ParallaxOcclusionMapping(vec2 texCoords, vec3 viewDir, int numLayers)
+vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir, float parallaxDepth, float minLayers, float maxLayers, sampler2D heightSampler)
 {
-    float layerDepth = 1.0 / float(numLayers);
+    float numLayers = mix(maxLayers, minLayers, max(dot(vec3(0.0, 0.0, 1.0), viewDir), 0.0));
+    const float layerDepth = 1.0 / numLayers;
     float currentLayerDepth = 0.0;
-    vec2 P = viewDir.xy * parallaxdepth;
-    vec2 deltaTexCoords = P / float(numLayers);
-    
+    vec2 P = viewDir.xy * parallaxDepth; 
+    vec2 deltaTexCoords = P / numLayers; 
+
     vec2 currentTexCoords = texCoords;
-    float currentDepthMapValue = texture(heightmaptex, currentTexCoords).r;
+    float currentDepthMapValue = texture(heightSampler, currentTexCoords).r;
 
     while (currentLayerDepth < currentDepthMapValue)
     {
         currentTexCoords -= deltaTexCoords;
-        currentDepthMapValue = texture(heightmaptex, currentTexCoords).r;
-        currentLayerDepth += layerDepth;
+        currentDepthMapValue = texture(heightSampler, currentTexCoords).r;  
+        currentLayerDepth += layerDepth;  
     }
 
     vec2 prevTexCoords = currentTexCoords + deltaTexCoords;
-    float prevDepthMapValue = texture(heightmaptex, prevTexCoords).r;
-    float afterDepth = currentDepthMapValue - currentLayerDepth + layerDepth;
+    float depthAfterCurrentLayer = currentDepthMapValue - currentLayerDepth;
+    float depthBeforeCurrentLayer = texture(heightSampler, prevTexCoords).r - currentLayerDepth + layerDepth;
+    float weight = depthAfterCurrentLayer / (depthAfterCurrentLayer - depthBeforeCurrentLayer);
+    vec2 finalTexCoords = prevTexCoords * weight + currentTexCoords * (1.0 - weight);
 
-    for (int i = 0; i < numIterations; ++i)
-{
-    vec2 midTexCoords = (currentTexCoords + prevTexCoords) * 0.5;
-    float midDepthMapValue = texture(heightMap, midTexCoords).r;
-    if (afterDepth > midDepthMapValue)
-    {
-        currentTexCoords = midTexCoords;
-        currentDepthMapValue = midDepthMapValue;
-    }
-    else
-    {
-        prevTexCoords = midTexCoords;
-        prevDepthMapValue = midDepthMapValue;
-    }
-}
-
-    return currentTexCoords;
+    return finalTexCoords;
 }
 vec3 T = normalize(ps_tangent);
 vec3 B = normalize(ps_binormal);
 vec3 N = normalize(ps_normal);
 mat3 tbnMatrix = transpose(mat3(T, B, N));
 vec3 viewDirTS = normalize(tbnMatrix * normalize(ps_vertexpos));
-vec2 ps_parallaxcoord = ParallaxOcclusionMapping(ps_texcoord, viewDirTS, parallaxlayers);
+vec2 ps_parallaxcoord = ParallaxMapping(ps_texcoord, viewDirTS, parallaxdepth, parallaxminlayers, parallaxmaxlayers, heightmaptex);
 float CalcShininess( vec3 v_origin, vec3 v_normal, vec3 l_origin )
 {
 return 1.0;

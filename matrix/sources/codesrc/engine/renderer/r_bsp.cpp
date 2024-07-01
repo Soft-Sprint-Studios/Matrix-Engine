@@ -234,7 +234,8 @@ bool CBSPRenderer::InitGL( void )
 		m_attribs.u_phong_exponent = m_pShader->InitUniform("phong_exponent", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_aoscale = m_pShader->InitUniform("aoscale", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_parallaxscale = m_pShader->InitUniform("parallaxdepth", CGLSLShader::UNIFORM_FLOAT1);
-		m_attribs.u_parallaxlayers = m_pShader->InitUniform("parallaxlayers", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_parallaxminlayers = m_pShader->InitUniform("parallaxminlayers", CGLSLShader::UNIFORM_FLOAT1);
+		m_attribs.u_parallaxmaxlayers = m_pShader->InitUniform("parallaxmaxlayers", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_cubemapnormal = m_pShader->InitUniform("cubemapnormal", CGLSLShader::UNIFORM_FLOAT1);
 		m_attribs.u_specularfactor = m_pShader->InitUniform("specfactor", CGLSLShader::UNIFORM_FLOAT1);
 		
@@ -2239,7 +2240,8 @@ bool CBSPRenderer::DrawFirst( void )
 
 				en_texture_t* pheighttexture = pmaterial->ptextures[MT_TX_HEIGHT];
 				m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
-				m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
+				m_pShader->SetUniform1f(m_attribs.u_parallaxminlayers, pmaterial->parallaxminlayers);
+				m_pShader->SetUniform1f(m_attribs.u_parallaxmaxlayers, pmaterial->parallaxmaxlayers);
 				m_pShader->SetUniform1i(m_attribs.u_heightmap, textureIndex);
 				R_Bind2DTexture(GL_TEXTURE0 + textureIndex, pheighttexture->palloc->gl_index);
 				textureIndex++;
@@ -2575,7 +2577,8 @@ bool CBSPRenderer::BindTextures( bsp_texture_t* phandle, cubemapinfo_t* pcubemap
 
 			en_texture_t* paotexture = pmaterial->ptextures[MT_TX_HEIGHT];
 			m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
-			m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
+			m_pShader->SetUniform1f(m_attribs.u_parallaxminlayers, pmaterial->parallaxminlayers);
+			m_pShader->SetUniform1f(m_attribs.u_parallaxmaxlayers, pmaterial->parallaxmaxlayers);
 			m_pShader->SetUniform1i(m_attribs.u_heightmap, textureIndex);
 			R_Bind2DTexture(GL_TEXTURE0 + textureIndex, paotexture->palloc->gl_index);
 			textureIndex++;
@@ -3181,7 +3184,8 @@ bool CBSPRenderer::DrawLights( bool specular )
 					if (!m_pShader->SetDeterminator(m_attribs.d_parallax, TRUE, false))
 						return false;
 					m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
-					m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
+					m_pShader->SetUniform1f(m_attribs.u_parallaxminlayers, pmaterial->parallaxminlayers);
+					m_pShader->SetUniform1f(m_attribs.u_parallaxmaxlayers, pmaterial->parallaxmaxlayers);
 					R_Bind2DTexture(GL_TEXTURE0 + texunit + 2, pmaterial->ptextures[MT_TX_HEIGHT]->palloc->gl_index);
 				}
 				else
@@ -3202,7 +3206,8 @@ bool CBSPRenderer::DrawLights( bool specular )
 					if (!m_pShader->SetDeterminator(m_attribs.d_parallax, TRUE, false))
 						return false;
 					m_pShader->SetUniform1f(m_attribs.u_parallaxscale, pmaterial->parallaxscale);
-					m_pShader->SetUniform1f(m_attribs.u_parallaxlayers, pmaterial->parallaxlayers);
+					m_pShader->SetUniform1f(m_attribs.u_parallaxminlayers, pmaterial->parallaxminlayers);
+					m_pShader->SetUniform1f(m_attribs.u_parallaxmaxlayers, pmaterial->parallaxmaxlayers);
 					R_Bind2DTexture(GL_TEXTURE0 + texunit + 2, pmaterial->ptextures[MT_TX_HEIGHT]->palloc->gl_index);
 				}
 				else
@@ -3756,7 +3761,7 @@ bool CBSPRenderer::DrawVSMFaces( void )
 {
 	// Render normal ones first
 	for(Uint32 i = 0; i < m_texturesArray.size(); i++)
-	{
+	{ 
 		if(!m_texturesArray[i].pmodeltexture)
 			continue;
 
